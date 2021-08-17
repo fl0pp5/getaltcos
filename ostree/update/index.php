@@ -129,15 +129,23 @@ if ($changed) {
 }
 
 $cmd = "
+set -x;
 cd $rootsPath/;
 sudo rm -f ./upper/etc;
 #ls -l ./merged;
 echo 'UPPER=';ls -lR ./upper;
 cd upper
-find . -type c;
-find . -type c -exec rm -rf  $commitPath/{} \;
+echo 'DELETE==='
+delete=`find . -type c`;
+echo DELETE \$delete
+sudo rm -rf \$delete
+cd ../$lastCommitId/;
+sudo rm -rf \$delete
+cd ../upper;
+#echo 'RM==='
+#find . -type c -exec echo sudo rm -rf  $commitPath/{} 2>&1\;
 echo 'CPIO===';
-find . -depth | cpio -plmvd $commitPath/; 
+find . -depth | sudo cpio -plmvdu $commitPath/ 2>&1; 
 cd ..
 ";
 
