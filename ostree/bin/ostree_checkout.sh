@@ -5,7 +5,7 @@ ref=$1
 lastCommitId=$2
 clear=$3
 repoBarePath="$DOCUMENT_ROOT/ACOS/streams/$ref/bare/repo";
-$rootsPath = "$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
+rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
 
 if [  "$clear" = 'all'  ]
 then
