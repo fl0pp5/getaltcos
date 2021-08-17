@@ -4,25 +4,7 @@ function cmpByVersion($commit1, $commit2) {
   return $ret;
 }
 
-
-//MAIN
-$ref = $_REQUEST['ref'];
-$version = $_REQUEST['version'];
-
-$repoBarePath = "/var/www/vhosts/getacos/ACOS/streams/$ref/bare/repo";
-$repoArchivePath = "/var/www/vhosts/getacos/ACOS/streams/$ref/archive/repo";
-$etcaptPath = "/var/www/vhosts/getacos/streams/$ref/etc/apt";
-
-if (!file_exists($repoBarePath)) {
-        echo "Bare repository $repoBarePath don't exists";
-        exit(1);
-}
-echo "repoBarePath=$repoBarePath\n";
-$cmd = "ostree --repo=$repoBarePath log $ref";
-$output = [];
-exec($cmd, $output);
-
-echo "LOG=" . print_r($output, 1);
+function getLastCommit($output) {
 $commits = [];
 $commit = [];
 foreach ($output as $line) {
@@ -40,7 +22,60 @@ foreach ($output as $line) {
       $value = trim(implode(' ', array_slice($parts, 1)));
       $commit[$name] = $value;
     }
+  }
+}
 
+if ($id = @$commit['id'] ) {
+  $commits[] = $commit;
+}
+
+uasort($commits, 'cmpByVersion');
+echo "COMMITS=" . print_r($commits, 1);
+$lastCommit = $commits[0];
+return $lastCommit; 
+}
+
+//phpinfo();//exit(0);
+
+//MAIN
+$DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
+putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
+$BINDIR = "$DOCUMENT_ROOT/ostree/bin";
+$ref = $_REQUEST['ref'];
+$version = $_REQUEST['version'];
+
+$repoBarePath = "$DOCUMENT_ROOT/ACOS/streams/$ref/bare/repo";
+$repoArchivePath = "$DOCUMENT_ROOT/ACOS/streams/$ref/archive/repo";
+
+if (!file_exists($repoBarePath)) {
+        echo "Bare repository $repoBarePath don't exists";
+        exit(1);
+}
+echo "repoBarePath=$repoBarePath\n";
+$cmd = "ostree --repo=$repoBarePath log $ref";
+$cmd = "$BINDIR/ostree_log.sh $ref";
+echo "CMD=$cmd\n";
+$output = [];
+exec($cmd, $output);
+echo "LOG=" . print_r($output, 1);
+exit(0);
+$commits = [];
+$commit = [];
+foreach ($output as $line) {
+  if (strlen(trim($line)) == 0 ) continue;
+  $parts = explode(' ', $line);
+  $name = $parts[0];
+  if (trim($name) == 'commit') {
+    if ($id = @$commit['id'] ) {
+      $commits[] = $commit;
+    }
+    $id = trim($parts[1]);
+    $commit['id'] = $id;
+  } else {
+    if (substr($name, -1) == ':') {
+      $value = trim(implode(' ', array_slice($parts, 1)));
+      $commit[$name] = $value;
+    }
   }
 }
 
