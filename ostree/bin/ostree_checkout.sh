@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-exec 2>/tmp/ostree_checkout.log
+exec 2>&1
 ref=$1
 lastCommitId=$2
 clear=$3
@@ -9,12 +9,16 @@ rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
 
 if [  "$clear" = 'all'  ]
 then
-  rm -rf $rootsPath
-  mkdir -p $rootsPath
+  sudo umount $rootsPath/merged
+  sudo rm -rf $rootsPath
+  sudo mkdir -p $rootsPath
 fi
-sudo ostree checkout --repo $repoBarePath $lastCommitId
 cd $rootsPath
-ln -sf $lastCommitId root
+if [ ! -d $lastCommitId ]
+then
+  sudo ostree checkout --repo $repoBarePath $lastCommitId
+fi
+sudo ln -sf $lastCommitId root
 
 for dir in merged upper work
 do 

@@ -77,7 +77,7 @@ echo "LOGCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "LOG=" . print_r($output, 1);
-//exit(0);
+# exit(0);
 
 $lastCommit = getLastCommit($output);
 $lastCommitId = $lastCommit['id'];
@@ -88,17 +88,19 @@ if ($lastVersion != $version) {
   exit(1);
 }
 
-$cmd = "$BINDIR/ostree_checkout.sh $ref $lastCommitId 1";
+$cmd = "$BINDIR/ostree_checkout.sh $ref $lastCommitId all";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "CHECKOUT=" . print_r($output, 1);
+//exit(0);
 
 $cmd = "$BINDIR/apt-get_update.sh $ref";
 echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "APT-GET_UPDATE=" . print_r($output, 1);
+exit(0);
 
 $cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref";
 echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
