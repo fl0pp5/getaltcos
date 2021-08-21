@@ -70,6 +70,8 @@ mount -t overlay overlay -o lowerdir=./root,upperdir=./upper,workdir=./work ./me
 
 После проведения изменений они переносятся из каталога `upper` в каталог `root` с новыми `inode`.
 
+![overlay-монтирование](./Images/OverlayFS_Image.png)
+
 Удаленные файлы и каталоги в каталоге `upper` отображаются в виде специальных файлов типа `c` (`character devices`). Перед копированием каталога `upper` файлы с аналогичным именем удаляются из каталога `root` и каталога `upper`.
 
 Достоинства метода:
