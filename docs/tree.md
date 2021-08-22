@@ -77,4 +77,23 @@ $ git clone https://gitea.basealt.ru/kaf/getacos
 - `update/` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getacos.altlinux.org/ostree/update/` обновление текущей версии репозитория (при их наличии) до следующей версии.
 - `install` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getacos.altlinux.org/ostree/install/` форморование новой ветки репозитория с указанными для установке пакетами
 
+
+#### Структура каталога shell-скриптов `/ostree/bin`
+
+Перед запуском скриптов должна быть определена переменная `DOCUMENT_ROOT` хранящую тропу до корневого репозитория:
+```
+# export DOCUMENT_ROOT=/var/www/vhosts/getacos
+```
+
+- `createACOStar.sh` - создание tar-файла `~/out/acos-<date>-x86_64.tar` начального дистрибутива с символической ссылкой `~out/atacos-latest-x86_64.tar`.
+- `createRepo.sh` - создание репозитория на основе tar-файла 
+- `ostree_log.sh` - 
+- `ostree_checkout.sh` -
+- `apt-get_update.sh` -
+- `apt-get_dist-upgrade.sh` - 
+- `syncUpdates.sh` -
+- `ostree_commit.sh` -
+- `ostree_pull-local.sh` -
+
+
 ### Структура каталога `/v1/graph` графа протокола `cincinatti`
