@@ -168,7 +168,12 @@ ostree_commit.sh ref newCommitId newVersion
 (Рассмотреть вариант создание комита на основе каталога `merged`).
 
 
-- `ostree_pull-local.sh` -
+- `ostree_pull-local.sh` - синхронизировать `bare`-репозиторий разработчика с `archive`-репозиторием клиентов.
+
+Формат вызова:
+```
+ostree_pull-local.sh
+```
 
 
 ### Структура каталога `/v1/graph` графа протокола `cincinatti`
