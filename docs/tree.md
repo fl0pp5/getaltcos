@@ -87,7 +87,7 @@ $ git clone https://gitea.basealt.ru/kaf/getacos
 
 - `createACOStar.sh` - создание tar-файла `~/out/acos-<date>-x86_64.tar` начального дистрибутива с символической ссылкой `~out/atacos-latest-x86_64.tar`.
 - `createRepo.sh` - создание репозитория на основе tar-файла 
-- `ostree_log.sh` - отобрражение логов  по ссылке (`refs`).
+- `ostree_log.sh` - отображение логов  по ссылке (`refs`).
 Формат:
 ```
 ostree_log.sh ref
@@ -101,10 +101,37 @@ ContentChecksum:  90456ba35e9af8bccf61bb3516e21dd695feae4a948d2bdc0714a81bce262a
 Date:  2021-08-20 15:49:26 +0000
 Version: sisyphus.20210820.0.0
 (no subject)
-
 ```
 
-- `ostree_checkout.sh` -
+- `ostree_checkout.sh` - разворачивание дерева дистрибутива в каталоге `/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/roots/<commitId>/` и монтирование overlay-каталогов.
+Формат вызова:
+```
+ostree_checkout.sh ref commitId clear
+```
+
+Пример:
+```
+$ ostree_checkout.sh acos/x86_64/sisyphus fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6 all
+```
+Действия:
+- в случае значения 3-го параметра `all` удаление каталога 
+`/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/roots`
+и создание нового каталога `roots`;
+- разворачивание из каталога репозитория `/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/bare/repo` в каталог `/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/roots/fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6` ветки `acos/x86_64/sisyphus` репозитория с комитом `fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6`.
+- создание символической ссылки `root` на каталог `fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6`;
+- создание подкаталогов `merged`, `upper`, `work`.
+
+- overlay-монтировние каталогов:
+```
+mount -t overlay overlay -o lowerdir=fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6,upperdir=./upper,workdir=./work ./merged
+```
+
+Нижний каталог `fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6` монтируется в режиме `только на чтение`.
+На него формируется символическая ссылка `root`.
+
+На момент монтирования содержимое каталога `upper` совпадает с содержимым каталога развернутого комита `root`.
+Работа по корректировке развернутого дерева репозитория в дальнейшем производится в каталог `merged`. Все изменения, добавления и удаление файлов в каталог `merged` отображаются в каталоге `upper`. Содержимое каталога `root` остается неизменным.
+
 - `apt-get_update.sh` -
 - `apt-get_dist-upgrade.sh` - 
 - `syncUpdates.sh` -
