@@ -134,14 +134,40 @@ mount -t overlay overlay -o lowerdir=fafb6a2406f09bfee76d7d0565c32dd13743f79019d
 
 - `apt-get_update.sh` - обновление пакетной базы в каталоге `merged`.
 
+Формат вызова:
+```
+apt-get_update.sh ref
+```
+
 - `apt-get_dist-upgrade.sh` - установка обновленных пакетов в каталоге `merged`.
 
+Формат вызова:
+```
+apt-get_dist-upgrade.sh ref
+```
+
 - `syncUpdates.sh` - передача обновления из каталога `upper` в каталог комита `root`.
+
+Формат вызова:
+```
+syncUpdates.sh ref
+```
 
 Файлы, помеченные как специальные файлы типа `character` удаляются из каталогов `upper` и `root`.
 Остальное содержимое каталога `upper` копируются в каталог комита `root`. 
 
-- `ostree_commit.sh` -
+(Рассмотреть вариант создание комита на основе каталога `merged`).
+
+- `ostree_commit.sh` - соссздание нового комита в `bare`-репозитории на основе нового содержимого каталога `root`.
+
+Формат вызова:
+```
+ostree_commit.sh ref newCommitId newVersion
+```
+
+(Рассмотреть вариант создание комита на основе каталога `merged`).
+
+
 - `ostree_pull-local.sh` -
 
 
