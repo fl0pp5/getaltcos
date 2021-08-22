@@ -87,7 +87,23 @@ $ git clone https://gitea.basealt.ru/kaf/getacos
 
 - `createACOStar.sh` - создание tar-файла `~/out/acos-<date>-x86_64.tar` начального дистрибутива с символической ссылкой `~out/atacos-latest-x86_64.tar`.
 - `createRepo.sh` - создание репозитория на основе tar-файла 
-- `ostree_log.sh` - 
+- `ostree_log.sh` - отобрражение логов  по ссылке (`refs`).
+Формат:
+```
+ostree_log.sh ref
+```
+
+Пример:
+```
+$ ostree_log.sh acos/x86_64/sisyphus
+commit fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6
+ContentChecksum:  90456ba35e9af8bccf61bb3516e21dd695feae4a948d2bdc0714a81bce262a26
+Date:  2021-08-20 15:49:26 +0000
+Version: sisyphus.20210820.0.0
+(no subject)
+
+```
+
 - `ostree_checkout.sh` -
 - `apt-get_update.sh` -
 - `apt-get_dist-upgrade.sh` - 
