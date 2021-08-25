@@ -20,8 +20,6 @@ ROOTFS_ARCHIVE=$1
 MAIN_REPO=$2
 BRANCH=$3
 OUT_DIR=$4
-MAIN_ROOT=$TMP_DIR/root
-ACOS_ROOT=$TMP_DIR/acos_root
 VAR_ARCH=$OUT_DIR/var.tar.xz
 ROOT_ARCH=$OUT_DIR/acos_root.tar.xz
 VERSION_DATE=`basename $ROOTFS_ARCHIVE | awk -F- '{print $2;}'`
@@ -44,6 +42,8 @@ fi
 rm -f $VAR_ARCH $ROOT_ARCH
 
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
+MAIN_ROOT=$TMP_DIR/root
+ACOS_ROOT=$TMP_DIR/acos_root
 
 mkdir -p $MAIN_ROOT
 tar xf $ROOTFS_ARCHIVE -C $MAIN_ROOT --exclude=./dev/tty --exclude=./dev/tty0 --exclude=./dev/console  --exclude=./dev/urandom --exclude=./dev/random --exclude=./dev/full --exclude=./dev/zero --exclude=/dev/null --exclude=./dev/pts/ptmx --exclude=./dev/null
@@ -113,6 +113,6 @@ mkdir $ACOS_ROOT
 ostree admin init-fs --modern $ACOS_ROOT
 ostree pull-local --repo $ACOS_ROOT/ostree/repo $MAIN_REPO $BRANCH
 #Максимальное сжатие в многопоточном режиме
-tar -cf - -C $ACOS_ROOT `ls $ACOS_ROOT` | xz -9 -c -T0 - > $ROOT_ARCH
+tar -cf - -C $ACOS_ROOT . | xz -9 -c -T0 - > $ROOT_ARCH
 
 rm -rf $TMP_DIR
