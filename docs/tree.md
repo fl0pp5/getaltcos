@@ -1,62 +1,4 @@
-# Конфигурация WEB-сервера
-
-WEB-сервер Apache2 с поддержкой модуля PHP имеет домен
-`http://getacos.altlinux.org` с алиасами `http://acos.altlinux.org`, `http://builds.acos.altlinux.org`.
-
-В дальнейшем при выводе системы в промышленную эксплуатацию необходимо будет добавить домены для тестового контура.
-
-## Установка и настройка WEB-сервера
-
-Установка пакетов:
-```
-# apt-get update
-# apt-get install apache2 apache2-mod_php7 php7_curl php7-mbsting php7
-```
-
-Добавление виртуального WWW-сервера в файле `/etc/httpd2/conf/sites-available/vhosts.conf`:
-```
-<VirtualHost *:80>
-       ServerAdmin kaf@altlinus.org     
-       DocumentRoot "/var/www/vhosts/getacos"
-       ServerName getacos.altlinux.org
-       ServerAlias acos.altlinux.org 
-       ServerAlias builds.acos.altlinux.org
-       ErrorLog "/var/log/httpd2/getacos/error.log"
-       CustomLog "/var/log/httpd2/getacos/access.log" common
-</VirtualHost>
-```
-
-Создание каталогов логов сайта:
-```
-# mkdir -p /var/www/vhosts/getacos
-# chown root:webmaster  /var/www/vhosts/getacos
-```
-
-Включение пользователя в группу webmaster:
-```
-# usermod  -a -G webmaster <пользователь>
-```
-
-Копирование репозитория (из под обвчного пользователя-разработчика):
-```
-$ cd /var/www/vhosts/
-$ git clone https://gitea.basealt.ru/kaf/getacos
-```
-
-Запуск сервера:
-```
-# systemctl enable httpd2
-# systemctl start httpd2
-```
-
-Настройка доступа к серверу в файле `/etc/hosts`:
-```
-...
-<внешний_IP-адрес> getacos.altlinux.org acos.altlinux.org builds.acos.altlinux.org
-```
-
-
-## Дерево файловой системы WEB-сервера
+# Дерево файловой системы WEB-сервера
 
 Дерево файловой системы WEB-сервера выглядит сдежующим образом:
 ![Дерево файловой системы WEB-сервера](Images/tree.png)
@@ -70,14 +12,14 @@ $ git clone https://gitea.basealt.ru/kaf/getacos
 
 Каталог `ACOS` формируется динамически скриптами каталога `ostree` доступны скриптам формирования графа каталога `v1`.
 
-### Структура корневого каталога скриптов `/ostree` и производного каталога репозиториев `/ACOS`
+## Структура корневого каталога скриптов `/ostree` и производного каталога репозиториев `/ACOS`
 
 Корневой каталог скриптов `/ostree` содержит подкаталоги:
 - `bin/` - каталог shell-скриптов для вызова в режиме CLI или WEB-интерфейса из нижеописанных каталогов `update/`, `install/`.
 - `update/` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getacos.altlinux.org/ostree/update/` обновление текущей версии репозитория (при их наличии) до следующей версии.
 - `install` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getacos.altlinux.org/ostree/install/` форморование новой ветки репозитория с указанными для установке пакетами
 
-#### Структура каталога '/ACOS'
+### Структура каталога '/ACOS'
 
 Каталог содержит следующие подкаталоги:
 - `images/acos` - каталог образов дистрибутива
@@ -95,7 +37,7 @@ $ git clone https://gitea.basealt.ru/kaf/getacos
 - `archive` - копия репозитория `bare` в формате `archive` (сжатые данные) для передачи содержимого пользователю.
 
 
-#### Структура каталога shell-скриптов `/ostree/bin`
+### Структура каталога shell-скриптов `/ostree/bin`
 
 Перед запуском скриптов должна быть определена переменная `DOCUMENT_ROOT` хранящую тропу до корневого репозитория:
 ```
