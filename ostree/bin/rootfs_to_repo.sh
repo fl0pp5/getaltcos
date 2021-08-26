@@ -1,12 +1,16 @@
 #!/bin/sh
 set -e
 
-if [ -z "$4" ] 
+if [ $# = 0 ] 
 then
-	echo "Help: $0 <rootfs archive> <directory of main ostree repository> <branch> <directory for output archives>"
-	echo "For example: $0 out/acos-20210824-x86_64.tar repo acos/x86_64/sisyphus out"
+	echo "Help: $0 <branch> [<rootfs archive>] [<directory of main ostree repository>] [<directory for output archives>]"
+	echo "For example: $0 acos/x86_64/sisyphus out/acos-20210824-x86_64.tar repo out"
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
 	echo "If directory of main ostree repository doesn't exists, new repository will be created"
+	echo "Default values:"
+	echo "- <rootfs archive> \$DOCUMENT_ROOT/ACOS/rootfs_archives/<branch>/acos-latest-x86_64.tar"
+	echo "- <directory of main ostree repository> \$DOCUMENT_ROOT/ACOS/streams/<branch>/bare"
+	echo "- <directory for output archives> \$DOCUMENT_ROOT/ACOS/streams/<branch>/install_archives"
 	exit 1
 fi
 
@@ -16,12 +20,19 @@ then
         exit 1
 fi
 
-ROOTFS_ARCHIVE=$1
-MAIN_REPO=$2
-BRANCH=$3
-OUT_DIR=$4
-VAR_ARCH=$OUT_DIR/var.tar.xz
-ROOT_ARCH=$OUT_DIR/acos_root.tar.xz
+BRANCH=$1
+ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
+MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare}"
+OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives}"
+
+if [ ! -e $ROOTFS_ARCHIVE ]
+then
+	echo "ERROR: Rootfs archive must exist ($ROOTFS_ARCHIVE)"
+	exit 1
+fi
+
+[ -L $ROOTFS_ARCHIVE ] && ROOTFS_ARCHIVE=`realpath $ROOTFS_ARCHIVE`
+
 VERSION_DATE=`basename $ROOTFS_ARCHIVE | awk -F- '{print $2;}'`
 
 echo "Date for version: $VERSION_DATE"
@@ -38,6 +49,8 @@ then
 	exit 1
 fi
 
+VAR_ARCH=$OUT_DIR/var$VERSION_DATE.tar.xz
+ROOT_ARCH=$OUT_DIR/acos_root$VERSION_DATE.tar.xz
 
 rm -f $VAR_ARCH $ROOT_ARCH
 
