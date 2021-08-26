@@ -18,7 +18,7 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
 Добавление виртуального WWW-сервера в файле `/etc/httpd2/conf/sites-available/vhosts.conf`:
 ```
 <VirtualHost *:80>
-       ServerAdmin kaf@altlinus.org     
+       ServerAdmin acos@altlinux.org     
        DocumentRoot "/var/www/vhosts/getacos"
        ServerName getacos.altlinux.org
        ServerAlias acos.altlinux.org 
