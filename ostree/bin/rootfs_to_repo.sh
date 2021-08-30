@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 
+if [ $UID != 0 ]
+then
+	echo "Must run as superuser"
+	exit 1
+fi
+
 if [ $# = 0 ] 
 then
 	echo "Help: $0 <branch> [<rootfs archive>] [<directory of main ostree repository>] [<directory for output archives>]"
@@ -22,7 +28,7 @@ fi
 
 BRANCH=$1
 ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
-MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare}"
+MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo}"
 OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives}"
 
 if [ ! -e $ROOTFS_ARCHIVE ]
@@ -45,8 +51,8 @@ fi
 
 if [ ! -d $OUT_DIR ]
 then
-	echo "ERROR: Directory for output archives must exist"
-	exit 1
+	echo "WARNING: Crete directory for output archives"
+	mkdir -p $OUT_DIR
 fi
 
 VAR_ARCH=$OUT_DIR/var$VERSION_DATE.tar.xz
@@ -126,6 +132,6 @@ mkdir $ACOS_ROOT
 ostree admin init-fs --modern $ACOS_ROOT
 ostree pull-local --repo $ACOS_ROOT/ostree/repo $MAIN_REPO $BRANCH
 #Максимальное сжатие в многопоточном режиме
-tar -cf - -C $ACOS_ROOT . | xz -9 -c -T0 - > $ROOT_ARCH
+tar -cf - -C $ACOS_ROOT . | xz -9 -c  - > $ROOT_ARCH
 
 rm -rf $TMP_DIR
