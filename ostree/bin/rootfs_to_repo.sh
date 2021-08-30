@@ -30,7 +30,6 @@ BRANCH=$1
 ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo}"
 OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives}"
-
 if [ ! -e $ROOTFS_ARCHIVE ]
 then
 	echo "ERROR: Rootfs archive must exist ($ROOTFS_ARCHIVE)"
@@ -40,7 +39,6 @@ fi
 [ -L $ROOTFS_ARCHIVE ] && ROOTFS_ARCHIVE=`realpath $ROOTFS_ARCHIVE`
 
 VERSION_DATE=`basename $ROOTFS_ARCHIVE | awk -F- '{print $2;}'`
-
 echo "Date for version: $VERSION_DATE"
 
 if ! [[ "$VERSION_DATE" =~ ^[0-9]{8}$ ]] 
@@ -49,14 +47,16 @@ then
 	exit 1
 fi
 
-if [ ! -d $OUT_DIR ]
+VERSION_DIR=${OUT_DIR}/$VERSION_DATE
+
+if [ ! -d $VERSION_DIR ]
 then
-	echo "WARNING: Crete directory for output archives"
-	mkdir -p $OUT_DIR
+	echo "WARNING: Create version directory for output archives"
+	mkdir -p $VERSION_DIR
 fi
 
-VAR_ARCH=$OUT_DIR/var$VERSION_DATE.tar.xz
-ROOT_ARCH=$OUT_DIR/acos_root$VERSION_DATE.tar.xz
+VAR_ARCH=$VERSION_DIR/var.tar
+ROOT_ARCH=$VERSION_DIR/acos_root.tar
 
 rm -f $VAR_ARCH $ROOT_ARCH
 
@@ -115,7 +115,7 @@ rm -f $MAIN_ROOT/ostree.conf
 rm -rf $MAIN_ROOT/usr/etc
 mv $MAIN_ROOT/etc $MAIN_ROOT/usr/etc
 
-tar -cJf $VAR_ARCH -C $MAIN_ROOT var
+tar -cf $VAR_ARCH -C $MAIN_ROOT var
 rm -rf $MAIN_ROOT/var/*
 
 if [ ! -d $MAIN_REPO ]
@@ -132,6 +132,6 @@ mkdir $ACOS_ROOT
 ostree admin init-fs --modern $ACOS_ROOT
 ostree pull-local --repo $ACOS_ROOT/ostree/repo $MAIN_REPO $BRANCH
 #Максимальное сжатие в многопоточном режиме
-tar -cf - -C $ACOS_ROOT . | xz -9 -c  - > $ROOT_ARCH
+tar -cf  $ROOT_ARCH -C $ACOS_ROOT . 
 
 rm -rf $TMP_DIR

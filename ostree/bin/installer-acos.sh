@@ -1,23 +1,31 @@
 #!/bin/bash
 set -e
 
-if [ $# != 2 ] 
+if [ $# != 4 ] 
 then
-	echo "Help: $0 <device to install> <ignition configuration file>"
-	echo "For example: $0 /dev/sda /usr/share/acos/config_example.ign"
+	echo "Help: $0 <branch> <versiondate> <ignition configuration file> <device to install>"
+	echo "For example: $0 acos/x86_64/sisyphus 20210830 /usr/share/acos/config_example.ign /dev/sdb"
 	exit 1
 fi
 
-DEVICE=$1
-IGNITION_CONFIG=$2
+BRANCH=$1
+VERSIONDATE=$2
+IGNITION_CONFIG=$3
+DEVICE=$4
 BRANCH=acos/x86_64/sisyphus
 OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
-ARCHIVE_DIR=/usr/share/acos
+ARCHIVE_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives
 STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
+
+if [ ! -d $ARCHIVE_DIR ]
+then
+	echo "Archive dir $ARCHIVE_DIR don't exists"
+	exit 1
+fi
 
 if [ ! -b $DEVICE ]
 then
@@ -27,7 +35,7 @@ fi
 
 if [ ! -f $IGNITION_CONFIG ]
 then
-	echo "The second argument must be an existing file name"
+	echo "Ignition config don't exists"
 	exit 1
 fi
 
@@ -66,7 +74,7 @@ mkdir $MOUNT_DIR
 mount "$DEVICE"1 $MOUNT_DIR
 
 echo -e "${STEP_COLOR}*** Unpacking ostree repository ***${NO_COLOR}"
-tar xf $ARCHIVE_DIR/acos_root.tar.xz -C $MOUNT_DIR
+tar xf $ARCHIVE_DIR/acos_root.tar -C $MOUNT_DIR
 
 echo -e "${STEP_COLOR}*** GRUB installation ***${NO_COLOR}"
 grub-install --root-directory=$MOUNT_DIR $DEVICE
@@ -83,7 +91,7 @@ OSTREE_BOOT_PARTITION="/boot" ostree admin deploy alt:$BRANCH --sysroot $MOUNT_D
 
 echo -e "${STEP_COLOR}*** Filling in /var directory ***${NO_COLOR}"
 rm -rf $MOUNT_DIR/ostree/deploy/$OS_NAME/var
-tar xf $ARCHIVE_DIR/var.tar.xz -C $MOUNT_DIR/ostree/deploy/$OS_NAME/
+tar xf $ARCHIVE_DIR/var.tar -C $MOUNT_DIR/ostree/deploy/$OS_NAME/
 touch $MOUNT_DIR/ostree/deploy/$OS_NAME/var/.ostree-selabeled
 
 echo -e "${STEP_COLOR}*** Creating files for ignition ***${NO_COLOR}"
