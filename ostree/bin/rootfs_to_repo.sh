@@ -51,11 +51,12 @@ fi
 
 VERSION_DIR=${OUT_DIR}/$VERSION_DATE
 
-if [ ! -d $VERSION_DIR ]
+if [ -d $VERSION_DIR ]
 then
-	echo "WARNING: Create version directory for output archives"
-	mkdir -p $VERSION_DIR
+	echo "ERROR: Version for date $VERSION_DATE already exists."
+	exit 1
 fi
+mkdir -p $VERSION_DIR
 
 VAR_ARCH=$VERSION_DIR/var.tar
 ROOT_ARCH=$VERSION_DIR/acos_root.tar
@@ -64,7 +65,6 @@ rm -f $VAR_ARCH $ROOT_ARCH
 
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
 MAIN_ROOT=$TMP_DIR/root
-ACOS_ROOT=$TMP_DIR/acos_root
 
 mkdir -p $MAIN_ROOT
 tar xf $ROOTFS_ARCHIVE -C $MAIN_ROOT --exclude=./dev/tty --exclude=./dev/tty0 --exclude=./dev/console  --exclude=./dev/urandom --exclude=./dev/random --exclude=./dev/full --exclude=./dev/zero --exclude=/dev/null --exclude=./dev/pts/ptmx --exclude=./dev/null
@@ -155,10 +155,5 @@ ostree commit --repo=$MAIN_REPO --tree=dir=$MAIN_ROOT -b $BRANCH \
 	--no-xattrs --no-bindings --mode-ro-executables \
 	--add-metadata-string=version=sisyphus.$VERSION_DATE.0.0
 
-mkdir $ACOS_ROOT
-ostree admin init-fs --modern $ACOS_ROOT
-ostree pull-local --repo $ACOS_ROOT/ostree/repo $MAIN_REPO $BRANCH
-#Максимальное сжатие в многопоточном режиме
-tar -cf  $ROOT_ARCH -C $ACOS_ROOT . 
 
 rm -rf $TMP_DIR

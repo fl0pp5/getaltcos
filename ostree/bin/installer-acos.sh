@@ -28,6 +28,8 @@ OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
 ARCHIVE_DIR=$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH/$VERSIONDATE
+MAIN_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo
+
 STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
@@ -85,7 +87,8 @@ mkdir -p $MOUNT_DIR
 mount "$DEVICE"1 $MOUNT_DIR
 
 echo -e "${STEP_COLOR}*** Unpacking ostree repository ***${NO_COLOR}"
-tar xf $ARCHIVE_DIR/acos_root.tar -C $MOUNT_DIR
+ostree admin init-fs --modern $MOUNT_DIR
+ostree pull-local --repo $MOUNT_DIR/ostree/repo $MAIN_REPO $BRANCH
 
 echo -e "${STEP_COLOR}*** GRUB installation ***${NO_COLOR}"
 grub-install --root-directory=$MOUNT_DIR $DEVICE
