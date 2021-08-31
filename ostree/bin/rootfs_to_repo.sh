@@ -26,10 +26,10 @@ then
         exit 1
 fi
 
-BRANCH=$1
+BRANCH=${1:-acos/x86_64/sisyphus}
 ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo}"
-OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives}"
+OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH}"
 if [ ! -e $ROOTFS_ARCHIVE ]
 then
 	echo "ERROR: Rootfs archive must exist ($ROOTFS_ARCHIVE)"

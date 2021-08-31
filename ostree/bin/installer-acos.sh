@@ -1,22 +1,33 @@
 #!/bin/bash
 set -e
 
-if [ $# != 4 ] 
+lastVersionDate() {
+	lastDir=`ls -1d $DOCUMENT_ROOT/ACOS/install_archives/acos/x86_64/sisyphus/* | tail -1`
+	IFS=/
+	set -- $lastDir
+	while [ $# -gt 1 ]; do shift; done
+	echo $1
+}
+# MAIN
+if [ $# -gt 4 ] 
 then
-	echo "Help: $0 <branch> <versiondate> <ignition configuration file> <device to install>"
+	echo "Help: $0 [<branch>] [<versiondate>] [<ignition configuration file>] [<device to install>]"
 	echo "For example: $0 acos/x86_64/sisyphus 20210830 /usr/share/acos/config_example.ign /dev/sdb"
 	exit 1
 fi
 
-BRANCH=$1
+BRANCH=${1:-acos/x86_64/sisyphus}
 VERSIONDATE=$2
-IGNITION_CONFIG=$3
-DEVICE=$4
-BRANCH=acos/x86_64/sisyphus
+if [ -z "$VERSIONDATE" ]
+then
+	VERSIONDATE=`lastVersionDate`
+fi
+IGNITION_CONFIG=${3:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
+DEVICE=${4:-/dev/sdb}
 OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
-ARCHIVE_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives
+ARCHIVE_DIR=$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH/$VERSIONDATE
 STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
@@ -70,7 +81,7 @@ parted -a optimal $DEVICE mkpart primary ext4 2MIB 100% 2>&1 | grep -v /etc/fsta
 parted $DEVICE set 1 boot on 2>&1 | grep -v /etc/fstab
 #label "boot" is required for ignition to find partition.
 mkfs.ext4 -L boot "$DEVICE"1
-mkdir $MOUNT_DIR
+mkdir -p $MOUNT_DIR
 mount "$DEVICE"1 $MOUNT_DIR
 
 echo -e "${STEP_COLOR}*** Unpacking ostree repository ***${NO_COLOR}"
