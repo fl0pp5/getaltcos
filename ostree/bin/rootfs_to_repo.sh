@@ -76,7 +76,8 @@ ln -sf /run/systemd/resolve/resolv.conf $MAIN_ROOT/etc/resolv.conf
 chroot $MAIN_ROOT systemctl enable ignition-firstboot-complete.service ostree-remount.service sshd docker
 sed -i 's/^LABEL=ROOT\t/LABEL=boot\t/g' $MAIN_ROOT/etc/fstab
 sed -i 's/^AcceptEnv /#AcceptEnv /g' $MAIN_ROOT/etc/openssh/sshd_config
-sed -i 's/^# WHEEL_USERS ALL=(ALL) NOPASSWD: ALL$/WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/g' $MAIN_ROOT/etc/sudoers
+sed -i 's/^# WHEEL_USERS ALL=(ALL) ALL$/WHEEL_USERS ALL=(ALL) ALL/g' $MAIN_ROOT/etc/sudoers
+echo "zincati ALL=NOPASSWD: ALL" > $MAIN_ROOT/etc/sudoers.d/zincati
 sed -i 's|^HOME=/home$|HOME=/var/home|g' $MAIN_ROOT/etc/default/useradd
 echo "blacklist floppy" > $MAIN_ROOT/etc/modprobe.d/blacklist-floppy.conf
 mkdir $MAIN_ROOT/sysroot
