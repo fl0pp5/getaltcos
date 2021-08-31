@@ -114,6 +114,11 @@ echo
 echo -e "${STEP_COLOR}*** Setting root password ***${NO_COLOR}"
 chroot $MOUNT_DIR/ostree/boot.1/$OS_NAME/*/0/ passwd
 
+echo
+echo -e "${STEP_COLOR}*** Setting zincati password ***${NO_COLOR}"
+chroot $MOUNT_DIR/ostree/boot.1/$OS_NAME/*/0/ passwd zincati
+
+
 echo -e "${STEP_COLOR}*** Unmounting ***${NO_COLOR}"
 umount $MOUNT_DIR
 rm -r $MOUNT_DIR
