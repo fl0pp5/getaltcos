@@ -26,10 +26,11 @@ then
         exit 1
 fi
 
-BRANCH=$1
+BRANCH=${1:-acos/x86_64/sisyphus}
 ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo}"
-OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/install_archives}"
+OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH}"
+RPMS_DIR=$DOCUMENT_ROOT/ostree/data/rpms
 
 if [ ! -e $ROOTFS_ARCHIVE ]
 then
@@ -40,7 +41,6 @@ fi
 [ -L $ROOTFS_ARCHIVE ] && ROOTFS_ARCHIVE=`realpath $ROOTFS_ARCHIVE`
 
 VERSION_DATE=`basename $ROOTFS_ARCHIVE | awk -F- '{print $2;}'`
-
 echo "Date for version: $VERSION_DATE"
 
 if ! [[ "$VERSION_DATE" =~ ^[0-9]{8}$ ]] 
@@ -49,14 +49,16 @@ then
 	exit 1
 fi
 
-if [ ! -d $OUT_DIR ]
+VERSION_DIR=${OUT_DIR}/$VERSION_DATE
+
+if [ ! -d $VERSION_DIR ]
 then
-	echo "WARNING: Crete directory for output archives"
-	mkdir -p $OUT_DIR
+	echo "WARNING: Create version directory for output archives"
+	mkdir -p $VERSION_DIR
 fi
 
-VAR_ARCH=$OUT_DIR/var$VERSION_DATE.tar.xz
-ROOT_ARCH=$OUT_DIR/acos_root$VERSION_DATE.tar.xz
+VAR_ARCH=$VERSION_DIR/var.tar
+ROOT_ARCH=$VERSION_DIR/acos_root.tar
 
 rm -f $VAR_ARCH $ROOT_ARCH
 
@@ -74,7 +76,7 @@ ln -sf /run/systemd/resolve/resolv.conf $MAIN_ROOT/etc/resolv.conf
 chroot $MAIN_ROOT systemctl enable ignition-firstboot-complete.service ostree-remount.service sshd docker
 sed -i 's/^LABEL=ROOT\t/LABEL=boot\t/g' $MAIN_ROOT/etc/fstab
 sed -i 's/^AcceptEnv /#AcceptEnv /g' $MAIN_ROOT/etc/openssh/sshd_config
-sed -i 's/^# WHEEL_USERS ALL=(ALL) ALL$/WHEEL_USERS ALL=(ALL) ALL/g' $MAIN_ROOT/etc/sudoers
+sed -i 's/^# WHEEL_USERS ALL=(ALL) NOPASSWD: ALL$/WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/g' $MAIN_ROOT/etc/sudoers
 sed -i 's|^HOME=/home$|HOME=/var/home|g' $MAIN_ROOT/etc/default/useradd
 echo "blacklist floppy" > $MAIN_ROOT/etc/modprobe.d/blacklist-floppy.conf
 mkdir $MAIN_ROOT/sysroot
@@ -93,6 +95,30 @@ ln -sf var/mnt $MAIN_ROOT/mnt
 chroot $MAIN_ROOT chgrp wheel /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod 710 /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod ug+s /usr/bin/sudo /bin/su
+
+# TUNE zincati
+apt-get update -y -o RPM::RootDir=$MAIN_ROOT 
+apt-get install -y -o RPM::RootDir=$MAIN_ROOT vim-console apt-repo apt
+apt-get install -y -o RPM::RootDir=$MAIN_ROOT $RPMS_DIR/*.rpm sudo
+
+usermod -R $MAIN_ROOT -a -G root,wheel zincati
+
+mkdir -p $MAIN_ROOT/etc/ostree/remotes.d/
+echo "
+[remote \"acos\"]
+url=$REMOTEREPOURL
+gpg-verify=false
+" > $MAIN_ROOT/etc/ostree/remotes.d/acos.conf
+echo "
+# ALTLinux CoreOS Cincinnati backend
+[cincinnati]
+base_url=\"http://getacos.altlinux.org\"
+" > $MAIN_ROOT/etc/zincati/config.d/50-fedora-coreos-cincinnati.toml
+
+echo "$UPDATEIP getacos.altlinux.org" >> $MAIN_ROOT/etc/hosts
+
+chroot $MAIN_ROOT systemctl enable zincati.service
+
 
 KERNEL=`find $MAIN_ROOT/boot/ -type f -name "vmlinuz-*"`
 SHA=`sha256sum "$KERNEL" | awk '{print $1;}'`
@@ -115,7 +141,7 @@ rm -f $MAIN_ROOT/ostree.conf
 rm -rf $MAIN_ROOT/usr/etc
 mv $MAIN_ROOT/etc $MAIN_ROOT/usr/etc
 
-tar -cJf $VAR_ARCH -C $MAIN_ROOT var
+tar -cf $VAR_ARCH -C $MAIN_ROOT var
 rm -rf $MAIN_ROOT/var/*
 
 if [ ! -d $MAIN_REPO ]
@@ -132,6 +158,6 @@ mkdir $ACOS_ROOT
 ostree admin init-fs --modern $ACOS_ROOT
 ostree pull-local --repo $ACOS_ROOT/ostree/repo $MAIN_REPO $BRANCH
 #Максимальное сжатие в многопоточном режиме
-tar -cf - -C $ACOS_ROOT . | xz -9 -c  - > $ROOT_ARCH
+tar -cf  $ROOT_ARCH -C $ACOS_ROOT . 
 
 rm -rf $TMP_DIR
