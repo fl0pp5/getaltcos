@@ -104,7 +104,7 @@ echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "APT-GET_UPDATE=" . print_r($output, 1);
-exit(0);
+//exit(0);
 
 $cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref";
 echo "APT-GET_DIST-UPGRADECMD=$cmd\n";

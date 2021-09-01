@@ -26,7 +26,6 @@ class repo {
     $cmd = "ostree log $ref --repo=". $this->repoDir;
     //echo "CMD=$cmd<br>\n";
     exec($cmd, $output);
-
     #print_r($output);
     $commits = [];
     $commit = [];
@@ -63,7 +62,22 @@ class repo {
     return $commits;
   }
 
+  function fsck($commitId) {
+    $cmd = "sudo ostree fsck $commitId  --repo=". $this->repoDir;
+    //echo "CMD=$cmd<br>\n";
+    exec($cmd, $output);
+    //print_r($output);   
+    return $output; 
+  }
 
+  function ls($commitId, $flags='-X') {
+    $cmd = "sudo ostree ls -R $commitId $flags --repo=". $this->repoDir;
+    //echo "CMD=$cmd<br>\n";
+    exec($cmd, $output);
+    //print_r($output);   
+    return $output;
+  }       
+  
 
 
 }

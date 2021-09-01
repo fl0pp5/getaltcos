@@ -51,12 +51,17 @@ foreach ($archs as $arch) {
           $version = $commit['Version'];
           $date = $commit['Date'];
 ?>
-	        <li>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?></li>
+		<li>
+		  <ul>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?>
+		    <li><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Проверка целостности</a>
+                    <li><a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Содержание</a>
+		  </ul>
+            	</li>
 <?php 
         }
 ?>	  
   	      </ul>
-	      <li><a href='/ostree/update/?ref=<?= $ref?>&version=<?= $lastVersion?>'>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
+	      <li><a href='/ostree/update/?ref=<?= $ref?>&version=<?= $lastVersion?>' target=ostreeREST>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
           </ul>
 <?php 	  
       }
