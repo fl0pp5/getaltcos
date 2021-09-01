@@ -39,37 +39,37 @@ foreach ($archs as $arch) {
 	<ul>
 <?php
         $commits = $repo->getCommits($ref);
-	echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
-	$nCommits = count($commits);
-	$commitIds = array_keys($commits);
-	$lastCommitId = $nCommits > 0 ? $commitIds[$nCommits-1] : '';
-	echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
-	foreach ($commits as $commitId=>$commit) {
-	  $version = $commit['Version'];
-	  $date = $commit['Date'];
+        echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+        $nCommits = count($commits);
+        $commitIds = array_keys($commits);
+        $lastCommitId = $nCommits > 0 ? $commitIds[$nCommits-1] : '';
+        echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
+        foreach ($commits as $commitId=>$commit) {
+          $version = $commit['Version'];
+          $date = $commit['Date'];
 ?>
 	  <li>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?></li>
 <?php 
-	  }
+        }
 ?>	  
           <li><a href=''>Обновить ветку <?= $ref?></a></li>
 	  </ul>
 <?php 	  
-	}
+      }
 ?>
         </li>
       </ul>
     </li>
     <?php
-      }
+    }
     ?>
   </ul>
 <?php
-    }
+  }
 ?>
 </ul>
 <?php
-  }
 }
+
 
 
