@@ -1,36 +1,8 @@
 <?php
 //phpinfo();
-function listStreams() {
-  $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/x86_64");
-  $ret = [];
-  while ($entry=readdir($fd)) {
-    if (substr($entry,0,1) == '.') continue;
-    $ret[] = $entry;
-  } 
-  return $ret;
-}
-
-
-function getRefs($stream, $typeRepo='bare') {
-  $repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/x86_64/$stream/$typeRepo/repo";
-  $cmd = "ostree refs --repo=$repoDir";
-  $output = [];
-  //echo "<pre>CMD=$cmd</pre>\n";
-  exec($cmd, $output);
-  //echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
-  return $output; 
-}
-
-function getLog($ref, $typeRepo='bare') {
-  $repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref/$typeRepo/repo";
-  $cmd = "ostree log $ref --repo=$repoDir";
-  $output = [];
-  echo "<pre>CMD=$cmd</pre>\n";
-  exec($cmd, $output);
-  echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
-  return $output;  
-}
-
+$rootdir = $_SERVER['DOCUMENT_ROOT'];
+ini_set('include_path', "$rootdir");
+require_once('functions.php');
 ?>
 
 <html>
@@ -55,7 +27,7 @@ foreach ($streams as $stream) {
     <ul><h3>REF: <?= $ref?></h3>
     <li><a href='http://<?= $_SERVER['HTTP_HOST']?>/v1/graph/?stream=<?= $stream?>&basearch=x86_64' target='ostreeREST'>ГРАФ</a></li>
 <?php
-    $logs = getLog($ref);
+    $commits = getCommits($repo, $ref);      
 ?>
     </ul>
   </li>
