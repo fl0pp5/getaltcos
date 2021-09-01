@@ -24,7 +24,7 @@ foreach ($archs as $arch) {
   ?>
   <ul><h2>Поток: <?= $stream?></h2>
   <?php
-    $repo = new repo('acos/$arch/$stream');
+    $repo = new repo("acos/$arch/$stream");
     $refs = $repo->getRefs();
     foreach ($refs  as $ref) {
   ?>
@@ -47,7 +47,7 @@ foreach ($archs as $arch) {
 ?>
 
 
-
+<!--
 <h2>Sisyphus</h2>
 
 <h3>Граф</h3>
@@ -78,4 +78,4 @@ foreach ($archs as $arch) {
 <ul>
 <li>
 </ul>
-
+-->

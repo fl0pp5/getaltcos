@@ -21,5 +21,9 @@ class repos {
     return $ret;
   }
 
+  static function repoTypes() {
+    $ret = ['bare', 'archive'];
+    return $ret;
+  }
 
 }
