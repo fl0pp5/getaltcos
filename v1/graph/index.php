@@ -14,8 +14,12 @@ if (strlen($stream) ==0 ) {
   errorReply(2, 'Parameter stream is not defined');
 }
 
-$typeRepo = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
-$repo = new repo('acos/$basearch/$stream', $typeRepo);
+if (key_exists('repoType', $_REQUEST)) {
+  $repoType = $_REQUEST['repoType'];
+} else {
+  $repoType = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
+}  
+$repo = new repo("acos/$basearch/$stream", $repoType);
 
 $output=[];
 //echo "REPO=$repo<br>\n";

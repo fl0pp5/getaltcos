@@ -6,16 +6,18 @@ class repo {
   }
 
   function haveConfig() {
-    $ret = file_exists($this->repoDir."/config");
+    $configFile = $this->repoDir."/config";
+    $ret = file_exists($configFile);
+//    echo "<pre>CONFIGFILE=$configFile<br>\n";
     return $ret;
   }
 
   function getRefs() {
     $cmd = "ostree refs --repo=".$this->repoDir;
     $output = [];
-    echo "<pre>CMD=$cmd</pre>\n";
+//    echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
-    echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
+//    echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
     return $output;
   }
 
