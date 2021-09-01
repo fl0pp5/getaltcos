@@ -58,7 +58,7 @@ class repo {
           continue;
         }
       }
-    uasort($commits, 'cmpByDate');
+    uasort($commits, 'repo::cmpByDate');
     return $commits;
   }
 
@@ -78,6 +78,10 @@ class repo {
     return $output;
   }       
   
+  static function cmpByDate($c1, $c2) {
+  $ret = strcmp($c1['Date'], $c2['Date']);
+  return $ret;
+}
 
 
 }

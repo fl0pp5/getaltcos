@@ -65,10 +65,6 @@ echo $ret;
 
 
 # print_r($graph);
-function cmpByDate($c1, $c2) {
-  $ret = strcmp($c1['Date'], $c2['Date']);
-  return $ret;
-}
 
 function errorReply($num, $str) {
   http_response_code(400);

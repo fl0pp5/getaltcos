@@ -40,7 +40,7 @@ foreach ($archs as $arch) {
        	  <ul>
 <?php
         $commits = $repo->getCommits($ref);
-        echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+        // echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
 	$nCommits = count($commits);
 	if ($nCommits  <= 0) continue;
 	$commitIds = array_keys($commits);
@@ -54,9 +54,9 @@ foreach ($archs as $arch) {
 ?>
 		<li>
                     <input type='checkbox' value='<?= $commitId?>' />
-		  <ul>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?>a
+		  <ul>ID: <?= $commitId?><br>Версия: <?= $version?><br>Дата создания: <?= $date?>
 <?php
-	  if ($parent) { ?>Parent: <?= $parent?> <?php } 
+	  if ($parent) { ?><br>Parent: <?= $parent?> <?php } 
 ?>
 		    <li><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Проверка целостности</a>
                     <li><a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Содержание</a>
