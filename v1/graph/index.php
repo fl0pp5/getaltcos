@@ -1,4 +1,5 @@
 <?php
+//phpinfo();
 $basearch = @$_REQUEST['basearch'];
 if (strlen($basearch) ==0 ) {
   errorReply(1, 'Parameter basearch is not defined');
@@ -10,17 +11,20 @@ if (strlen($stream) ==0 ) {
 
 
 $output=[];
-$repo="/var/www/html/ACOS/streams/alt/$basearch/acos/$stream/archive/repo";
-
+$repoType = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
+$repo="/var/www/vhosts/getacos/ACOS/streams/acos/$basearch/$stream/$repoType/repo";
+//echo "REPO=$repo<br>\n";
 if (!file_exists("$repo/config")) {
   errorReply(3, "Stream $stream does not have reposutory");
 }
 
-$ref = "alt/$basearch/acos/$stream";
+$ref = "acos/$basearch/$stream";
 
-exec("ostree --repo=$repo log $ref", $output);
+$cmd = "ostree --repo=$repo log $ref";
+#echo "CMD=$cmd<br>\n";
+exec($cmd, $output);
 
-# print_r($output);
+#print_r($output);
 $commits = [];
 $commit = [];
 for ($i = 0; $i < count($output); $i++) {
