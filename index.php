@@ -21,27 +21,35 @@ foreach ($archs as $arch) {
   $streams = repos::listStreams($arch);
   echo "<pre>STREAMS=" . print_r($streams, 1) . "</pre>\n";
   foreach ($streams as $stream) {
-  ?>
-  <ul><h2>Поток: <?= $stream?></h2>
-  <?php
-    $repo = new repo("acos/$arch/$stream");
-    $refs = $repo->getRefs();
-    foreach ($refs  as $ref) {
-  ?>
+?>
+<ul><h2>Поток: <?= $stream?></h2>
+<?php
+    foreach (repos::repoTypes() as $repoType) {
+      $repo = new repo("acos/$arch/$stream", $repoType);
+?>
+  <ul><h3>Тип репозитория: <?= $repoType?>
+<?php
+      $refs = $repo->getRefs();
+      foreach ($refs  as $ref) {
+?>
     <li>
       <ul><h3>REF: <?= $ref?></h3>
-      <li><a href='http://<?= $_SERVER['HTTP_HOST']?>/v1/graph/?stream=<?= $stream?>&basearch=x86_64' target='ostreeREST'>ГРАФ</a></li>
-  <?php
-      $commits = $repo->getCommits($ref);
-      echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
-  ?>
+        <li><a href='http://<?= $_SERVER['HTTP_HOST']?>/v1/graph/?stream=<?= $stream?>&basearch=x86_64' target='ostreeREST'>ГРАФ</a></li>
+    <?php
+        $commits = $repo->getCommits($ref);
+        echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+?>
       </ul>
     </li>
-  <?php
-    }
-  ?>
+    <?php
+      }
+    ?>
   </ul>
-  <?php
+<?php
+    }
+?>
+</ul>
+<?php
   }
 }
 ?>

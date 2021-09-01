@@ -1,8 +1,8 @@
 <?php
 require_once "repos.php";
 class repo {
-  function __construct($ref, $typeRepo='bare') {
-    $this->repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref/$typeRepo/repo";
+  function __construct($ref, $repoType='bare') {
+    $this->repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref/$repoType/repo";
   }
 
   function haveConfig() {
