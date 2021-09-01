@@ -36,11 +36,11 @@ foreach ($archs as $arch) {
     <li>
       <ul><h3>REF: <?= $ref?></h3>
         <li><a href='/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'><?= $repoType?>-граф</a></li>
-        <li>Коммиты:
+        <li>Коммиты:<form action='/ostree/deleteCommits/'>
        	  <ul>
 <?php
         $commits = $repo->getCommits($ref);
-        //echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+        echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
 	$nCommits = count($commits);
 	if ($nCommits  <= 0) continue;
 	$commitIds = array_keys($commits);
@@ -49,18 +49,24 @@ foreach ($archs as $arch) {
         //echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
         foreach ($commits as $commitId=>$commit) {
           $version = $commit['Version'];
-          $date = $commit['Date'];
+	  $date = $commit['Date'];
+	  $parent = @$commit['Parent'];
 ?>
 		<li>
-		  <ul>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?>
+                    <input type='checkbox' value='<?= $commitId?>' />
+		  <ul>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?>a
+<?php
+	  if ($parent) { ?>Parent: <?= $parent?> <?php } 
+?>
 		    <li><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Проверка целостности</a>
                     <li><a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Содержание</a>
 		  </ul>
             	</li>
 <?php 
         }
-?>	  
-  	      </ul>
+?>	  	<button type='submit'>Удалить отмеченные коммиты</button>
+		</form>	
+	      </ul>
 	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
           </ul>
 <?php 	  
