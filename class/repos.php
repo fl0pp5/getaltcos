@@ -1,7 +1,7 @@
 <?php
 class repos {
 
-  static functions listArchs() {
+  static function listArchs() {
     $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/");
     $ret = [];
     while ($entry=readdir($fd)) {

@@ -1,45 +1,9 @@
 <?php
 //phpinfo();
-function getCommits($repo, $ref) {
-  $cmd = "ostree --repo=$repo log $ref";
-  //echo "CMD=$cmd<br>\n";
-  exec($cmd, $output);
 
-  #print_r($output);
-  $commits = [];
-  $commit = [];
-  for ($i = 0; $i < count($output); $i++) {
-      $str = trim($output[$i]);
-      #echo $str;
-      if (strlen($str) ==0 ) {
-        $commits[$commitId] = $commit;
-        $commit = [];
-        continue;
-      }
-      if (substr($str, 0, 6) == 'commit') {
-        $commitId = trim(substr($str,6));
-        $commit['commit'] = $commitId;
-        continue; 
-      }
-      if (substr($str, 0, 7) == 'Parent:') {
-        $parent = trim(substr($str,7));
-        $commit['Parent'] = $parent;
-        continue;
-      }
-      if (substr($str, 0, 5) == 'Date:') {
-        $date = trim(substr($str,5));
-        $commit['Date'] = $date;
-        continue;
-      }
-      if (substr($str, 0, 8) == 'Version:') {
-        $version = trim(substr($str, 8));
-        $commit['Version'] = $version;
-        continue;
-      }
-    }
-  uasort($commits, 'cmpByDate');
-  return $commits;
-}
+$rootdir = $_SERVER['DOCUMENT_ROOT'];
+ini_set('include_path', "$rootdir/class");
+require_once('repo.php');
 
 $basearch = @$_REQUEST['basearch'];
 if (strlen($basearch) ==0 ) {
@@ -50,17 +14,17 @@ if (strlen($stream) ==0 ) {
   errorReply(2, 'Parameter stream is not defined');
 }
 
+$typeRepo = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
+$repo = new repo('acos/$basearch/$stream', $typeRepo);
 
 $output=[];
-$repoType = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
-$repo="/var/www/vhosts/getacos/ACOS/streams/acos/$basearch/$stream/$repoType/repo";
 //echo "REPO=$repo<br>\n";
-if (!file_exists("$repo/config")) {
+if (!$repo->haveConfig()) {
   errorReply(3, "Stream $stream does not have reposutory");
 }
 
 $ref = "acos/$basearch/$stream";
-$commits = getCommits($repo, $ref);
+$commits = $repo->getCommits($ref);
 $index = 0;
 foreach($commits as $id => $commit) {
   $commits[$id]['index'] = "" . $index;

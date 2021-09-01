@@ -1,11 +1,17 @@
 <?php
+require_once "repos.php";
 class repo {
   function __construct($ref, $typeRepo) {
     $this->repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref/$typeRepo/repo";
   }
 
-  function getRefs($ref, $typeRepo='bare') {
-    $cmd = "ostree refs --repo=${this->repoDir}";
+  function haveConfig() {
+    $ret = file_exists($this->repoDir."/config");
+    return $ret;
+  }
+
+  function getRefs() {
+    $cmd = "ostree refs --repo=".$this->repoDir;
     $output = [];
     //echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
@@ -15,7 +21,7 @@ class repo {
 
 
   function getCommits($ref) {
-    $cmd = "ostree log $ref --repo=${this->repoDir}";
+    $cmd = "ostree log $ref --repo=". $this->repoDir;
     //echo "CMD=$cmd<br>\n";
     exec($cmd, $output);
 
