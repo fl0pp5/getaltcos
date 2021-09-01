@@ -1,40 +1,7 @@
 <?php
-function cmpByVersion($commit1, $commit2) {
-  $ret = strcmp($commit2['Version:'], $commit1['Version:']);
-  return $ret;
-}
-
-function getLastCommit($output) {
-  $commits = [];
-  $commit = [];
-  foreach ($output as $line) {
-    if (strlen(trim($line)) == 0 ) continue;
-    $parts = explode(' ', $line);
-    $name = $parts[0];
-    if (trim($name) == 'commit') {
-      if ($id = @$commit['id'] ) {
-        $commits[] = $commit;
-      }
-      $id = trim($parts[1]);
-      $commit['id'] = $id;
-    } else {
-      if (substr($name, -1) == ':') {
-        $value = trim(implode(' ', array_slice($parts, 1)));
-        $commit[$name] = $value;
-      }
-    }
-  }
-
-  if ($id = @$commit['id'] ) {
-    $commits[] = $commit;
-  }
-
-  uasort($commits, 'cmpByVersion');
-  echo "COMMITS=" . print_r($commits, 1);
-  $lastCommit = $commits[0];
-  return $lastCommit;
-}
-
+$rootdir = $_SERVER['DOCUMENT_ROOT'];
+ini_set('include_path', "$rootdir/class");
+require_once('repo.php');
 
 function isUpdated($output) {
   foreach ($output as $line) {
@@ -61,30 +28,27 @@ $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
 putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
 $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
-$version = $_REQUEST['version'];
+$commitId = $_REQUEST['commitId'];
 
-$repoBarePath = "$DOCUMENT_ROOT/ACOS/streams/$ref/bare/repo";
-$repoArchivePath = "$DOCUMENT_ROOT/ACOS/streams/$ref/archive/repo";
+$repoType = 'bare';
+$repo = new repo($ref, $repoType);
 
-if (!file_exists($repoBarePath)) {
+if (!$repo->haveConfig()) {
         echo "Bare repository $repoBarePath don't exists";
         exit(1);
 }
-echo "repoBarePath=$repoBarePath\n";
 
-$cmd = "$BINDIR/ostree_log.sh $ref";
-echo "LOGCMD=$cmd\n";
-$output = [];
-exec($cmd, $output);
-echo "LOG=" . print_r($output, 1);
-# exit(0);
+$commits = $repo->getCommits($ref);
 
-$lastCommit = getLastCommit($output);
-$lastCommitId = $lastCommit['id'];
+$commitIds = array_keys($commits);
+
+$lastCommitId = $commitIds[count($commitIds)-1];
+
+$lastCommit = $commits[$lastCommitId];
 $lastVersion = $lastCommit['Version:'];
 
-if ($lastVersion != $version) {
-  echo "Запрошенная версия $version не совпадает с последней версией $lastVersion\n";
+if ($lastCommitId != $commitId) {
+  echo "Запрошенная коммит версии $version не совпадает с последнем коммитом $commitId\n";
   exit(1);
 }
 

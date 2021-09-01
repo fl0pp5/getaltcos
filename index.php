@@ -61,7 +61,7 @@ foreach ($archs as $arch) {
         }
 ?>	  
   	      </ul>
-	      <li><a href='/ostree/update/?ref=<?= $ref?>&version=<?= $lastVersion?>' target=ostreeREST>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
+	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
           </ul>
 <?php 	  
       }

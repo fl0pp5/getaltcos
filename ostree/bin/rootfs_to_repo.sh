@@ -56,12 +56,11 @@ then
 	echo "ERROR: Version for date $VERSION_DATE already exists."
 	exit 1
 fi
-mkdir -p $VERSION_DIR
+mkdir -p $VERSION_DIR/0/0
 
-VAR_ARCH=$VERSION_DIR/var.tar
-ROOT_ARCH=$VERSION_DIR/acos_root.tar
+VAR_ARCH=$VERSION_DIR/0/0/var.tar
 
-rm -f $VAR_ARCH $ROOT_ARCH
+rm -f $VAR_ARCH 
 
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
 MAIN_ROOT=$TMP_DIR/root
