@@ -27,48 +27,47 @@ foreach ($archs as $arch) {
     foreach (repos::repoTypes() as $repoType) {
       $repo = new repo("acos/$arch/$stream", $repoType);
 ?>
-  <ul><h3>Тип репозитория: <?= $repoType?>
+  <li>
+    <ul><h3>Тип репозитория: <?= $repoType?></h3>
 <?php
       $refs = $repo->getRefs();
       foreach ($refs  as $ref) {
 ?>
     <li>
       <ul><h3>REF: <?= $ref?></h3>
-      <li><a href='http://<?= $_SERVER['HTTP_HOST']?>/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'>ГРАФ</a></li>
-      <li>Коммиты:
-	<ul>
+        <li><a href='/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'><?= $repoType?>-граф</a></li>
+        <li>Коммиты:
+       	  <ul>
 <?php
         $commits = $repo->getCommits($ref);
-        echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
-        $nCommits = count($commits);
-        $commitIds = array_keys($commits);
-        $lastCommitId = $nCommits > 0 ? $commitIds[$nCommits-1] : '';
-        echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
+        //echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+	$nCommits = count($commits);
+	if ($nCommits  <= 0) continue;
+	$commitIds = array_keys($commits);
+	$lastCommitId = $commitIds[$nCommits-1];
+	$lastVersion = $commits[$lastCommitId]['Version'];
+        //echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
         foreach ($commits as $commitId=>$commit) {
           $version = $commit['Version'];
           $date = $commit['Date'];
 ?>
-	  <li>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?></li>
+	        <li>Версия: <?= $version?><br>Дата создания: <?= $date?><br>ID: <?= $commitId?></li>
 <?php 
         }
 ?>	  
-          <li><a href=''>Обновить ветку <?= $ref?></a></li>
-	  </ul>
+  	      </ul>
+	      <li><a href='/ostree/update/?ref=<?= $ref?>&version=<?= $lastVersion?>'>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
+          </ul>
 <?php 	  
       }
 ?>
-        </li>
-      </ul>
-    </li>
+        </ul>
     <?php
     }
     ?>
   </ul>
 <?php
   }
-?>
-</ul>
-<?php
 }
 
 
