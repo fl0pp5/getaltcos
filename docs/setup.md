@@ -30,7 +30,6 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
 
 Создание каталогов логов сайта:
 ```
-# mkdir -p /var/www/vhosts/getacos
 # chown root:webmaster  /var/www/vhosts/getacos
 ```
 
@@ -42,8 +41,19 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
 Копирование репозитория (из под обвчного пользователя-разработчика):
 ```
 $ cd /var/www/vhosts/
-$ git clone https://gitea.basealt.ru/kaf/getacos
+$ git clone git@github.com:alt-cloud/getacos.git
 ```
+
+Включение поддержки втртуальных сайтов:
+```
+# a2ensite vhosts
+# mkdir /var/log/httpd2/getacos/
+# chmod 777  /var/log/httpd2/getacos
+# mkdir -p  /var/www/vhosts/getacos/ACOS/streams/acos/
+# chgrp root:webmaster /var/www/vhosts/getacos/ACOS/streams/acos/
+```
+
+
 
 Запуск сервера:
 ```
