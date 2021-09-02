@@ -12,7 +12,7 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
 Установка пакетов:
 ```
 # apt-get update
-# apt-get install apache2 apache2-mod_php7 php7_curl php7-mbsting php7
+# apt-get install -y apache2 apache2-mod_php7 php7-curl php7-mbstring php7
 ```
 
 Добавление виртуального WWW-сервера в файле `/etc/httpd2/conf/sites-available/vhosts.conf`:
