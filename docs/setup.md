@@ -49,6 +49,8 @@ $ git clone git@github.com:alt-cloud/getacos.git
 # a2ensite vhosts
 # mkdir /var/log/httpd2/getacos/
 # chmod 777  /var/log/httpd2/getacos
+# mkdir -p  /var/www/vhosts/getacos/ACOS/streams/acos/
+# chgrp root:webmaster /var/www/vhosts/getacos/ACOS/streams/acos/
 ```
 
 
