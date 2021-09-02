@@ -26,6 +26,8 @@ then
 	exit 1
 fi
 export IMAGEDIR="$DOCUMENT_ROOT/ACOS/rootfs_archives/acos/x86_64/$BRANCH/"
+sudo mkdir -p $IMAGEDIR
+sudo chmod 777 $IMAGEDIR
 
 if [ ! -d $IMAGEDIR ]
 then
