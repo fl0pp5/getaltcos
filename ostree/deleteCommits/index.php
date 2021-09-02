@@ -5,9 +5,23 @@ ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
 $ref = $_REQUEST['ref'];
 $repoType = $_REQUEST['repoType'];
-$commitId = $_REQUEST['commitId'];
+$ids = $_REQUEST['ids'];
 
 $repo = new repo($ref, $repoType);
+$commits = $repo->getCommits($ref);
+echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+//Оставить неудаляемые
+foreach ($ids as $id) {
+  unset($commits[$id]);
+}
+
+$repo->deleteRef($ref);
+foreach ($ids as $id) {
+  $repo->deleteCommit($id);
+}
+
+$revCommitIds = array_reverse(array_keys($commits));
+$repo->createRef($ref, $revCommitIds[0]);
 
 /*
 ostree  --repo=/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/bare/repo/ refs --delete acos/x86_64/sisyphus
