@@ -69,3 +69,10 @@ $ git clone git@github.com:alt-cloud/getacos.git
 ...
 <внешний_IP-адрес> getacos.altlinux.org acos.altlinux.org builds.acos.altlinux.org
 ```
+
+## Установка  mkimages-profiles
+
+```
+$ cd /var/www/vhosts
+$ git clone  git://git.altlinux.org/gears/m/mkimage-profiles.git
+```
