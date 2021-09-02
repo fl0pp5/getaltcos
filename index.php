@@ -84,8 +84,15 @@ foreach ($archs as $arch) {
 ?>	  	<button type='submit'>Удалить отмеченные коммиты</button>
 		</form>	
 	      </ul>
-	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST>Обновить <?= $repoType?>-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
-          </ul>
+<?php 
+	if ($repoType == 'bare') {
+?>
+	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST>Обновить bare-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
+              <li><a href='/ostree/pullToArchive/?ref=<?= $ref?>' target=ostreeREST>Скопировать  bare-репозиторий в archive-репозиторий</a></li>
+<?php 
+ 	}
+?>	
+	  </ul>
 <?php 	  
       }
 ?>

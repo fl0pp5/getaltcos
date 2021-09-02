@@ -49,16 +49,16 @@ then
 	exit 1
 fi
 
-VERSION_DIR=${OUT_DIR}/$VERSION_DATE
+VERSION_DIR=${OUT_DIR}/$VERSION_DATE/0/0
 
 if [ -d $VERSION_DIR ]
 then
 	echo "ERROR: Version for date $VERSION_DATE already exists."
 	exit 1
 fi
-mkdir -p $VERSION_DIR/0/0
+mkdir -p $VERSION_DIR
 
-VAR_ARCH=$VERSION_DIR/0/0/var.tar
+VAR_ARCH=$VERSION_DIR/var.tar
 
 rm -f $VAR_ARCH 
 
@@ -147,6 +147,7 @@ rm -rf $MAIN_ROOT/var/*
 if [ ! -d $MAIN_REPO ]
 then
 #Создание главного ostree-репозитория
+	mkdir -p $MAIN_REPO
 	ostree init --repo=$MAIN_REPO --mode=bare
 fi
 

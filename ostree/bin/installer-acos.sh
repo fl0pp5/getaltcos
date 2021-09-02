@@ -20,7 +20,7 @@ BRANCH=${1:-acos/x86_64/sisyphus}
 VERSIONDATE=$2
 if [ -z "$VERSIONDATE" ]
 then
-	VERSIONDATE=`lastVersionDate`
+	VERSIONDATE=`lastVersionDate`/0/0
 fi
 IGNITION_CONFIG=${3:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
 DEVICE=${4:-/dev/sdb}

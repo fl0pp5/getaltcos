@@ -2,6 +2,7 @@
 require_once "repos.php";
 class repo {
   function __construct($ref, $repoType='bare') {
+    $this->repoType = $repoType;		
     $this->repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref/$repoType/repo";
   }
 
@@ -10,6 +11,21 @@ class repo {
     $ret = file_exists($configFile);
 //    echo "<pre>CONFIGFILE=$configFile<br>\n";
     return $ret;
+  }
+
+  function init() {
+    $cmd = "sudo mkdir -p " .  $this->repoDir .' 2>&1';;
+    $output = [];
+    echo "<pre>CMD=$cmd</pre>\n";
+    exec($cmd, $output);    
+    echo "<pre>MKDIR=" . print_r($output, 1) . "</pre>\n";
+    $cmd = "sudo ostree init --mode=" . $this->repoType . " --repo=" .  $this->repoDir .' 2>&1';;
+    $output = [];
+    echo "<pre>CMD=$cmd</pre>\n";
+    exec($cmd, $output);
+    echo "<pre>INIT=" . print_r($output, 1) . "</pre>\n";
+
+
   }
 
   function getRefs() {

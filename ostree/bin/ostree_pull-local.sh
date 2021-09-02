@@ -10,6 +10,6 @@ then
   sudo mkdir -p  $repoArchivePath
   sudo ostree init --repo=$repoArchivePath --mode=archive
 fi
-sudo ostree pull-local --repo $repoArchivePath $repoBarePath
+sudo ostree pull-local --repo $repoArchivePath $repoBarePath $ref
 sudo ostree  summary --repo=$repoArchivePath --update
 
