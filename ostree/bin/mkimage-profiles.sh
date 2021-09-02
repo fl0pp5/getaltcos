@@ -6,7 +6,7 @@ then
 	exit 1
 fi
 
-if [ $# -ne 1 -o "$1" != 'sisyphus' -a $1 != 'p10' ]
+if [ $# -ne 1 -o "$1" != 'sisyphus' -a "$1" != 'p10' ]
 then
 	echo "Format: $0 sisyphus|p10"
 	exit 1
@@ -29,9 +29,7 @@ export IMAGEDIR="$DOCUMENT_ROOT/ACOS/rootfs_archives/acos/x86_64/$BRANCH/"
 
 if [ ! -d $IMAGEDIR ]
 then
-	echo "rootfs_archive directory $IMAGEDIR must exists"
-	echo "Run under root: mkdir -p  -m 777 $IMAGEDIR"
-	exit 1
+  sudo mkdir -p $IMAGEDIR
 fi
 
 MKIMAGEDIR="$DOCUMENT_ROOT/../mkimage-profiles"
