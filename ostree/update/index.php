@@ -45,7 +45,8 @@ $commitIds = array_keys($commits);
 $lastCommitId = $commitIds[count($commitIds)-1];
 
 $lastCommit = $commits[$lastCommitId];
-$lastVersion = $lastCommit['Version:'];
+# echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "</pre>";
+$lastVersion = $lastCommit['Version'];
 
 if ($lastCommitId != $commitId) {
   echo "Запрошенная коммит версии $version не совпадает с последнем коммитом $commitId\n";
@@ -56,46 +57,46 @@ list($stream, $date, $major, $minor) = explode('.', $lastVersion);
 $nextMinor = $minor + 1;
 $nextVersion = "$stream.$date.$major$nextMinor";
 
-$cmd = "$BINDIR/ostree_checkout.sh $ref $lastCommitId all";
+$cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId' '$lastVersion' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "CHECKOUT=" . print_r($output, 1);
+echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
 //exit(0);
 
 $cmd = "$BINDIR/apt-get_update.sh $ref";
 echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "APT-GET_UPDATE=" . print_r($output, 1);
+echo "APT-GET_UPDATE=<pre>" . print_r($output, 1). "</pre>";
 //exit(0);
 
 $cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref";
 echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "APT-GET_DIST-UPGRADE=" . print_r($output, 1);
+echo "APT-GET_DIST-UPGRADE=<pre>" . print_r($output, 1). "</pre>";
 
 if (!isUpdated($output)) {
   echo "Обновлений нет";
   exit(0);
 }
 
-$cmd = "$BINDIR/syncUpdates.sh $ref";
+$cmd = "$BINDIR/syncUpdates.sh $ref $nextVersion";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "SYNCUPDATES=" . print_r($output, 1);
+echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
 
 $cmd = "$BINDIR/ostree_commit.sh $ref $lastCommitId $nextVersion";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "COMMIT=" . print_r($output, 1);
+echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/ostree_pull-local.sh";
+$cmd = "$BINDIR/ostree_pull-local.sh $ref";
 echo "PULLCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "PULL=" . print_r($output, 1);
+echo "PULL=<pre>" . print_r($output, 1). "</pre>";
 

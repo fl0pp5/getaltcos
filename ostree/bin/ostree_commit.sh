@@ -17,5 +17,5 @@ newCommitId=`sudo ostree commit \
         --add-metadata-string=version=$version
 `
 sudo ostree  summary --repo=$repoBarePath --update
-mv $lastCommitId $newCommitId
-ln -sf $newCommitId root
+sudo mv $lastCommitId $newCommitId
+sudo ln -sf $newCommitId root
