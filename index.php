@@ -8,6 +8,20 @@ require_once('repo.php');
 <html>
 <head>
 <title>Links</title>
+<script>
+function markAfter(input) {
+  if (!input.checked) return;
+  var inputs = document.getElementsByTagName('input');
+  var n;
+  for (n=0; n < inputs.length && inputs[n].value != input.value; n+=1);
+  for (n=n+1; n < inputs.length; n+=1) {
+    if (inputs[n].type='checkbox') {
+      inputs[n].checked = true;
+    }
+  }
+  
+}
+</script>
 </head>
 <body>
 
@@ -36,7 +50,10 @@ foreach ($archs as $arch) {
     <li>
       <ul><h3>REF: <?= $ref?></h3>
         <li><a href='/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'><?= $repoType?>-граф</a></li>
-        <li>Коммиты:<form action='/ostree/deleteCommits/'>
+	<li>Коммиты:
+	  <form action='/ostree/deleteCommits/' target='ostreeREST'>
+	  <input type='hidden' name='ref' value='<?= $ref?>' />
+	  <input type='hidden' name='repoType' value='<?= $repoType?>' />
        	  <ul>
 <?php
         $commits = $repo->getCommits($ref);
@@ -53,7 +70,7 @@ foreach ($archs as $arch) {
 	  $parent = @$commit['Parent'];
 ?>
 		<li>
-                    <input type='checkbox' value='<?= $commitId?>' />
+                    <input type='checkbox' value='<?= $commitId?>' name='ids[]' onClick='markAfter(this)' />
 		  <ul>ID: <?= $commitId?><br>Версия: <?= $version?><br>Дата создания: <?= $date?>
 <?php
 	  if ($parent) { ?><br>Parent: <?= $parent?> <?php } 
