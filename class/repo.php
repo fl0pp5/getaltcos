@@ -21,6 +21,32 @@ class repo {
     return $output;
   }
 
+  function deleteRef($ref) {
+    $cmd = "sudo ostree refs --delete $ref --repo=".$this->repoDir .' 2>&1';;
+    $output = [];
+    echo "<pre>CMD=$cmd</pre>\n";
+    exec($cmd, $output);
+    echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
+    return $output;
+  }
+
+  function createRef($ref, $commitId) {
+    $cmd = "sudo ostree refs --create=$ref $commitId --repo=".$this->repoDir . ' 2>&1';
+    $output = [];
+    echo "<pre>CMD=$cmd</pre>\n";
+    exec($cmd, $output);
+    echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
+    return $output;	  
+  }
+
+  function deleteCommit($commitId) {
+    $cmd = "sudo ostree prune --delete-commit $commitId --repo=".$this->repoDir . ' 2>&1';;
+    $output = [];
+    echo "<pre>CMD=$cmd</pre>\n";
+    exec($cmd, $output);
+    echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
+    return $output;	  
+  }
 
   function getCommits($ref) {
     $cmd = "ostree log $ref --repo=". $this->repoDir;
@@ -72,7 +98,7 @@ class repo {
 
   function ls($commitId, $flags='-X') {
     $cmd = "sudo ostree ls -R $commitId $flags --repo=". $this->repoDir;
-    //echo "CMD=$cmd<br>\n";
+    echo "$cmd<br>\n";
     exec($cmd, $output);
     //print_r($output);   
     return $output;
