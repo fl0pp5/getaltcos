@@ -24,6 +24,7 @@ function isUpdated($output) {
 //phpinfo();//exit(0);
 
 //MAIN
+$startTime = time();
 $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
 putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
 $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
@@ -54,8 +55,8 @@ if ($lastCommitId != $commitId) {
 }
 
 list($stream, $date, $major, $minor) = explode('.', $lastVersion);
-$nextMinor = $minor + 1;
-$nextVersion = "$stream.$date.$major$nextMinor";
+$nextMinor = intval($minor) + 1;
+$nextVersion = "$stream.$date.$major.$nextMinor";
 
 $cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId' '$lastVersion' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
@@ -79,6 +80,8 @@ echo "APT-GET_DIST-UPGRADE=<pre>" . print_r($output, 1). "</pre>";
 
 if (!isUpdated($output)) {
   echo "Обновлений нет";
+  $endTime = time();
+  echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
   exit(0);
 }
 
@@ -99,4 +102,6 @@ echo "PULLCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "PULL=<pre>" . print_r($output, 1). "</pre>";
+$endTime = time();
+echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
 

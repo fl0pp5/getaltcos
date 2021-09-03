@@ -16,6 +16,7 @@ sudo du -s root/
 sudo rm -f ./upper/etc;
 sudo mkdir -p $varDir
 sudo tar  -C ./upper -cvf $varFile var
+sudo rm -rf ./upper/var
 #ls -l ./merged;
 #echo 'UPPER=';ls -lR ./upper;
 cd upper

@@ -106,7 +106,7 @@ usermod -R $MAIN_ROOT -a -G root,wheel zincati
 mkdir -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "
 [remote \"acos\"]
-url=$REMOTEREPOURL
+url=http://getacos.altlinux.org/ACOS/streams/$BRANCH/archive/repo/
 gpg-verify=false
 " > $MAIN_ROOT/etc/ostree/remotes.d/acos.conf
 echo "
