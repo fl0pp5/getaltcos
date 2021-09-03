@@ -6,20 +6,24 @@ lastCommitId=$2
 version=$3
 clear=$4
 repoBarePath="$DOCUMENT_ROOT/ACOS/streams/$ref/bare/repo";
-rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
+rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots"
+rootsPathOld="$DOCUMENT_ROOT/ACOS/streams/$ref/rootsi.$$";
+
 
 varSubDir=`echo $version | sed -e 's/\./\//g'`
-varFile=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/var.tar
-if [ ! -f $varFile ]
+#varFile=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/var.tar
+varDir=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/var
+if [ ! -d $varDir ]
 then
-  echo "var archive $varFile don't exists"
+  echo "var dicrectory $varDir don't exists"
   exit 1
 fi
 
 if [  "$clear" = 'all'  ]
 then
-  sudo umount $rootsPath/merged
-  sudo rm -rf $rootsPath
+  sudo mv $rootsPath $rootsPathOld 
+  sudo umount $rootsPathOld/merged
+  sudo  rm -rf $rootsPathOld
   sudo mkdir -p $rootsPath
 fi
 cd $rootsPath
@@ -41,4 +45,8 @@ sudo mount -t overlay overlay -o lowerdir=$lastCommitId,upperdir=./upper,workdir
 
 cd merged
 sudo ln -sf  /usr/etc/ ./etc;
-sudo tar xvf $varFile
+sudo rsync -av $varDir .
+sudo mkdir -p ./run/lock ./run/systemd/resolve/ ./tmp/.private/root/
+sudo cp /etc/resolv.conf .//run/systemd/resolve/resolv.conf
+
+# sudo tar xvf $varFile

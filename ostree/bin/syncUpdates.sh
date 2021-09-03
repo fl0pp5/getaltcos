@@ -6,20 +6,18 @@ version=$2
 rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
 commitPath="$rootsPath/root"
 varSubDir=`echo $version | sed -e 's/\./\//g'`
-varDir=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir
-varFile=$varDir/var.tar
+varDir=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/
+# varFile=$varDir/var.tar
 
 cd $rootsPath/;
 sudo umount merged
 sudo du -s upper
 sudo du -s root/
-sudo rm -f ./upper/etc;
+sudo rm -f ./upper/etc ./root/etc;
 sudo mkdir -p $varDir
-sudo tar  -C ./upper -cvf $varFile var
-sudo rm -rf ./upper/var
-#ls -l ./merged;
-#echo 'UPPER=';ls -lR ./upper;
 cd upper
+sudo rsync -av var $varDir
+sudo rm -rf ./var ./run
 delete=`sudo find . -type c`;
 echo DELETE $delete
 sudo rm -rf $delete
