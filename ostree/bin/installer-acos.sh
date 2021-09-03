@@ -105,7 +105,8 @@ OSTREE_BOOT_PARTITION="/boot" ostree admin deploy alt:$BRANCH --sysroot $MOUNT_D
 
 echo -e "${STEP_COLOR}*** Filling in /var directory ***${NO_COLOR}"
 rm -rf $MOUNT_DIR/ostree/deploy/$OS_NAME/var
-tar xf $ARCHIVE_DIR/var.tar -C $MOUNT_DIR/ostree/deploy/$OS_NAME/
+rsync -av $ARCHIVE_DIR/var $MOUNT_DIR/ostree/deploy/$OS_NAME/
+# tar xf $ARCHIVE_DIR/var.tar -C $MOUNT_DIR/ostree/deploy/$OS_NAME/
 touch $MOUNT_DIR/ostree/deploy/$OS_NAME/var/.ostree-selabeled
 
 echo -e "${STEP_COLOR}*** Creating files for ignition ***${NO_COLOR}"

@@ -54,13 +54,15 @@ VERSION_DIR=${OUT_DIR}/$VERSION_DATE/0/0
 if [ -d $VERSION_DIR ]
 then
 	echo "ERROR: Version for date $VERSION_DATE already exists."
+	echo "Try: rm -rf $VERSION_DIR"
 	exit 1
 fi
+rm -rf $VERSION_DIR
+
 mkdir -p $VERSION_DIR
 
-VAR_ARCH=$VERSION_DIR/var.tar
+# VAR_ARCH=$VERSION_DIR/var.tar
 
-rm -f $VAR_ARCH 
 
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
 MAIN_ROOT=$TMP_DIR/root
@@ -141,7 +143,9 @@ rm -f $MAIN_ROOT/ostree.conf
 rm -rf $MAIN_ROOT/usr/etc
 mv $MAIN_ROOT/etc $MAIN_ROOT/usr/etc
 
-tar -cf $VAR_ARCH -C $MAIN_ROOT var
+rsync -av $MAIN_ROOT/var $VERSION_DIR 
+
+# tar -cf $VAR_ARCH -C $MAIN_ROOT var
 rm -rf $MAIN_ROOT/var/*
 
 if [ ! -d $MAIN_REPO ]

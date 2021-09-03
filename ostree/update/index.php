@@ -77,6 +77,7 @@ echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "APT-GET_DIST-UPGRADE=<pre>" . print_r($output, 1). "</pre>";
+// exit(0);
 
 if (!isUpdated($output)) {
   echo "Обновлений нет";
