@@ -63,8 +63,8 @@ foreach ($archs as $arch) {
 	$commitIds = array_keys($commits);
 	$lastCommitId = $commitIds[$nCommits-1];
 	$lastVersion = $commits[$lastCommitId]['Version'];
-        //echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
-        foreach ($commits as $commitId=>$commit) {
+	//echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
+	foreach ($commits as $commitId=>$commit) {
           $version = $commit['Version'];
 	  $date = $commit['Date'];
 	  $parent = @$commit['Parent'];
@@ -75,8 +75,28 @@ foreach ($archs as $arch) {
 <?php
 	  if ($parent) { ?><br>Parent: <?= $parent?> <?php } 
 ?>
-		    <li><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Проверка целостности</a>
-                    <li><a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Содержание</a>
+		    <li><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Проверка целостности коммта</a>
+		    <li><a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Содержание коммита</a>
+                    <li><a href='/ostree/lsvar/?ref=<?= $ref?>&repoType=<?= $repoType?>&version=<?= $version?>' target=ostreeREST>Содержание каталога /var</a>
+
+		    <li> 
+			<select name='cmpCommitId'> 
+<?php
+	  $nCommit = -1;
+	  foreach ($commitIds as $cmpCommitId) {
+            $nCommit += 1;		  
+	    if ($cmpCommitId == $commitId) continue;
+	    $nextCommitId = $commitIds[$nCommit+1];
+	    $checked = $nCommit > 0 && $commitId == $nextCommitId ? 'selected' : '';
+	    // echo "$commitId == $nextCommitId<br>\n";
+	    $cmpVersion = $commits[$cmpCommitId]['Version'];
+?>
+			 <option value='<?= $cmpCommitId?>' <?= $checked?>><?= $cmpVersion?> <?= substr($cmpCommitId, 0, 4)?>... </option>  
+<?php
+	  }
+?>
+			</select> <span onClick='alert("Click")' style='color:blue;'>Сравнить</span> 
+		    </li>	
 		  </ul>
             	</li>
 <?php 
