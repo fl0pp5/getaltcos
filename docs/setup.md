@@ -25,6 +25,9 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
        ServerAlias builds.acos.altlinux.org
        ErrorLog "/var/log/httpd2/getacos/error.log"
        CustomLog "/var/log/httpd2/getacos/access.log" common
+       <Directory /var/www/vhosts/getacos>
+         Options Indexes FollowSymLinks
+       </Directory>       
 </VirtualHost>
 ```
 
