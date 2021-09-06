@@ -24,7 +24,6 @@ BRANCH=${1:-acos/x86_64/sisyphus}
 ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo}"
 OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH}"
-RPMS_DIR=$DOCUMENT_ROOT/ostree/data/rpms
 
 if [ ! -e $ROOTFS_ARCHIVE ]
 then
@@ -91,11 +90,6 @@ ln -sf var/mnt $MAIN_ROOT/mnt
 chroot $MAIN_ROOT chgrp wheel /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod 710 /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod ug+s /usr/bin/sudo /bin/su
-
-# TUNE zincati
-apt-get update -y -o RPM::RootDir=$MAIN_ROOT 
-apt-get install -y -o RPM::RootDir=$MAIN_ROOT vim-console apt-repo apt
-apt-get install -y -o RPM::RootDir=$MAIN_ROOT $RPMS_DIR/*.rpm sudo
 
 usermod -R $MAIN_ROOT -a -G root,wheel zincati
 
