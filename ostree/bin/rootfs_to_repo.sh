@@ -10,7 +10,7 @@ then
 	echo "Default values:"
 	echo "- <rootfs archive> \$DOCUMENT_ROOT/ACOS/rootfs_archives/<branch>/acos-latest-x86_64.tar"
 	echo "- <directory of main ostree repository> \$DOCUMENT_ROOT/ACOS/streams/<branch>/bare"
-	echo "- <directory for output archives> \$DOCUMENT_ROOT/ACOS/streams/<branch>/install_archives"
+	echo "- <directory for output archives> \$DOCUMENT_ROOT/ACOS/streams/<branch>/vars"
 	exit 1
 fi
 
@@ -21,9 +21,10 @@ then
 fi
 
 BRANCH=${1:-acos/x86_64/sisyphus}
-ROOTFS_ARCHIVE="${2:-$DOCUMENT_ROOT/ACOS/rootfs_archives/$BRANCH/acos-latest-x86_64.tar}"
-MAIN_REPO="${3:-$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo}"
-OUT_DIR="${4:-$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH}"
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCH
+ROOTFS_ARCHIVE="${2:-$BRANCH_REPO/mkimage-profiles/acos-latest-x86_64.tar}"
+MAIN_REPO="${3:-$BRANCH_REPO/bare/repo}"
+OUT_DIR="${4:-$BRANCH_REPO/vars}"
 RPMS_DIR=$DOCUMENT_ROOT/ostree/data/rpms
 
 if [ ! -e $ROOTFS_ARCHIVE ]
@@ -55,9 +56,6 @@ rm -rf $VERSION_DIR
 
 mkdir -p $VERSION_DIR
 
-# VAR_ARCH=$VERSION_DIR/var.tar
-
-
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
 MAIN_ROOT=$TMP_DIR/root
 
@@ -68,7 +66,7 @@ tar xf $ROOTFS_ARCHIVE -C $MAIN_ROOT --exclude=./dev/tty --exclude=./dev/tty0 --
 rm -f $MAIN_ROOT/etc/resolv.conf
 ln -sf /run/systemd/resolve/resolv.conf $MAIN_ROOT/etc/resolv.conf
 
-chroot $MAIN_ROOT systemctl enable ignition-firstboot-complete.service ostree-remount.service sshd docker
+chroot $MAIN_ROOT systemctl enable ostree-remount.service sshd docker
 sed -i 's/^LABEL=ROOT\t/LABEL=boot\t/g' $MAIN_ROOT/etc/fstab
 sed -i 's/^AcceptEnv /#AcceptEnv /g' $MAIN_ROOT/etc/openssh/sshd_config
 sed -i 's/^# WHEEL_USERS ALL=(ALL) ALL$/WHEEL_USERS ALL=(ALL) ALL/g' $MAIN_ROOT/etc/sudoers
@@ -93,9 +91,9 @@ chroot $MAIN_ROOT chmod 710 /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod ug+s /usr/bin/sudo /bin/su
 
 # TUNE zincati
-apt-get update -y -o RPM::RootDir=$MAIN_ROOT 
-apt-get install -y -o RPM::RootDir=$MAIN_ROOT vim-console apt-repo apt
-apt-get install -y -o RPM::RootDir=$MAIN_ROOT $RPMS_DIR/*.rpm sudo
+#apt-get update -y -o RPM::RootDir=$MAIN_ROOT 
+#apt-get install -y -o RPM::RootDir=$MAIN_ROOT vim-console apt-repo apt
+#apt-get install -y -o RPM::RootDir=$MAIN_ROOT $RPMS_DIR/*.rpm sudo
 
 usermod -R $MAIN_ROOT -a -G root,wheel zincati
 

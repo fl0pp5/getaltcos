@@ -2,7 +2,7 @@
 set -e
 
 lastVersionDate() {
-	lastDir=`ls -1d $DOCUMENT_ROOT/ACOS/install_archives/acos/x86_64/sisyphus/* | tail -1`
+	lastDir=`ls -1d  $VARS_DIR/* | tail -1`
 	IFS=/
 	set -- $lastDir
 	while [ $# -gt 1 ]; do shift; done
@@ -18,21 +18,25 @@ fi
 
 BRANCH=${1:-acos/x86_64/sisyphus}
 VERSIONDATE=$2
-if [ -z "$VERSIONDATE" ]
-then
-	VERSIONDATE=`lastVersionDate`/0/0
-fi
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCH
 IGNITION_CONFIG=${3:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
 DEVICE=${4:-/dev/sdb}
 OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
-ARCHIVE_DIR=$DOCUMENT_ROOT/ACOS/install_archives/$BRANCH/$VERSIONDATE
-MAIN_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCH/bare/repo
+export VARS_DIR=$BRANCH_REPO/vars
+MAIN_REPO=$BRANCH_REPO/bare/repo
 
 STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
+
+if [ -z "$VERSIONDATE" ]
+then
+        VERSIONDATE=`lastVersionDate`/0/0
+fi
+
+ARCHIVE_DIR=$VARS_DIR/$VERSIONDATE
 
 if [ ! -d $ARCHIVE_DIR ]
 then

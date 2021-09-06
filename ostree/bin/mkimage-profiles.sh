@@ -25,7 +25,9 @@ then
 	echo "Variable DOCUMENT_ROOT must be defined"
 	exit 1
 fi
-export IMAGEDIR="$DOCUMENT_ROOT/ACOS/rootfs_archives/acos/x86_64/$BRANCH/"
+BRANCH=${1:-acos/x86_64/sisyphus}
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/acos/x86_64/$BRANCH
+export IMAGEDIR="$BRANCH_REPO/mkimage-profiles"
 sudo mkdir -p $IMAGEDIR
 sudo chmod 777 $IMAGEDIR
 
