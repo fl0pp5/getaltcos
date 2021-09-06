@@ -1,12 +1,6 @@
 #!/bin/sh
 set -e
 
-if [ $UID != 0 ]
-then
-	echo "Must run as superuser"
-	exit 1
-fi
-
 if [ $# = 0 ] 
 then
 	echo "Help: $0 <branch> [<rootfs archive>] [<directory of main ostree repository>] [<directory for output archives>]"
