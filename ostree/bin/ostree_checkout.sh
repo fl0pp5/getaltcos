@@ -5,14 +5,12 @@ ref=$1
 lastCommitId=$2
 version=$3
 clear=$4
-repoBarePath="$DOCUMENT_ROOT/ACOS/streams/$ref/bare/repo";
-rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots"
-rootsPathOld="$DOCUMENT_ROOT/ACOS/streams/$ref/rootsi.$$";
-
-
-varSubDir=`echo $version | sed -e 's/\./\//g'`
-#varFile=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/var.tar
-varDir=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/var
+branchPath="$DOCUMENT_ROOT/ACOS/streams/$ref"
+repoBarePath="$branchPath/bare/repo";
+rootsPath="$branchPath/roots"
+rootsPathOld="$branchPath/rootsi.$$";
+ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3" 
+varDir="$branchPath/$varSubDir/"
 if [ ! -d $varDir ]
 then
   echo "var dicrectory $varDir don't exists"

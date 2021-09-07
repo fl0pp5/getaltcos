@@ -5,15 +5,16 @@ ref=$1
 version=$2
 rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
 commitPath="$rootsPath/root"
-varSubDir=`echo $version | sed -e 's/\./\//g'`
-varDir=$DOCUMENT_ROOT/ACOS/install_archives/$ref/../$varSubDir/
-# varFile=$varDir/var.tar
+ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3"
+varDir=$branchPath/$varSubDir
+ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3"
+varDir=$branchPath/$varSubDir
 
 cd $rootsPath/;
-sudo umount merged
 sudo du -s upper
 sudo du -s root/
 sudo rm -f ./upper/etc ./root/etc;
+
 sudo mkdir -p $varDir
 cd upper
 sudo rsync -av var $varDir
@@ -26,9 +27,10 @@ sudo rm -rf $delete
 cd ../upper;
 #echo 'RM==='
 #find . -type c -exec echo sudo rm -rf  $commitPath/{} 2>&1\;
-echo 'CPIO===';
-sudo find . -depth | sudo cpio -plmdu $commitPath/ 2>&1;
+sudo find . -depth | (cd ../merged;sudo cpio -plmdu $commitPath/) 2>&1;
+
 cd ..
 sudo du -s upper
 sudo du -s root/
+sudo umount merged
 
