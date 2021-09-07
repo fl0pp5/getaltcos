@@ -29,7 +29,7 @@ then
 	echo "Variable DOCUMENT_ROOT must be defined"
 	exit 1
 fi
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/acos/x86_64/$ref
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$ref
 export IMAGEDIR="$BRANCH_REPO/mkimage-profiles"
 sudo mkdir -p $IMAGEDIR
 sudo chmod 777 $IMAGEDIR
