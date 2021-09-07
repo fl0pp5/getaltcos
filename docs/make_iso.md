@@ -94,14 +94,16 @@ OSTREE_BRANCH=acos/$ARCH/$BRANCH
 make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out vm/acos.tar
 ```
 
-Создать коммит в репозитории ostree. В команде указать архив, созданный предыдущей командой
+Создать коммит в репозитории ostree.
 ```
-sudo ./getacos/ostree/bin/rootfs_to_repo.sh $OSTREE_BRANCH out/acos-20210906-x86_64.tar $MAIN_REPO out
+VERSION_DATE=$(basename `realpath out/acos-latest-x86_64.tar`| awk -F- '{print $2;}')
+sudo rm -rf out/$VERSION_DATE/0/0
+sudo ./getacos/ostree/bin/rootfs_to_repo.sh $OSTREE_BRANCH out/acos-latest-x86_64.tar $MAIN_REPO out
 ```
 
 Создать пакет acos-archives с архивами для установки. Указать путь к каталогу var, созданному предыдущей командой в каталоге out (скорректировать дату).
 ```
-sudo tar -cf - -C out/20210906/0/0 var | xz -9 -c - > rpmbuild/SOURCES/var.tar.xz
+sudo tar -cf - -C out/$VERSION_DATE/0/0 var | xz -9 -c - > rpmbuild/SOURCES/var.tar.xz
 
 sudo rm -rf acos_root
 mkdir acos_root
