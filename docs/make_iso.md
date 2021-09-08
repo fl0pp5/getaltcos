@@ -3,7 +3,7 @@
 ## Подготовка ОС
 Установить пакеты
 ```
-sudo apt-get install mkimage mkimage-preinstall hasher git-core
+sudo apt-get install mkimage mkimage-preinstall hasher git-core ostree
 ```
 
 Добавить своего пользователя (в данном случае - keremet) в группы, необходимые для запуска hasher
@@ -11,9 +11,9 @@ sudo apt-get install mkimage mkimage-preinstall hasher git-core
 sudo hasher-useradd keremet
 ```
 
-Перелогиниться.
-
 В /etc/hasher-priv/system добавить строчку: allowed_mountpoints=/proc
+
+Перелогиниться.
 
 ## Подготовка каталога для сборки
 
