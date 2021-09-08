@@ -40,7 +40,7 @@ echo "Date for version: $VERSION_DATE"
 
 if ! [[ "$VERSION_DATE" =~ ^[0-9]{8}$ ]] 
 then
-	echo "ERROR: The name of the rootfs archive contains an incorrect date"
+	echo "ERROR: The name of the rootfs archive ($ROOTFS_ARCHIVE) contains an incorrect date"
 	exit 1
 fi
 
