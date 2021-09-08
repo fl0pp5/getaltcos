@@ -90,7 +90,7 @@ chroot $MAIN_ROOT chgrp wheel /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod 710 /usr/bin/sudo /bin/su
 chroot $MAIN_ROOT chmod ug+s /usr/bin/sudo /bin/su
 
-usermod -R $MAIN_ROOT -a -G root,wheel zincati
+chroot $MAIN_ROOT usermod -a -G root,wheel zincati
 
 mkdir -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "
