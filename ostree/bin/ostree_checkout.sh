@@ -13,7 +13,7 @@ ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3"
 varDir="$branchPath/$varSubDir/"
 if [ ! -d $varDir ]
 then
-  echo "var dicrectory $varDir don't exists"
+  echo "var directory $varDir don't exists"
   exit 1
 fi
 
