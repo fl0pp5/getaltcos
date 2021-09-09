@@ -118,8 +118,8 @@ foreach ($archs as $arch) {
 <?php
 	if ($repoType == 'bare') {
 ?>
-	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST>Обновить bare-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
-              <li><a href='/ostree/pullToArchive/?ref=<?= $ref?>' target=ostreeREST>Скопировать  bare-репозиторий в archive-репозиторий</a></li>
+	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button'>Обновить bare-ветку <?= $ref?> версии <?= $lastVersion?></button></a></li>
+              <li><a href='/ostree/pullToArchive/?ref=<?= $ref?>' target=ostreeREST><button type='button'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
 <?php
  	}
 ?>
