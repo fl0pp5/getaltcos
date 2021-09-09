@@ -3,10 +3,9 @@ set -x
 exec 2>&1
 ref=$1
 version=$2
-rootsPath="$DOCUMENT_ROOT/ACOS/streams/$ref/roots";
+branchPath=$DOCUMENT_ROOT/ACOS/streams/$ref/
+rootsPath="$branchPath/roots";
 commitPath="$rootsPath/root"
-ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3"
-varDir=$branchPath/$varSubDir
 ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3"
 varDir=$branchPath/$varSubDir
 
