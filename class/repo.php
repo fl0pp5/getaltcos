@@ -2,8 +2,11 @@
 require_once "repos.php";
 class repo {
   function __construct($ref, $repoType='bare') {
-    $this->repoType = $repoType;		
-    $this->repoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref/$repoType/repo";
+    $this->repoType = $repoType;
+    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref";
+    $this->repoDir = $this->refDir . "/$repoType/repo";
+    $this->rootsDir = $this->refDir . "/roots";
+    $this->varsDir = $this->refDir . "/vars";
   }
 
   function haveConfig() {
@@ -17,7 +20,7 @@ class repo {
     $cmd = "sudo mkdir -p " .  $this->repoDir .' 2>&1';;
     $output = [];
     echo "<pre>CMD=$cmd</pre>\n";
-    exec($cmd, $output);    
+    exec($cmd, $output);
     echo "<pre>MKDIR=" . print_r($output, 1) . "</pre>\n";
     $cmd = "sudo ostree init --mode=" . $this->repoType . " --repo=" .  $this->repoDir .' 2>&1';;
     $output = [];
@@ -52,7 +55,7 @@ class repo {
     echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
     echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
-    return $output;	  
+    return $output;
   }
 
   function deleteCommit($commitId) {
@@ -61,7 +64,7 @@ class repo {
     echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
     echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
-    return $output;	  
+    return $output;
   }
 
   function getCommits($ref) {
@@ -108,18 +111,46 @@ class repo {
     $cmd = "sudo ostree fsck $commitId  --repo=". $this->repoDir;
     //echo "CMD=$cmd<br>\n";
     exec($cmd, $output);
-    //print_r($output);   
-    return $output; 
+    //print_r($output);
+    return $output;
   }
 
   function ls($commitId, $flags='-X') {
     $cmd = "sudo ostree ls -R $commitId $flags --repo=". $this->repoDir;
     echo "$cmd<br>\n";
     exec($cmd, $output);
-    //print_r($output);   
+    //print_r($output);
     return $output;
-  }       
-  
+  }
+
+  function checkout($commitId, $replace=false) {
+    if (!is_dir($this->rootsDir)) {
+      $cmd = "sudo mkdir -p " .  $this->rootsDir .' 2>&1';;
+      $output = [];
+//       echo "<pre>CMD=$cmd</pre>\n";
+      exec($cmd, $output);
+//       echo "<pre>MKDIR=" . print_r($output, 1) . "</pre>\n";
+    }
+    $checkoutDir = $this->rootsDir . "/$commitId";
+    if (is_dir($checkoutDir)) {
+      if ($replace) {
+        $cmd = "sudo rm -rf $checkoutDir 2>&1";;
+        $output = [];
+//         echo "<pre>CMD=$cmd</pre>\n";
+        exec($cmd, $output);
+//         echo "<pre>MKDIR=" . print_r($output, 1) . "</pre>\n";
+      } else {
+        return;
+      }
+    }
+    $cmd = "sudo ostree checkout $commitId " . $checkoutDir . " --repo=". $this->repoDir;
+//     echo "<br>$cmd<br>\n";
+    exec($cmd, $output);
+    //print_r($output);
+
+  }
+
+
   static function cmpByDate($c1, $c2) {
   $ret = strcmp($c1['Date'], $c2['Date']);
   return $ret;
