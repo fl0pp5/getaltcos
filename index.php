@@ -19,13 +19,14 @@ function markAfter(input) {
       inputs[n].checked = true;
     }
   }
-  
+
 }
 </script>
 </head>
 <body>
 
 <h1>TEST</h1>
+
 
 <?php
 $archs = repos::listArchs();
@@ -49,7 +50,7 @@ foreach ($archs as $arch) {
 ?>
     <li>
       <ul><h3>REF: <?= $ref?></h3>
-        <li><a href='/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'><?= $repoType?>-граф</a></li>
+        <li><a href='/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
 	<li>Коммиты:
 	  <form action='/ostree/deleteCommits/' target='ostreeREST'>
 	  <input type='hidden' name='ref' value='<?= $ref?>' />
@@ -70,50 +71,64 @@ foreach ($archs as $arch) {
 	  $parent = @$commit['Parent'];
 ?>
 		<li>
-                    <input type='checkbox' value='<?= $commitId?>' name='ids[]' onClick='markAfter(this)' />
+      <input type='checkbox' value='<?= $commitId?>' name='ids[]' onClick='markAfter(this)' />
 		  <ul>ID: <?= $commitId?><br>Версия: <?= $version?><br>Дата создания: <?= $date?>
 <?php
-	  if ($parent) { ?><br>Parent: <?= $parent?> <?php } 
+	  if ($parent) { ?><br>Parent: <?= $parent?> <?php }
 ?>
-		    <li><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Проверка целостности коммта</a>
-		    <li><a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST>Содержание коммита</a>
-                    <li><a href='/ostree/lsvar/?ref=<?= $ref?>&repoType=<?= $repoType?>&version=<?= $version?>' target=ostreeREST>Содержание каталога /var</a>
-
-		    <li> 
-			<select name='cmpCommitId'> 
+		    <li
+          ><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
+            ><button type='button'>Проверка целостности коммта</button
+          ></a>
+        </li>
+		    <li>Содержание коммита
+          <a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
+            ><button type='button'>OSTREE</button>
+          </a>
+          <a href='/ostree/lsTree/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
+            ><button type='button'>Файловая система</button>
+          </a>
+        </li>
+        <li>Содержание каталога /var
+          <a href='/ostree/lsvar/?ref=<?= $ref?>&repoType=<?= $repoType?>&version=<?= $version?>' target=ostreeREST>
+            <button type='button'>Файловая система</button>
+          </a>
+        </li>
+		    <li>
+			<select name='cmpCommitId'>
 <?php
 	  $nCommit = -1;
 	  foreach ($commitIds as $cmpCommitId) {
-            $nCommit += 1;		  
+            $nCommit += 1;
 	    if ($cmpCommitId == $commitId) continue;
 	    $nextCommitId = $commitIds[$nCommit+1];
 	    $checked = $nCommit > 0 && $commitId == $nextCommitId ? 'selected' : '';
 	    // echo "$commitId == $nextCommitId<br>\n";
 	    $cmpVersion = $commits[$cmpCommitId]['Version'];
 ?>
-			 <option value='<?= $cmpCommitId?>' <?= $checked?>><?= $cmpVersion?> <?= substr($cmpCommitId, 0, 4)?>... </option>  
+			 <option value='<?= $cmpCommitId?>' <?= $checked?>><?= $cmpVersion?> <?= substr($cmpCommitId, 0, 4)?>... </option>
 <?php
 	  }
 ?>
-			</select> <span onClick='alert("Click")' style='color:blue;'>Сравнить</span> 
-		    </li>	
+			</select> <span onClick='alert("Click")' style='color:blue;'>Сравнить</span>
+		    </li>
 		  </ul>
             	</li>
-<?php 
+<?php
         }
 ?>	  	<button type='submit'>Удалить отмеченные коммиты</button>
-		</form>	
+		</form>
 	      </ul>
-<?php 
+<?php
 	if ($repoType == 'bare') {
 ?>
 	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST>Обновить bare-ветку <?= $ref?> версии <?= $lastVersion?></a></li>
               <li><a href='/ostree/pullToArchive/?ref=<?= $ref?>' target=ostreeREST>Скопировать  bare-репозиторий в archive-репозиторий</a></li>
-<?php 
+<?php
  	}
-?>	
+?>
 	  </ul>
-<?php 	  
+<?php
       }
 ?>
         </ul>
