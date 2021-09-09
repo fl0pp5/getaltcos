@@ -99,7 +99,12 @@ foreach ($archs as $arch) {
 <?php if ($nCommit > 0){ ?>
 		    <li>
           DIFF <?= $prevVersion?>
-		    </li>
+          <a href='/ostree/diff/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
+            ><button type='button'>OSTREE</button>
+          </a>
+          <a href='/ostree/diffTree/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
+            ><button type='button'>Файловая система</button>
+          </a>		    </li>
 <?php } ?>
 		  </ul>
             	</li>

@@ -147,7 +147,14 @@ class repo {
 //     echo "<br>$cmd<br>\n";
     exec($cmd, $output);
     //print_r($output);
+  }
 
+    function diff($commitId1, $commitId2) {
+    $cmd = "sudo ostree diff $commitId1 $commitId2 --repo=". $this->repoDir;
+    echo "$cmd<br>\n";
+    exec($cmd, $output);
+    //print_r($output);
+    return $output;
   }
 
 
