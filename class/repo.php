@@ -3,7 +3,7 @@ require_once "repos.php";
 class repo {
   function __construct($ref, $repoType='bare') {
     $this->repoType = $repoType;
-    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$ref";
+    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refDir($ref);
     $this->repoDir = $this->refDir . "/$repoType/repo";
     $this->rootsDir = $this->refDir . "/roots";
     $this->varsDir = $this->refDir . "/vars";
@@ -157,6 +157,14 @@ class repo {
     return $output;
   }
 
+  static function subRef($ref, $subName) {
+    $path = explode('/', $ref);
+    $lastN = count($path) - 1;
+    $path[$lastN] = ucfirst($path[$lastN]);
+    $path[] = $subName;
+    $ret = implode('/', $path);
+    return $ret;
+  }
 
   static function cmpByDate($c1, $c2) {
   $ret = strcmp($c1['Date'], $c2['Date']);

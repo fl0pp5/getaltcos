@@ -8,14 +8,15 @@ $repoType = $_REQUEST['repoType'];
 $commitId = $_REQUEST['commitId'];
 
 $repo = new repo($ref, $repoType);
+echo "REPO=" . print_r($repo, 1);
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Проверка целостности файловой системы репозитория</title> 
+<title>Проверка целостности файловой системы репозитория</title>
 </head>
 <body>
-<?php 
+<?php
 $result = $repo->fsck($commitId);
 echo implode("<br>", $result);

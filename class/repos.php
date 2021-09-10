@@ -26,4 +26,16 @@ class repos {
     return $ret;
   }
 
+  /**
+   * Возвращает тропу, где находятся репозитории bare, archive
+   * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
+   * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus
+   */
+  static function refDir($ref) {
+    $path = array_slice(explode('/', $ref), 0, 3);
+    $path[2] = strtolower($path[2]);
+    $ret = implode('/', $path);
+    return $ret;
+  }
+
 }

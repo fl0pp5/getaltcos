@@ -5,7 +5,8 @@ require_once('repo.php');
 
 $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
-$path = "/ACOS/streams/${ref}/roots/$commitId";
+$refDir = repos::refDir($ref);
+$path = "/ACOS/streams/$refDir/roots/$commitId";
 $dir = "$rootdir/$path";
 //echo "PATH=$path";
 $repo = new repo($ref, 'bare');
