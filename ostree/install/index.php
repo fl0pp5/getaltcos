@@ -18,7 +18,7 @@ $repoType = 'bare';
 $repo = new repo($ref, $repoType);
 
 if (!$repo->haveConfig()) {
-        echo "Bare repository $repoBarePath don't exists";
-        exit(1);
+  echo "Bare repository $repoBarePath don't exists";
+  exit(1);
 }
 

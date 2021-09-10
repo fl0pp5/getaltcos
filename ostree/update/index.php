@@ -31,6 +31,8 @@ $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
 
+$refDir = repos::refDir($ref);
+
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
 
@@ -58,7 +60,7 @@ list($stream, $date, $major, $minor) = explode('.', $lastVersion);
 $nextMinor = intval($minor) + 1;
 $nextVersion = "$stream.$date.$major.$nextMinor";
 
-$cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId' '$lastVersion' 'all'";
+$cmd = "$BINDIR/ostree_checkout.sh '$refDir' '$lastCommitId' '$lastVersion' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);

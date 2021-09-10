@@ -3,7 +3,8 @@ require_once "repos.php";
 class repo {
   function __construct($ref, $repoType='bare') {
     $this->repoType = $repoType;
-    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refDir($ref);
+    $this->refRepoDir = repos::refRepoDir($ref);
+    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . $this->refRepoDir;
     $this->repoDir = $this->refDir . "/$repoType/repo";
     $this->rootsDir = $this->refDir . "/roots";
     $this->varsDir = $this->refDir . "/vars";

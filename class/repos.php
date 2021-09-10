@@ -31,11 +31,40 @@ class repos {
    * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
    * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus
    */
-  static function refDir($ref) {
+  static function refRepoDir($ref) {
     $path = array_slice(explode('/', $ref), 0, 3);
     $path[2] = strtolower($path[2]);
     $ret = implode('/', $path);
     return $ret;
   }
+
+  /*
+   * Возвращает вариант ветки
+   * acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
+   */
+  static function refVariant($ref, $date=false, $major=0, $minor=0) {
+    if (!$date) {
+      $date = strftime("%Y%m%d");
+    }
+    $path = explode('/', $ref);
+    $path[2] = strtolower($path[2]);
+    $stream = implode('_', array_slice($path, 2));
+    $ret = "$stream.$date.$major.$minor";
+    return $ret;
+  }
+
+  /*
+   *
+   */
+  static function variantVarSubDir($variant) {
+    $path = explode('.', strtolower($variant));
+    $stream = $path[0];
+    $date = $path[1];
+    $major = $path[2];
+    $minor = $path[3];
+    $ret = "$stream/$date/$major/$minor";
+    return $ret;
+  }
+
 
 }
