@@ -66,7 +66,6 @@ tar xf $ROOTFS_ARCHIVE -C $MAIN_ROOT --exclude=./dev/tty --exclude=./dev/tty0 --
 rm -f $MAIN_ROOT/etc/resolv.conf
 ln -sf /run/systemd/resolve/resolv.conf $MAIN_ROOT/etc/resolv.conf
 
-chroot $MAIN_ROOT systemctl enable ostree-remount.service sshd docker
 sed -i 's/^LABEL=ROOT\t/LABEL=boot\t/g' $MAIN_ROOT/etc/fstab
 sed -i 's/^AcceptEnv /#AcceptEnv /g' $MAIN_ROOT/etc/openssh/sshd_config
 sed -i 's/^# WHEEL_USERS ALL=(ALL) ALL$/WHEEL_USERS ALL=(ALL) ALL/g' $MAIN_ROOT/etc/sudoers
@@ -86,12 +85,6 @@ ln -sf var/roothome $MAIN_ROOT/root
 ln -sf ../var/usrlocal $MAIN_ROOT/usr/local
 ln -sf var/mnt $MAIN_ROOT/mnt
 
-chroot $MAIN_ROOT chgrp wheel /usr/bin/sudo /bin/su
-chroot $MAIN_ROOT chmod 710 /usr/bin/sudo /bin/su
-chroot $MAIN_ROOT chmod ug+s /usr/bin/sudo /bin/su
-
-chroot $MAIN_ROOT usermod -a -G root,wheel -d / zincati
-
 mkdir -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "
 [remote \"acos\"]
@@ -105,8 +98,6 @@ base_url=\"http://getacos.altlinux.org\"
 " > $MAIN_ROOT/etc/zincati/config.d/50-fedora-coreos-cincinnati.toml
 
 echo "$UPDATEIP getacos.altlinux.org" >> $MAIN_ROOT/etc/hosts
-
-chroot $MAIN_ROOT systemctl enable zincati.service
 
 
 KERNEL=`find $MAIN_ROOT/boot/ -type f -name "vmlinuz-*"`
