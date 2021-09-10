@@ -7,7 +7,7 @@ require_once('repo.php');
 
 <html>
 <head>
-<title>Links</title>
+<title>Административный интерфейс OSTREE-потоков ALTLinux Container OS</title>
 <script>
 function markAfter(input) {
   if (!input.checked) return;
@@ -25,7 +25,7 @@ function markAfter(input) {
 </head>
 <body>
 
-<h1>TEST</h1>
+<h1>Административный интерфейс OSTREE-потоков ALTLinux Container OS</h1>
 
 
 <?php
@@ -80,7 +80,7 @@ foreach ($archs as $arch) {
 ?>
 		    <li
           ><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
-            ><button type='button'>Проверка целостности коммта</button
+            ><button type='button'>Проверка целостности коммита</button
           ></a>
         </li>
 		    <li>Содержание коммита

@@ -15,7 +15,7 @@ $repo = new repo($ref, 'bare');
 $repo->checkout($commitId1, true);
 $repo->checkout($commitId2, true);
 
-$cmd = "cd $rootsDir; sudo diff -r $commitId1 $commitId2 2>&1";
+$cmd = "cd $rootsDir; sudo diff -r $commitId1 $commitId2 | grep -v 'No such file or directory' 2>&1";
 // echo "CMD = $cmd<br>\n";
 $output = [];
 exec($cmd, $output);
