@@ -3,10 +3,99 @@
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
+require_once('repos.php');
 ?>
-
 <html>
 <head>
+<?php
+$os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
+$title[] = "Административный интерфейс OSTREE-потоков";
+$title[] = repos::getOSName($os);
+if (!key_exists('arch', $_REQUEST)) {
+  $listArchs = repos::listArchs();
+?>
+<title><?= implode('/', array_reverse($title))?></title>
+</head>
+<body>
+<form action='./'>
+<input type='hidden' name='os' value='<?= $os?>'/>
+<h2><?= implode("<br>", $title)?></h2>
+Архитектура:
+<select name='arch'>
+<?php
+foreach ($listArchs as $arch) {
+?>
+  <option value='<?= $arch?>'><?= $arch?></option>
+<?php
+}
+?>
+</select>
+<button type='submit'>Отобразить</button>
+</form>
+<?php
+  exit(0);
+}
+
+$arch = $_REQUEST['arch'];
+$title[] = "Архитектура $arch";
+if (!key_exists('stream', $_REQUEST)) {
+  $listStreams = repos::listStreams();
+?>
+<title><?= implode('/', array_reverse($title))?></title>
+</head>
+<body>
+<form action='./'>
+<input type='hidden' name='os' value='<?= $os?>'/>
+<input type='hidden' name='arch' value='<?= $arch?>'/>
+<h2><?= implode("<br>", $title)?></h2>
+Поток:
+<select name='stream'>
+<?php
+foreach ($listStreams as $stream) {
+?>
+  <option value='<?= $stream?>'><?= $stream?></option>
+<?php
+}
+?>
+</select>
+<button type='submit'>Отобразить</button>
+</form>
+<?php
+  exit(0);
+}
+
+$stream = $_REQUEST['stream'];
+$title[] = "Поток $stream";
+$repo = new repo("$os/$arch/$stream", 'bare');
+if (!key_exists('ref', $_REQUEST)) {
+  $refs = $repo->getRefs();
+?>
+<title><?= implode('/', array_reverse($title))?></title>
+</head>
+<body>
+<form action='./'>
+<input type='hidden' name='os' value='<?= $os?>'/>
+<input type='hidden' name='arch' value='<?= $arch?>'/>
+<input type='hidden' name='stream' value='<?= $stream?>'/>
+<h2><?= implode("<br>", $title)?></h2>
+Ветка:
+<select name='ref'>
+<?php
+foreach ($refs as $ref) {
+?>
+  <option value='<?= $ref?>'><?= $ref?></option>
+<?php
+}
+?>
+</select>
+<button type='submit'>Отобразить</button>
+</form>
+<?php
+  exit(0);
+}
+
+?>
+
 <title>Административный интерфейс OSTREE-потоков ALTLinux Container OS</title>
 <script>
 function markAfter(input) {

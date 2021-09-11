@@ -1,6 +1,18 @@
 <?php
 class repos {
 
+  static $OSs = ['acos' => 'ALTLinux Container OS'];
+
+  static function listOSs() {
+    $ret = array_keys(repos::OSs);
+    return $ret;
+  }
+
+  static function getOSName($os) {
+    $ret = repos::$OSs[$os];
+    return $ret;
+  }
+
   static function listArchs() {
     $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/");
     $ret = [];
