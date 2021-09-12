@@ -7,94 +7,89 @@ require_once('repos.php');
 ?>
 <html>
 <head>
+<style>
+.arch {
+  font-weight: bold;
+}
+
+.stream {
+  font-weight: bold;
+}
+
+.ref {
+  font-weight: bold;
+}
+</style>
 <?php
-$os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
+$Ref = false;
+$Os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
 $title[] = "Административный интерфейс OSTREE-потоков";
-$title[] = repos::getOSName($os);
-if (!key_exists('arch', $_REQUEST)) {
-  $listArchs = repos::listArchs();
+$title[] = repos::getOSName($Os);
+
+$Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : false;
+$listArchs = repos::listArchs();
 ?>
 <title><?= implode('/', array_reverse($title))?></title>
 </head>
 <body>
 <form action='./'>
-<input type='hidden' name='os' value='<?= $os?>'/>
-<h2><?= implode("<br>", $title)?></h2>
+<input type='hidden' name='os' value='<?= $Os?>'/>
+<h2><?= implode(" ", $title)?></h2>
+<span class='arch'>
 Архитектура:
 <select name='arch'>
 <?php
 foreach ($listArchs as $arch) {
+  $selected = ($arch === $Arch) ? 'selected' : '';
 ?>
-  <option value='<?= $arch?>'><?= $arch?></option>
+  <option value='<?= $arch?>' <?= $selected?>><?= $arch?></option>
 <?php
 }
 ?>
 </select>
-<button type='submit'>Отобразить</button>
-</form>
+</span>
 <?php
-  exit(0);
-}
-
-$arch = $_REQUEST['arch'];
-$title[] = "Архитектура $arch";
-if (!key_exists('stream', $_REQUEST)) {
+$Stream = (key_exists('stream', $_REQUEST)) ? $_REQUEST['stream'] : false;
+if ($Arch) {
   $listStreams = repos::listStreams();
 ?>
-<title><?= implode('/', array_reverse($title))?></title>
-</head>
-<body>
-<form action='./'>
-<input type='hidden' name='os' value='<?= $os?>'/>
-<input type='hidden' name='arch' value='<?= $arch?>'/>
-<h2><?= implode("<br>", $title)?></h2>
+<span class='stream'>
 Поток:
 <select name='stream'>
 <?php
 foreach ($listStreams as $stream) {
+  $selected = ($stream == $Stream) ? 'selected' : '';
 ?>
-  <option value='<?= $stream?>'><?= $stream?></option>
+  <option value='<?= $stream?>' <?= $selected?>><?= $stream?></option>
 <?php
 }
 ?>
 </select>
-<button type='submit'>Отобразить</button>
-</form>
+</span>
 <?php
-  exit(0);
-}
-
-$stream = $_REQUEST['stream'];
-$title[] = "Поток $stream";
-$repo = new repo("$os/$arch/$stream", 'bare');
-if (!key_exists('ref', $_REQUEST)) {
-  $refs = $repo->getRefs();
+  if ($Stream) {
+    $repo = new repo("$Os/$Arch/$Stream", 'bare');
+    $Ref = key_exists('ref', $_REQUEST) ? $_REQUEST['ref'] : '';
+    $refs = $repo->getRefs();
 ?>
-<title><?= implode('/', array_reverse($title))?></title>
-</head>
-<body>
-<form action='./'>
-<input type='hidden' name='os' value='<?= $os?>'/>
-<input type='hidden' name='arch' value='<?= $arch?>'/>
-<input type='hidden' name='stream' value='<?= $stream?>'/>
-<h2><?= implode("<br>", $title)?></h2>
+<span class='ref'>
 Ветка:
 <select name='ref'>
 <?php
-foreach ($refs as $ref) {
+  foreach ($refs as $ref) {
+    $selected = ($ref == $Ref) ? 'selected' : '';
 ?>
-  <option value='<?= $ref?>'><?= $ref?></option>
+  <option value='<?= $ref?>' <?= $selected?>><?= $ref?></option>
 <?php
-}
+    }
+  }
 ?>
 </select>
+</span>
+<?php } ?>
 <button type='submit'>Отобразить</button>
 </form>
-<?php
-  exit(0);
-}
-
-?>
+<?php if (!$Ref) exit(0); ?>
 
 <title>Административный интерфейс OSTREE-потоков ALTLinux Container OS</title>
 <script>
