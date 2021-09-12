@@ -8,15 +8,7 @@ require_once('repos.php');
 <html>
 <head>
 <style>
-.arch {
-  font-weight: bold;
-}
-
-.stream {
-  font-weight: bold;
-}
-
-.ref {
+.arch, .stream, .ref, .addSubtef {
   font-weight: bold;
 }
 </style>
@@ -26,8 +18,8 @@ $Os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
 $title[] = "Административный интерфейс OSTREE-потоков";
 $title[] = repos::getOSName($Os);
 
-$Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : false;
 $listArchs = repos::listArchs();
+$Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : (count($listArchs) == 1 ? $listArchs[0] : false);
 ?>
 <title><?= implode('/', array_reverse($title))?></title>
 </head>
@@ -49,9 +41,9 @@ foreach ($listArchs as $arch) {
 </select>
 </span>
 <?php
-$Stream = (key_exists('stream', $_REQUEST)) ? $_REQUEST['stream'] : false;
+$listStreams = repos::listStreams();
+$Stream = (key_exists('stream', $_REQUEST)) ? $_REQUEST['stream'] : (count($listStreams) == 1 ? $listStreams[0] : false);
 if ($Arch) {
-  $listStreams = repos::listStreams();
 ?>
 <span class='stream'>
 Поток:
@@ -69,8 +61,8 @@ foreach ($listStreams as $stream) {
 <?php
   if ($Stream) {
     $repo = new repo("$Os/$Arch/$Stream", 'bare');
-    $Ref = key_exists('ref', $_REQUEST) ? $_REQUEST['ref'] : '';
     $refs = $repo->getRefs();
+    $Ref = key_exists('ref', $_REQUEST) ? $_REQUEST['ref'] : (count($refs) == 1 ? $refs[0] : false);
 ?>
 <span class='ref'>
 Ветка:
@@ -82,10 +74,13 @@ foreach ($listStreams as $stream) {
   <option value='<?= $ref?>' <?= $selected?>><?= $ref?></option>
 <?php
     }
-  }
 ?>
 </select>
 </span>
+<?php
+  }
+?>
+
 <?php } ?>
 <button type='submit'>Отобразить</button>
 </form>
@@ -106,122 +101,114 @@ function markAfter(input) {
 
 }
 </script>
-</head>
-<body>
 
-<h1>Административный интерфейс OSTREE-потоков ALTLinux Container OS</h1>
+<p>
+<form action='ostree/install/'>
+<div class='addSubtef'>
+Добавить подветку:
+<br />
+Имя подветки: <?= $Ref?>/<input type='input' name='subName' size='20'/>
+<br />
+Добавляемые пакеты:  <input type='input' name='pkgs' size='80'/>
+<br />
+<button type='submit'>Добавить</button>
+</div>
+</form>
 
-
+<ul>
 <?php
-$archs = repos::listArchs();
-// echo "<pre>ARCHS=" . print_r($archs, 1) . "</pre>\n";
-
-foreach ($archs as $arch) {
-  $streams = repos::listStreams($arch);
-  //echo "<pre>STREAMS=" . print_r($streams, 1) . "</pre>\n";
-  foreach ($streams as $stream) {
-?>
-<ul><h2>Поток: <?= $stream?></h2>
-<?php
-    foreach (repos::repoTypes() as $repoType) {
-      $repo = new repo("acos/$arch/$stream", $repoType);
+foreach (repos::repoTypes() as $repoType) {
+  $repo = new repo("$Os/$Arch/$Stream", $repoType);
+  $commits = $repo->getCommits($Ref);
+  // echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
+  $nCommits = count($commits);
+  if ($nCommits  <= 0) continue;
 ?>
   <li>
     <ul><h3>Тип репозитория: <?= $repoType?></h3>
-<?php
-      $refs = $repo->getRefs();
-      foreach ($refs  as $ref) {
-?>
-    <li>
-      <ul><h3>REF: <?= $ref?></h3>
-        <li><a href='/v1/graph/?stream=<?= $stream?>&basearch=x86_64&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
-	<li>Коммиты:
-	  <form action='/ostree/deleteCommits/' target='ostreeREST'>
-	  <input type='hidden' name='ref' value='<?= $ref?>' />
-	  <input type='hidden' name='repoType' value='<?= $repoType?>' />
+
+
+        <li><a href='/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
+        <li>Коммиты:
+          <form action='/ostree/deleteCommits/' target='ostreeREST'>
+          <input type='hidden' name='ref' value='<?= $Ref?>' />
+          <input type='hidden' name='repoType' value='<?= $repoType?>' />
        	  <ul>
 <?php
-        $commits = $repo->getCommits($ref);
-        // echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
-	$nCommits = count($commits);
-	if ($nCommits  <= 0) continue;
-	$commitIds = array_keys($commits);
-	$lastCommitId = $commitIds[$nCommits-1];
-	$lastVersion = $commits[$lastCommitId]['Version'];
-	//echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
+  $commitIds = array_keys($commits);
+  $lastCommitId = $commitIds[$nCommits-1];
+  $lastVersion = $commits[$lastCommitId]['Version'];
+  //echo "<pre>nCommits=$nCommits lastCommitId=$lastCommitId</pre>\n";
   $nCommit = -1;
-	foreach ($commits as $commitId=>$commit) {
+  foreach ($commits as $commitId=>$commit) {
     $nCommit += 1;
     $version = $commit['Version'];
-	  $date = $commit['Date'];
-	  $parent = @$commit['Parent'];
+    $date = $commit['Date'];
+    $parent = @$commit['Parent'];
 ?>
 		<li>
       <input type='checkbox' value='<?= $commitId?>' name='ids[]' onClick='markAfter(this)' />
 		  <ul>ID: <?= $commitId?><br>Версия: <?= $version?><br>Дата создания: <?= $date?>
 <?php
-	  if ($parent) { ?><br>Parent: <?= $parent?> <?php }
+    if ($parent) { ?><br>Parent: <?= $parent?> <?php }
 ?>
 		    <li
-          ><a href='/ostree/fsck/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
+          ><a href='/ostree/fsck/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
             ><button type='button'>Проверка целостности коммита</button
           ></a>
         </li>
 		    <li>Содержание коммита
-          <a href='/ostree/ls/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
+          <a href='/ostree/ls/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
             ><button type='button'>OSTREE</button>
           </a>
-          <a href='/ostree/lsTree/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
+          <a href='/ostree/lsTree/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
             ><button type='button'>Файловая система</button>
           </a>
         </li>
         <li>Содержание каталога /var
-          <a href='/ostree/lsvar/?ref=<?= $ref?>&repoType=<?= $repoType?>&version=<?= $version?>' target=ostreeREST>
+          <a href='/ostree/lsvar/?ref=<?= $Ref?>&repoType=<?= $repoType?>&version=<?= $version?>' target=ostreeREST>
             <button type='button'>Файловая система</button>
           </a>
         </li>
-<?php if ($nCommit > 0){ ?>
+<?php
+    if ($nCommit > 0){
+?>
 		    <li>
           DIFF <?= $prevVersion?>
-          <a href='/ostree/diffRPM/?ref=<?= $ref?>&repoType=<?= $repoType?>&version1=<?= $version?>&version2=<?= $prevVersion?>' target=ostreeREST
+          <a href='/ostree/diffRPM/?ref=<?= $Ref?>&repoType=<?= $repoType?>&version1=<?= $version?>&version2=<?= $prevVersion?>' target=ostreeREST
             ><button type='button'>RPM</button>
           </a>
-          <a href='/ostree/diff/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
+          <a href='/ostree/diff/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
             ><button type='button'>OSTREE</button>
           </a>
-          <a href='/ostree/diffTree/?ref=<?= $ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
+          <a href='/ostree/diffTree/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
             ><button type='button'>Файловая система</button>
           </a>		    </li>
-<?php } ?>
+<?php
+    }
+?>
 		  </ul>
             	</li>
 <?php
-          $prevVersion = $version;
-          $prevCommitId = $commitId;
-        }
+    $prevVersion = $version;
+    $prevCommitId = $commitId;
+  }
 ?>	  	<button type='submit'>Удалить отмеченные коммиты</button>
 		</form>
-	      </ul>
-<?php
-	if ($repoType == 'bare') {
-?>
-	      <li><a href='/ostree/update/?ref=<?= $ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button'>Обновить bare-ветку <?= $ref?> версии <?= $lastVersion?></button></a></li>
-              <li><a href='/ostree/pullToArchive/?ref=<?= $ref?>' target=ostreeREST><button type='button'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
-<?php
- 	}
-?>
-	  </ul>
-<?php
-      }
-?>
-        </ul>
-    <?php
-    }
-    ?>
   </ul>
 <?php
+  if ($repoType == 'bare') {
+?>
+	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>' target=ostreeREST><button type='button'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
+<?php
   }
+?>
+
+</ul>
+<?php
 }
+
 
 
 

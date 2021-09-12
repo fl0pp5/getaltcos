@@ -8,6 +8,9 @@ class repo {
     $this->repoDir = $this->refDir . "/$repoType/repo";
     $this->rootsDir = $this->refDir . "/roots";
     $this->varsDir = $this->refDir . "/vars";
+    $this->commits = [];
+    $this->lastCommit = [];
+    $this->lastCommitId = [];
   }
 
   function haveConfig() {
@@ -105,7 +108,21 @@ class repo {
         }
       }
     uasort($commits, 'repo::cmpByDate');
+    $this->commits = $commits;
+    $commitsIds = array_key($commits);
+    $nCommits = count($commitsIds);
+    if ($nCommits > 0) {
+      $this->lastCommitId[$ref] = $nCommits - 1;
+      $this->lastCommit[$ref] = $commits[$nCommits - 1];
+    }
     return $commits;
+  }
+
+  function lastCommit($ref) {
+    if (!key_exists($ref, $this->commits)) {
+      $this->getCommits($ref);
+    }
+    return $this->lastCommit[$ref];
   }
 
   function fsck($commitId) {

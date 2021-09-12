@@ -12,12 +12,11 @@ $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 $subName = $_REQUEST['subName'];
 $pkgs = explode(',', $_REQUEST['pkgs']);
-$commitId = $_REQUEST['commitId'];
 
 $subRef = repo::subRef($ref, $subName);
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
-$refDir = repos::refDir($ref);
+$refDir = repos::refRepoDir($ref);
 
 if (!$repo->haveConfig()) {
   echo "Bare repository $repoBarePath don't exists";
@@ -25,18 +24,9 @@ if (!$repo->haveConfig()) {
 }
 
 $commits = $repo->getCommits($ref);
-$commitIds = array_keys($commits);
-$lastCommitId = $commitIds[count($commitIds)-1];
-$lastCommit = $commits[$lastCommitId];
-
-if (!key_exists($commitId, $commits)) {
-  echo "Запрошенный коммит $commitId отсутствует в репозитории";
-  exit(1);
-}
-
-$commit = $commits[$commitId];
+$commitId = $repo->lastCommitId($ref);
+$commit =  $repo->lastCommit($ref);
 $version = $commit['Version'];
-
 
 $cmd = "$BINDIR/ostree_checkout.sh '$refDir' '$commitId' '$version' 'all'";
 echo "CHECKOUTCMD=$cmd\n";

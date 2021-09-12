@@ -31,7 +31,7 @@ $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
 
-$refDir = repos::refDir($ref);
+$refDir = repos::refRepoDir($ref);
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
