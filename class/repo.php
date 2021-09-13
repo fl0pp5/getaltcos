@@ -109,7 +109,7 @@ class repo {
       }
     uasort($commits, 'repo::cmpByDate');
     $this->commits = $commits;
-    $commitsIds = array_key($commits);
+    $commitsIds = array_keys($commits);
     $nCommits = count($commitsIds);
     if ($nCommits > 0) {
       $this->lastCommitId[$ref] = $nCommits - 1;

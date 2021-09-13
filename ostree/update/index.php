@@ -2,6 +2,7 @@
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
+require_once('refsConf.php');
 
 function isUpdated($output) {
   foreach ($output as $line) {
@@ -35,6 +36,7 @@ $refDir = repos::refRepoDir($ref);
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
+$refsConf = new refsConf($ref);
 
 if (!$repo->haveConfig()) {
         echo "Bare repository $repoBarePath don't exists";
@@ -74,12 +76,18 @@ exec($cmd, $output);
 echo "APT-GET_UPDATE=<pre>" . print_r($output, 1). "</pre>";
 //exit(0);
 
-$cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref";
+$rpmListFile = tempnam('/tmp', 'ostree_');
+echo "<br>rpmListFile=$rpmListFile<br>";
+$cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref '$rpmListFile'";
 echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "APT-GET_DIST-UPGRADE=<pre>" . print_r($output, 1). "</pre>";
 // exit(0);
+$fp = fopen($rpmListFile, 'r');
+$rpmList = explode("\n", fread($fp, filesize($rpmListFile)));
+fclose($fp);
+//unlink($rpmListFile);
 
 if (!isUpdated($output)) {
   echo "Обновлений нет";
@@ -87,6 +95,13 @@ if (!isUpdated($output)) {
   echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
   exit(0);
 }
+$RpmList = [];
+foreach ($rpmList as $rpm) {
+  if (strlen(trim($rpm)) == 0) continue;
+  $RpmList[] = $rpm;
+}
+$refsConf->addRpmList($RpmList);
+$refsConf->save();
 
 $cmd = "$BINDIR/syncUpdates.sh $ref $nextVersion";
 echo "SYNCUPDATESCMD=$cmd\n";
