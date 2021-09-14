@@ -14,7 +14,7 @@ sudo du -s upper
 sudo du -s root/
 sudo rm -f ./upper/etc ./root/etc;
 
-sudo mkdir -p $varDir
+sudo mkdir --mode 0755 -p $varDir
 cd upper
 sudo rsync -av var $varDir
 sudo rm -rf ./var ./run
