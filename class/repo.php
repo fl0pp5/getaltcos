@@ -163,7 +163,7 @@ class repo {
       if (strlen(trim($rpm)) == 0) continue;
       $ret[] = $rpm;
     }
-    print_r($ret);
+//     print_r($ret);
     return $ret;
   }
 

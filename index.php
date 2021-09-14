@@ -115,6 +115,7 @@ if (count($refs) > 0) {
 ?>
 <p>
 <form action='ostree/install/' target='ostreeREST'>
+<input type='hidden' name='ref' value='<?= $ref?>' />
 <div class='addSubtef'>
 Добавить подветку:
 <br />

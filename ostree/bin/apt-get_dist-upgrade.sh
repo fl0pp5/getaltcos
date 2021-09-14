@@ -1,6 +1,5 @@
 #!/bin/sh
 set -x
-#exec 2>/tmp/apt-get_dist-upgrade.log
 exec 2>&1
 ref=$1
 rpmListFile=$2

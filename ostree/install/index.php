@@ -2,7 +2,7 @@
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
-
+require_once('refsConf.php');
 
 //MAIN
 $startTime = time();
@@ -12,10 +12,11 @@ $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 $subName = $_REQUEST['subName'];
 $pkgs = $_REQUEST['pkgs'];
+$refDir = repos::refRepoDir($ref);
 
 $subRef = repos::subRef($ref, $subName);
-$version = repos::refVersion($subRef);
-$versionVarSubDir = repos::versionVarSubDir($version);
+$subVersion = repos::refVersion($subRef);
+$subVersionVarSubDir = repos::versionVarSubDir($subVersion);
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
 $refRepoDir = $repo->refRepoDir;
@@ -31,8 +32,9 @@ $lastCommitId = $repo->lastCommitId;
 $lastCommit = $repo->lastCommit;
 # echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "</pre>";
 $lastVersion = $lastCommit['Version'];
+$versionVarSubDir = repos::versionVarSubDir($lastVersion);
 
-$cmd = "$BINDIR/ostree_checkout.sh '$refRepoDir' '$lastCommitId' '$lastVersion' 'all'";
+$cmd = "$BINDIR/ostree_checkout.sh '$refRepoDir' '$lastCommitId' '$versionVarSubDir' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -50,9 +52,19 @@ $output = [];
 exec($cmd, $output);
 echo "APT-GET_INSTALL=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/syncUpdates.sh $refRepoDir  $versionVarSubDir";
+$cmd = "$BINDIR/syncUpdates.sh $refRepoDir  $subVersionVarSubDir";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
 
+$rpmList = $repo->rpmList($subVersion);
+$refsConf = new refsConf($subRef, $subVersion, $pkgs);
+$refsConf->addRpmList($rpmList);
+$refsConf->save();
+
+$cmd = "$BINDIR/ostree_commit.sh '$refDir' '$lastCommitId' '$subVersion' '$subRef'";
+echo "COMMITCMD=$cmd\n";
+$output = [];
+exec($cmd, $output);
+echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";

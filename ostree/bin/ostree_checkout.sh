@@ -3,13 +3,13 @@ set -x
 exec 2>&1
 ref=$1
 lastCommitId=$2
-versionVarSubDir=$2
+versionVarSubDir=$3
 clear=$4
 branchPath="$DOCUMENT_ROOT/ACOS/streams/$ref"
 repoBarePath="$branchPath/bare/repo";
 rootsPath="$branchPath/roots"
 rootsPathOld="$branchPath/rootsi.$$";
-varDir="$branchPath/var/$versionVarSubDir"
+varDir="$branchPath/vars/$versionVarSubDir"
 if [ ! -d $varDir ]
 then
   echo "var directory $varDir don't exists"
@@ -42,7 +42,7 @@ sudo mount -t overlay overlay -o lowerdir=$lastCommitId,upperdir=./upper,workdir
 
 cd merged
 sudo ln -sf  /usr/etc/ ./etc;
-sudo rsync -av $varDir .
+sudo rsync -av $varDir/var .
 sudo mkdir -p ./run/lock ./run/systemd/resolve/ ./tmp/.private/root/
 sudo cp /etc/resolv.conf .//run/systemd/resolve/resolv.conf
 

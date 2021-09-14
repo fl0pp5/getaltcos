@@ -6,7 +6,7 @@ versionVarSubDir=$2
 branchPath=$DOCUMENT_ROOT/ACOS/streams/$ref/
 rootsPath="$branchPath/roots";
 commitPath="$rootsPath/root"
-varDir="$branchPath/var/$versionVarSubDir"
+varDir="$branchPath/vars/$versionVarSubDir"
 
 cd $rootsPath/;
 sudo du -s upper

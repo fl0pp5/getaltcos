@@ -107,7 +107,7 @@ $output = [];
 exec($cmd, $output);
 echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/ostree_commit.sh $refDir $lastCommitId $nextVersion";
+$cmd = "$BINDIR/ostree_commit.sh $refDir $lastCommitId $nextVersion $ref";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);

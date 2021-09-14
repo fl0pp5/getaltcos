@@ -4,12 +4,12 @@
  */
 class refsConf {
 
-  function __construct($ref, $version) {
+  function __construct($ref, $version, $addedPkgs=false) {
     $this->ref = $ref;
     $this->version = $version;
     $this->refRepoDir = repos::refRepoDir($ref);
     $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . $this->refRepoDir;
-    $this->varsDir = $this->refDir . "/vars/" . repos::refVersionDatesSubDir($ref);
+    $this->varsDir = $this->refDir . "/vars/" ;//. repos::refVersionDatesSubDir($ref);
     $this->versionDir = $this->varsDir . '/' . repos::versionVarSubDir($version);
     $this->refConfFile = $this->versionDir . "/refConf.json";
     if (file_exists($this->refConfFile)) {
@@ -20,17 +20,20 @@ class refsConf {
     } else {
       $this->data = ['ref' => $ref, 'version' => $version];
     }
+    if ($addedPkgs) {
+      $this->data['addedPkgs'] = $addedPkgs;
+    }
   }
 
   function save() {
     $oldConf = $this->refConfFile . ".old";
-    unlink($oldConf);
-    rename($this->refConfFile, $oldConf);
+    if (file_exists($oldConf)) unlink($oldConf);
+    if (file_exists($this->refConfFile)) rename($this->refConfFile, $oldConf);
     $fp = fopen($this->refConfFile, 'w');
     $data = json_encode($this->data, JSON_PRETTY_PRINT);
-//     echo "<pre>DATA=$data</pre><br>\n";
+    echo "<pre>DATA=$data</pre><br>\n";
     fwrite($fp, $data);
-//     echo "<pre>THIS=". print_r($this, 1); echo "</pre><br>\n";
+    echo "<pre>THIS=". print_r($this, 1); echo "</pre><br>\n";
     fclose($fp);
   }
 
