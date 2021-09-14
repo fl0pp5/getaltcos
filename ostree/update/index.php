@@ -31,8 +31,9 @@ putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
 $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
-
 $refDir = repos::refRepoDir($ref);
+$version = repos::refVersion($ref);
+$versionVarSubDir = repos::versionVarSubDir($version);
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
@@ -42,13 +43,9 @@ if (!$repo->haveConfig()) {
         exit(1);
 }
 
-$commits = $repo->getCommits($ref);
-
-$commitIds = array_keys($commits);
-
-$lastCommitId = $commitIds[count($commitIds)-1];
-
-$lastCommit = $commits[$lastCommitId];
+$commits = $repo->getCommits();
+$lastCommitId = $repo->lastCommitId;
+$lastCommit = $repo->lastCommit;
 # echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "</pre>";
 $lastVersion = $lastCommit['Version'];
 
@@ -61,14 +58,14 @@ list($stream, $date, $major, $minor) = explode('.', $lastVersion);
 $nextMinor = intval($minor) + 1;
 $nextVersion = "$stream.$date.$major.$nextMinor";
 
-$cmd = "$BINDIR/ostree_checkout.sh '$refDir' '$lastCommitId' '$lastVersion' 'all'";
+$cmd = "$BINDIR/ostree_checkout.sh '$refDir' '$lastCommitId' '$versionVarSubDir' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
 //exit(0);
 
-$cmd = "$BINDIR/apt-get_update.sh $ref";
+$cmd = "$BINDIR/apt-get_update.sh $refDir";
 echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -77,7 +74,7 @@ echo "APT-GET_UPDATE=<pre>" . print_r($output, 1). "</pre>";
 
 $rpmListFile = tempnam('/tmp', 'ostree_');
 echo "<br>rpmListFile=$rpmListFile<br>";
-$cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref '$rpmListFile'";
+$cmd = "$BINDIR/apt-get_dist-upgrade.sh $refDir '$rpmListFile'";
 echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -104,23 +101,23 @@ $refsConf = new refsConf($ref, $lastVersion);
 $refsConf->addRpmList($RpmList);
 $refsConf->save();
 
-$cmd = "$BINDIR/syncUpdates.sh $ref $nextVersion";
+$cmd = "$BINDIR/syncUpdates.sh $refDir $versionVarSubDir";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/ostree_commit.sh $ref $lastCommitId $nextVersion";
+$cmd = "$BINDIR/ostree_commit.sh $refDir $lastCommitId $nextVersion";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/ostree_pull-local.sh $ref";
-echo "PULLCMD=$cmd\n";
-$output = [];
-exec($cmd, $output);
-echo "PULL=<pre>" . print_r($output, 1). "</pre>";
-$endTime = time();
-echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
+// $cmd = "$BINDIR/ostree_pull-local.sh $refDir";
+// echo "PULLCMD=$cmd\n";
+// $output = [];
+// exec($cmd, $output);
+// echo "PULL=<pre>" . print_r($output, 1). "</pre>";
+// $endTime = time();
+// echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
 

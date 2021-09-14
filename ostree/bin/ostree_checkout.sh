@@ -3,14 +3,13 @@ set -x
 exec 2>&1
 ref=$1
 lastCommitId=$2
-version=$3
+versionVarSubDir=$2
 clear=$4
 branchPath="$DOCUMENT_ROOT/ACOS/streams/$ref"
 repoBarePath="$branchPath/bare/repo";
 rootsPath="$branchPath/roots"
 rootsPathOld="$branchPath/rootsi.$$";
-ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3" 
-varDir="$branchPath/$varSubDir/"
+varDir="$branchPath/var/$versionVarSubDir"
 if [ ! -d $varDir ]
 then
   echo "var directory $varDir don't exists"
@@ -19,7 +18,7 @@ fi
 
 if [  "$clear" = 'all'  ]
 then
-  sudo mv $rootsPath $rootsPathOld 
+  sudo mv $rootsPath $rootsPathOld
   sudo umount $rootsPathOld/merged
   sudo  rm -rf $rootsPathOld
   sudo mkdir -p $rootsPath
@@ -32,7 +31,7 @@ fi
 sudo ln -sf $lastCommitId root
 
 for dir in merged upper work
-do 
+do
   if [ -d $dir ];
   then
        sudo rm -rf $dir;

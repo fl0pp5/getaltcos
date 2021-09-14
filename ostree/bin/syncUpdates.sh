@@ -2,19 +2,18 @@
 set -x
 exec 2>&1
 ref=$1
-version=$2
+versionVarSubDir=$2
 branchPath=$DOCUMENT_ROOT/ACOS/streams/$ref/
 rootsPath="$branchPath/roots";
 commitPath="$rootsPath/root"
-ifs=$IFS; IFS=.;set -- $version;IFS=$ifs;shift;varSubDir="vars/$1/$2/$3"
-varDir=$branchPath/$varSubDir
+varDir="$branchPath/var/$versionVarSubDir"
 
 cd $rootsPath/;
 sudo du -s upper
 sudo du -s root/
 sudo rm -f ./upper/etc ./root/etc;
 
-sudo mkdir --mode 0755 -p $varDir
+sudo mkdir --mode 0775 -p $varDir
 cd upper
 sudo rsync -av var $varDir
 sudo rm -rf ./var ./run

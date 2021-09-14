@@ -101,7 +101,8 @@ class repos {
 
   /*
    * Возвращает иям поддиректория варианта в каталоге /vars
-   *
+   * sisyphus.20210914.0.0 => 20210914/0/0
+   * sisyphus_apache.20210914.0.0 => apache/20210914/0/0
    */
   static function versionVarSubDir($version) {
     $path = explode('.', strtolower($version));
