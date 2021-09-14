@@ -1,34 +1,33 @@
 <?php
 /*
- * Класс для ведения отформации по веткам потоков
+ * Класс для работы с данными по веткам потоков
  */
 class refsConf {
 
-  function __construct($ref) {
+  function __construct($ref, $version) {
     $this->ref = $ref;
+    $this->version = $version;
     $this->refRepoDir = repos::refRepoDir($ref);
     $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . $this->refRepoDir;
-    $this->repoDir = $this->refDir . "/$repoType/repo";
-    $this->refsConfFile = $this->refDir . "/refsConf.json";
-    if (file_exists($this->refsConfFile)) {
-      $fp = fopen($this->refsConfFile, 'r');
-      $this->refsData = json_decode(fread($fp, filesize($this->refsConfFile)), true);
+    $this->varsDir = $this->refDir . "/vars/" . repos::refVersionDatesSubDir($ref);
+    $this->versionDir = $this->varsDir . '/' . repos::versionVarSubDir($version);
+    $this->refConfFile = $this->versionDir . "/refConf.json";
+    if (file_exists($this->refConfFile)) {
+      $fp = fopen($this->refConfFile, 'r');
+      $this->data = json_decode(fread($fp, filesize($this->refConfFile)), true);
       fclose($fp);
-      $this->data = key_exists($ref, $this->refsData) ? $this->refsData[$ref] : ['ref' => $ref];
 //     echo "<pre>THIS=". print_r($this, 1); echo "</pre><br>\n";
     } else {
-      $this->refsData = [];
-      $this->data = ['ref' => $ref];
+      $this->data = ['ref' => $ref, 'version' => $version];
     }
   }
 
   function save() {
-    $oldConf = $this->refsConfFile . ".old";
+    $oldConf = $this->refConfFile . ".old";
     unlink($oldConf);
-    rename($this->refsConfFile, $oldConf);
-    $fp = fopen($this->refsConfFile, 'w');
-    $this->refsData[$this->ref] = $this->data;
-    $data = json_encode($this->refsData, JSON_PRETTY_PRINT);
+    rename($this->refConfFile, $oldConf);
+    $fp = fopen($this->refConfFile, 'w');
+    $data = json_encode($this->data, JSON_PRETTY_PRINT);
 //     echo "<pre>DATA=$data</pre><br>\n";
     fwrite($fp, $data);
 //     echo "<pre>THIS=". print_r($this, 1); echo "</pre><br>\n";

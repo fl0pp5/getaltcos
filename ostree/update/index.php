@@ -36,7 +36,6 @@ $refDir = repos::refRepoDir($ref);
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
-$refsConf = new refsConf($ref);
 
 if (!$repo->haveConfig()) {
         echo "Bare repository $repoBarePath don't exists";
@@ -95,11 +94,13 @@ if (!isUpdated($output)) {
   echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
   exit(0);
 }
+
 $RpmList = [];
 foreach ($rpmList as $rpm) {
   if (strlen(trim($rpm)) == 0) continue;
   $RpmList[] = $rpm;
 }
+$refsConf = new refsConf($ref, $lastVersion);
 $refsConf->addRpmList($RpmList);
 $refsConf->save();
 

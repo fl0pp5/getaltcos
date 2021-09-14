@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-if [ $# = 0 ] 
+if [ $# = 0 ]
 then
 	echo "Help: $0 <branch> [<rootfs archive>] [<directory of main ostree repository>] [<directory for output archives>]"
 	echo "For example: $0 acos/x86_64/sisyphus out/acos-20210824-x86_64.tar repo out"
@@ -38,7 +38,7 @@ fi
 VERSION_DATE=`basename $ROOTFS_ARCHIVE | awk -F- '{print $2;}'`
 echo "Date for version: $VERSION_DATE"
 
-if ! [[ "$VERSION_DATE" =~ ^[0-9]{8}$ ]] 
+if ! [[ "$VERSION_DATE" =~ ^[0-9]{8}$ ]]
 then
 	echo "ERROR: The name of the rootfs archive ($ROOTFS_ARCHIVE) contains an incorrect date"
 	exit 1
@@ -54,12 +54,12 @@ then
 fi
 rm -rf $VERSION_DIR
 
-mkdir -p $VERSION_DIR
+mkdir --mode=0775 -p $VERSION_DIR
 
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
 MAIN_ROOT=$TMP_DIR/root
 
-mkdir -p $MAIN_ROOT
+mkdir --mode=0775 -p $MAIN_ROOT
 tar xf $ROOTFS_ARCHIVE -C $MAIN_ROOT --exclude=./dev/tty --exclude=./dev/tty0 --exclude=./dev/console  --exclude=./dev/urandom --exclude=./dev/random --exclude=./dev/full --exclude=./dev/zero --exclude=/dev/null --exclude=./dev/pts/ptmx --exclude=./dev/null
 
 #Вынести в m-i-p
@@ -72,7 +72,7 @@ sed -i 's/^# WHEEL_USERS ALL=(ALL) ALL$/WHEEL_USERS ALL=(ALL) ALL/g' $MAIN_ROOT/
 echo "zincati ALL=NOPASSWD: ALL" > $MAIN_ROOT/etc/sudoers.d/zincati
 sed -i 's|^HOME=/home$|HOME=/var/home|g' $MAIN_ROOT/etc/default/useradd
 echo "blacklist floppy" > $MAIN_ROOT/etc/modprobe.d/blacklist-floppy.conf
-mkdir $MAIN_ROOT/sysroot
+mkdir --mode=0775 $MAIN_ROOT/sysroot
 ln -s sysroot/ostree $MAIN_ROOT/ostree
 
 mv -f $MAIN_ROOT/home $MAIN_ROOT/opt $MAIN_ROOT/srv $MAIN_ROOT/mnt $MAIN_ROOT/var/
@@ -85,7 +85,7 @@ ln -sf var/roothome $MAIN_ROOT/root
 ln -sf ../var/usrlocal $MAIN_ROOT/usr/local
 ln -sf var/mnt $MAIN_ROOT/mnt
 
-mkdir -p $MAIN_ROOT/etc/ostree/remotes.d/
+mkdir --mode=0775 -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "
 [remote \"acos\"]
 url=http://getacos.altlinux.org/ACOS/streams/$BRANCH/archive/repo/
@@ -121,7 +121,7 @@ rm -f $MAIN_ROOT/ostree.conf
 rm -rf $MAIN_ROOT/usr/etc
 mv $MAIN_ROOT/etc $MAIN_ROOT/usr/etc
 
-rsync -av $MAIN_ROOT/var $VERSION_DIR 
+rsync -av $MAIN_ROOT/var $VERSION_DIR
 
 # tar -cf $VAR_ARCH -C $MAIN_ROOT var
 rm -rf $MAIN_ROOT/var/*
@@ -129,7 +129,7 @@ rm -rf $MAIN_ROOT/var/*
 if [ ! -d $MAIN_REPO ]
 then
 #Создание главного ostree-репозитория
-	mkdir -p $MAIN_REPO
+	mkdir --mode=0775 -p $MAIN_REPO
 	ostree init --repo=$MAIN_REPO --mode=bare
 fi
 

@@ -8,20 +8,24 @@ $repoType = $_REQUEST['repoType'];
 $ids = $_REQUEST['ids'];
 
 $repo = new repo($ref, $repoType);
-$commits = $repo->getCommits($ref);
+$commits = $repo->getCommits();
 echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
 //Оставить неудаляемые
 foreach ($ids as $id) {
+  $commit = $commits[$id];
+  $version = $commit['Version'];
+  echo "<pre>Version=$version Commit=" . print_r($commit, 1) . "</pre>";
+  $repo->deleteVarDir($version);
   unset($commits[$id]);
 }
 
-$repo->deleteRef($ref);
+$repo->deleteRef();
 foreach ($ids as $id) {
   $repo->deleteCommit($id);
 }
 
 $revCommitIds = array_reverse(array_keys($commits));
-$repo->createRef($ref, $revCommitIds[0]);
+$repo->createRef($revCommitIds[0]);
 
 /*
 ostree  --repo=/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/bare/repo/ refs --delete acos/x86_64/sisyphus

@@ -10,6 +10,13 @@ require_once('repos.php');
 <style>
 .arch, .stream, .ref, .addSubtef {
   font-weight: bold;
+  font-size: 14pt;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+  font-size: 14pt;
 }
 </style>
 <?php
@@ -49,8 +56,8 @@ if ($Arch) {
 Поток:
 <select name='stream'>
 <?php
-foreach ($listStreams as $stream) {
-  $selected = ($stream == $Stream) ? 'selected' : '';
+  foreach ($listStreams as $stream) {
+    $selected = ($stream == $Stream) ? 'selected' : '';
 ?>
   <option value='<?= $stream?>' <?= $selected?>><?= $stream?></option>
 <?php
@@ -63,25 +70,27 @@ foreach ($listStreams as $stream) {
     $repo = new repo("$Os/$Arch/$Stream", 'bare');
     $refs = $repo->getRefs();
     $Ref = key_exists('ref', $_REQUEST) ? $_REQUEST['ref'] : (count($refs) == 1 ? $refs[0] : false);
+    if (count($refs) == 0) {
+      $Ref="$Os/$Arch/$Stream";
+    }
 ?>
 <span class='ref'>
 Ветка:
 <select name='ref'>
 <?php
-  foreach ($refs as $ref) {
-    $selected = ($ref == $Ref) ? 'selected' : '';
+    foreach ($refs as $ref) {
+      $selected = ($ref == $Ref) ? 'selected' : '';
 ?>
   <option value='<?= $ref?>' <?= $selected?>><?= $ref?></option>
 <?php
-    }
+      }
 ?>
 </select>
 </span>
 <?php
   }
+}
 ?>
-
-<?php } ?>
 <button type='submit'>Отобразить</button>
 </form>
 <?php if (!$Ref) exit(0); ?>
@@ -101,9 +110,11 @@ function markAfter(input) {
 
 }
 </script>
-
+<?php
+if (count($refs) > 0) {
+?>
 <p>
-<form action='ostree/install/'>
+<form action='ostree/install/' target='ostreeREST'>
 <div class='addSubtef'>
 Добавить подветку:
 <br />
@@ -114,7 +125,9 @@ function markAfter(input) {
 <button type='submit'>Добавить</button>
 </div>
 </form>
-
+<?php
+}
+?>
 <ul>
 <?php
 foreach (repos::repoTypes() as $repoType) {
@@ -122,12 +135,30 @@ foreach (repos::repoTypes() as $repoType) {
   $commits = $repo->getCommits($Ref);
   // echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
   $nCommits = count($commits);
-  if ($nCommits  <= 0) continue;
+  if ($nCommits == 0) {
+    if ($repoType != 'bare') continue;
+    $versionDates = $repo->versionDates();
+    if (count($versionDates) > 0) {
+?>
+<div class='warning'>
+В каталоге <?= $repo->varsDir?> есть каталоги /var по датам: <?= implode(', ', $versionDates)?>
+<br />
+Удалите их
+</div>
+<?php
+    } else {
+?>
+<form action='ostree/createRef/' target='ostreeREST'>
+<input name='ref' value='<?= $Ref?>' type='hidden' />
+<button type='submit'>Создать ветку <?= $Ref?></button>
+</form>
+<?php
+    }
+  continue;
+  }
 ?>
   <li>
     <ul><h3>Тип репозитория: <?= $repoType?></h3>
-
-
         <li><a href='/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
         <li>Коммиты:
           <form action='/ostree/deleteCommits/' target='ostreeREST'>
