@@ -9,18 +9,21 @@ lastVersionDate() {
 	echo $1
 }
 # MAIN
-if [ $# -gt 4 ] 
+if [ $# -gt 4 ]
 then
 	echo "Help: $0 [<branch>] [<versiondate>] [<ignition configuration file>] [<device to install>]"
 	echo "For example: $0 acos/x86_64/sisyphus 20210830 /usr/share/acos/config_example.ign /dev/sdb"
 	exit 1
 fi
 
-BRANCH=${1:-acos/x86_64/sisyphus}
-VERSIONDATE=$2
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCH
-IGNITION_CONFIG=${3:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
-DEVICE=${4:-/dev/sdb}
+BRANCHDIR=${1:-acos/x86_64/sisyphus}
+BRANCH=$2
+COMMITID=$3
+VERSIONDIR=$4
+IGNITION_CONFIG=${6:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
+DEVICE=${6:-/dev/sdb}
+
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
 OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
@@ -31,12 +34,8 @@ STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
 
-if [ -z "$VERSIONDATE" ]
-then
-        VERSIONDATE=`lastVersionDate`/0/0
-fi
 
-ARCHIVE_DIR=$VARS_DIR/$VERSIONDATE
+ARCHIVE_DIR=$VARS_DIR/$VERSIONDIR
 
 if [ ! -d $ARCHIVE_DIR ]
 then
@@ -77,7 +76,7 @@ parted $DEVICE print
 echo -en "${WARN_COLOR}All data on the disk will be destroyed.${NO_COLOR} "
 read -p "Are you sure you want to install ACOS on this disk (y/n)? " -n 1 -r
 echo
-[[ $REPLY =~ ^[Yy]$ ]] || exit 1 
+[[ $REPLY =~ ^[Yy]$ ]] || exit 1
 
 
 echo -e "${STEP_COLOR}*** Creating a partition and file system ***${NO_COLOR}"
@@ -92,7 +91,7 @@ mount "$DEVICE"1 $MOUNT_DIR
 
 echo -e "${STEP_COLOR}*** Unpacking ostree repository ***${NO_COLOR}"
 ostree admin init-fs --modern $MOUNT_DIR
-ostree pull-local --repo $MOUNT_DIR/ostree/repo $MAIN_REPO $BRANCH
+ostree pull-local --repo $MOUNT_DIR/ostree/repo $MAIN_REPO $COMMITID
 
 echo -e "${STEP_COLOR}*** GRUB installation ***${NO_COLOR}"
 grub-install --root-directory=$MOUNT_DIR $DEVICE
@@ -100,6 +99,7 @@ ln -s ../loader/grub.cfg $MOUNT_DIR/boot/grub/grub.cfg
 
 echo -e "${STEP_COLOR}*** Deployment of $OS_NAME ***${NO_COLOR}"
 ostree config --repo $REPO_LOCAL set sysroot.bootloader grub2
+ostree refs --repo $REPO_LOCAL --create $BRANCH $COMMITID
 ostree refs --repo $REPO_LOCAL --create alt:$BRANCH $BRANCH
 ostree admin os-init $OS_NAME --sysroot $MOUNT_DIR
 OSTREE_BOOT_PARTITION="/boot" ostree admin deploy alt:$BRANCH --sysroot $MOUNT_DIR --os $OS_NAME \

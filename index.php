@@ -132,8 +132,8 @@ if (count($refs) > 0) {
 <ul>
 <?php
 foreach (repos::repoTypes() as $repoType) {
-  $repo = new repo("$Os/$Arch/$Stream", $repoType);
-  $commits = $repo->getCommits($Ref);
+  $repo = new repo($Ref, $repoType);
+  $commits = $repo->getCommits();
   // echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
   $nCommits = count($commits);
   if ($nCommits == 0) {
@@ -215,12 +215,19 @@ foreach (repos::repoTypes() as $repoType) {
           </a>
           <a href='/ostree/diffTree/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
             ><button type='button'>Файловая система</button>
-          </a>		    </li>
+          </a>
+        </li>
+
 <?php
     }
 ?>
+        <li>
+          <a href='/ostree/installer-acos/?ref=<?= $Ref?>&commitId=<?= $commitId?>&version=<?= $version?>' target=ostreeREST>
+            <button type='button'>Создать загрузочный QUEMU RAW диск</button>
+          </a>
+        </li>
 		  </ul>
-            	</li>
+    </li>
 <?php
     $prevVersion = $version;
     $prevCommitId = $commitId;

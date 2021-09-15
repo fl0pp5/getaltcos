@@ -168,7 +168,7 @@ class repo {
   }
 
   function fsck($commitId) {
-    $cmd = "sudo ostree fsck $commitId  --repo=". $this->repoDir;
+    $cmd = "sudo ostree fsck $commitId  --repo=". $this->repoDir . " 2>&1";
     //echo "CMD=$cmd<br>\n";
     exec($cmd, $output);
     //print_r($output);

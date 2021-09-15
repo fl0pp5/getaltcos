@@ -8,7 +8,7 @@ $repoType = $_REQUEST['repoType'];
 $commitId = $_REQUEST['commitId'];
 
 $repo = new repo($ref, $repoType);
-echo "REPO=" . print_r($repo, 1);
+// echo "REPO=" . print_r($repo, 1);
 
 ?>
 <!DOCTYPE html>
