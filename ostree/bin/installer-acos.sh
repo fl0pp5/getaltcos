@@ -1,17 +1,9 @@
 #!/bin/bash
 set -e
-
-lastVersionDate() {
-	lastDir=`ls -1d  $VARS_DIR/* | tail -1`
-	IFS=/
-	set -- $lastDir
-	while [ $# -gt 1 ]; do shift; done
-	echo $1
-}
 # MAIN
 if [ $# -gt 4 ]
 then
-	echo "Help: $0 [<branch>] [<versiondate>] [<ignition configuration file>] [<device to install>]"
+	echo "Help: $0 <branchdir> <branch> <commitid> <versiondir> [<ignition configuration file>] [<device to install>]"
 	echo "For example: $0 acos/x86_64/sisyphus 20210830 /usr/share/acos/config_example.ign /dev/sdb"
 	exit 1
 fi
