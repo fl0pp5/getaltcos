@@ -100,13 +100,13 @@ class repos {
 
 
   /*
-   * Возвращает иям поддиректория варианта в каталоге /vars
+   * Возвращает имя поддиректория варианта в каталоге /vars
    * sisyphus.20210914.0.0 => 20210914/0/0
    * sisyphus_apache.20210914.0.0 => apache/20210914/0/0
    */
   static function versionVarSubDir($version) {
     $path = explode('.', strtolower($version));
-    $stream = strtolower($path[0]);
+    $stream = $path[0];
     $path1 = explode('_', $stream);
     $dir = implode('_', array_slice($path1, 1));
     $date = $path[1];
