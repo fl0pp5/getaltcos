@@ -2,10 +2,10 @@
 
 # Split passwd file (/etc/passwd) into
 # /usr/etc/passwd - home users password file (uid >= 500)
-# /usr/lib/passwd - system users password file (uid < 500)
+# /lib/passwd - system users password file (uid < 500)
 splitPasswd() {
   > /usr/etc/passwd
-  > /usr/lib/passwd
+  > /lib/passwd
   set -f
   ifs=$IFS
   while read line
@@ -14,7 +14,7 @@ splitPasswd() {
     uid=$3
     if [ $uid -lt 500 ]
     then
-      echo $line >> /usr/lib/passwd
+      echo $line >> /lib/passwd
     else
       echo $line >> /usr/etc/passwd
     fi
@@ -23,10 +23,10 @@ splitPasswd() {
 
 # Split group file (/etc/group) into
 # /usr/etc/group - home users password file (uid >= 500)
-# /usr/lib/group - system users password file (uid < 500)
+# /lib/group - system users password file (uid < 500)
 splitGroup() {
   > /usr/etc/group
-  > /usr/lib/group
+  > /lib/group
   set -f
   ifs=$IFS
   while read line
@@ -35,7 +35,7 @@ splitGroup() {
     uid=$3
     if [ $uid -lt 500 ]
     then
-      echo $line >> /usr/lib/group
+      echo $line >> /lib/group
     else
       echo $line >> /usr/etc/group
     fi
