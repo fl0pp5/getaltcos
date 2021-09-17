@@ -97,8 +97,14 @@ if ($Arch) {
 </form>
 <?php
 if (!$Ref) exit(0);
-if (!$refExists) {
-  echo "<div class='warning'>Запрошенные ветка $Ref отсутствует в bare-репозитории</div>";
+if (!$refExists && strlen($Ref) > 0) {
+  echo "<div class='warning'>Запрошенная ветка '$Ref' отсутствует в bare-репозитории</div>";
+?>
+<form action='ostree/createRef/' target='ostreeREST'>
+<input name='ref' value='<?= $Ref?>' type='hidden' />
+<button type='submit'>Создать ветку <?= $Ref?></button>
+</form>
+<?php
   exit(0);
 }
 ?>

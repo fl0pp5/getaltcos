@@ -44,17 +44,27 @@ then
 	exit 1
 fi
 
-VERSION_DIR=${OUT_DIR}/$VERSION_DATE/0/0
+DATA_DIR=${OUT_DIR}/$VERSION_DATE
+if [ -d $DATA_DIR  -a -n "`ls -1 $DATA_DIR`" ]
+then
+  let MAJOR=`ls -1 $DATA_DIR | sort -n | tail -1`+1
+else
+  MAJOR=0
+fi
 
-if [ -d $VERSION_DIR ]
+
+VERSION_DIR=$VERSION_DATE/$MAJOR/0
+VERSION_FULLDIR=${OUT_DIR}/$VERSION_DIR
+
+if [ -d $VERSION_FULLDIR ]
 then
 	echo "ERROR: Version for date $VERSION_DATE already exists."
-	echo "Try: rm -rf $VERSION_DIR"
+	echo "Try: rm -rf $VERSION_FULLDIR"
 	exit 1
 fi
-rm -rf $VERSION_DIR
+rm -rf $VERSION_FULLDIR
 
-mkdir --mode=0775 -p $VERSION_DIR
+mkdir --mode=0775 -p $VERSION_FULLDIR
 
 TMP_DIR=`mktemp --tmpdir -d rootfs_to_repo-XXXXXX`
 MAIN_ROOT=$TMP_DIR/root
@@ -121,7 +131,7 @@ rm -f $MAIN_ROOT/ostree.conf
 rm -rf $MAIN_ROOT/usr/etc
 mv $MAIN_ROOT/etc $MAIN_ROOT/usr/etc
 
-rsync -av $MAIN_ROOT/var $VERSION_DIR
+rsync -av $MAIN_ROOT/var $VERSION_FULLDIR
 
 # tar -cf $VAR_ARCH -C $MAIN_ROOT var
 rm -rf $MAIN_ROOT/var/*
@@ -133,9 +143,10 @@ then
 	ostree init --repo=$MAIN_REPO --mode=bare
 fi
 
-ostree commit --repo=$MAIN_REPO --tree=dir=$MAIN_ROOT -b $BRANCH \
+COMMITID=`ostree commit --repo=$MAIN_REPO --tree=dir=$MAIN_ROOT -b $BRANCH \
 	--no-xattrs --no-bindings --mode-ro-executables \
-	--add-metadata-string=version=sisyphus.$VERSION_DATE.0.0
+	--add-metadata-string=version=sisyphus.$VERSION_DATE.$MAJOR.0`
 
-
+cd ${OUT_DIR}
+ln -sf $VERSION_DIR $COMMITID
 rm -rf $TMP_DIR

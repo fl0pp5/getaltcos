@@ -57,6 +57,8 @@ if ($lastCommitId != $commitId) {
 list($stream, $date, $major, $minor) = explode('.', $lastVersion);
 $nextMinor = intval($minor) + 1;
 $nextVersion = "$stream.$date.$major.$nextMinor";
+$nextVersionVarSubDir = repos::versionVarSubDir($nextVersion);
+
 
 $cmd = "$BINDIR/ostree_checkout.sh '$refDir' '$lastCommitId' '$versionVarSubDir' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
@@ -107,11 +109,12 @@ $output = [];
 exec($cmd, $output);
 echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/ostree_commit.sh $refDir $lastCommitId $nextVersion $ref";
+$cmd = "$BINDIR/ostree_commit.sh $refDir $lastCommitId $nextVersion $ref $nextVersionVarSubDir";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";
+$commitId = pop($output);
 
 // $cmd = "$BINDIR/ostree_pull-local.sh $refDir";
 // echo "PULLCMD=$cmd\n";

@@ -1,0 +1,17 @@
+[
+    {
+        "parentRef": "acos\/x86_64\/sisyphus\/",
+        "subName": "k8s",
+        "pkgs": [
+            "kubernetes-kubeadm",
+            "kubernetes-kubelet",
+            "cri-tools"
+        ],
+        "cmd": "kubeadm config images pull"
+    },
+    {
+        "parentRef": "acos\/x86_64\/sisyphus\/",
+        "subName": "lamp",
+        "pkgs": []
+    }
+]
