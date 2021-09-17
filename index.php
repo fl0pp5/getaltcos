@@ -78,7 +78,9 @@ if ($Arch) {
 Ветка:
 <select name='ref'>
 <?php
+    $refExists = false;
     foreach ($refs as $ref) {
+      if ($ref == $Ref) $refExists=true;
       $selected = ($ref == $Ref) ? 'selected' : '';
 ?>
   <option value='<?= $ref?>' <?= $selected?>><?= $ref?></option>
@@ -93,7 +95,13 @@ if ($Arch) {
 ?>
 <button type='submit'>Отобразить</button>
 </form>
-<?php if (!$Ref) exit(0); ?>
+<?php
+if (!$Ref) exit(0);
+if (!$refExists) {
+  echo "<div class='warning'>Запрошенные ветка $Ref отсутствует в bare-репозитории</div>";
+  exit(0);
+}
+?>
 
 <title>Административный интерфейс OSTREE-потоков ALTLinux Container OS</title>
 <script>
