@@ -1,6 +1,7 @@
 FROM acos/x86_64/sisyphus
 
 RUN \
-  apt-get update; \
-  apt-get install -y kubernetes-kubeadm kubernetes-kubelet cri-tools; \
-  kubeadm config images pull
+  apt-get update; 
+RUN  apt-get install -y kubernetes-kubeadm kubernetes-kubelet cri-tools; 
+RUN kubeadm config images pull
+
