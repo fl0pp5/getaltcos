@@ -61,6 +61,33 @@ class repos {
     return $ret;
   }
 
+
+  /**
+   * Возвращает тропу, где находятся данные ветки (vars, roots, ACOSfile, ...)
+   * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
+   * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus/apache
+   */
+  static function refToDir($ref) {
+    $ret = strtolower($ref);
+    return $ret;
+  }
+
+  /**
+   * Возвращает тропу, где находятся данные ветки (vars, roots, ACOSfile, ...)
+   * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
+   * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus/apache
+   */
+  static function dirToRef($ref) {
+    $path = explode('/', $ref);
+    $ret = implode('/', array_slice($path, 0, 2));
+    for ($i = 2; $i < count($path)-1; $i++) {
+      $ret .= "/" . ucfirst($path[$i]);
+    }
+    $ret .= "/" . ucfirst($path[$i]);
+    return $ret;
+  }
+
+
   /**
    * Возвращает тропу, где находятся репозитории bare, archive
    * acos/x86_64/sisyphus -> acos/x86_64/sisyphus

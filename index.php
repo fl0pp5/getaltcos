@@ -4,6 +4,8 @@ $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
 require_once('repos.php');
+require_once('acosfile.php');
+
 ?>
 <html>
 <head>
@@ -78,14 +80,19 @@ if ($Arch) {
 Ветка:
 <select name='ref'>
 <?php
+    $acosSubRefs = array_flip(acosfile::getAcosSubRefs($Ref));
+//     echo "<pre>ACOSSUBREFS=" . print_r($acosSubRefs, 1) . "</pre>";
     $refExists = false;
     foreach ($refs as $ref) {
       if ($ref == $Ref) $refExists=true;
+      if (key_exists($ref, $acosSubRefs)) unset($acosSubRefs[$ref]);
       $selected = ($ref == $Ref) ? 'selected' : '';
 ?>
   <option value='<?= $ref?>' <?= $selected?>><?= $ref?></option>
 <?php
-      }
+    }
+    $acosSubRefs = array_keys($acosSubRefs);
+//     echo "<pre>ACOSSUBREFS=" . print_r($acosSubRefs, 1) . "</pre>";
 ?>
 </select>
 </span>
@@ -129,7 +136,7 @@ if (count($refs) > 0) {
 ?>
 <p>
 <form action='ostree/install/' target='ostreeREST'>
-<input type='hidden' name='ref' value='<?= $ref?>' />
+<input type='hidden' name='ref' value='<?= $Ref?>' />
 <div class='addSubtef'>
 Добавить подветку:
 <br />
@@ -141,6 +148,22 @@ if (count($refs) > 0) {
 </div>
 </form>
 <?php
+  if (count($acosSubRefs) > 0) {
+?>
+<form action='/ostree/build/' target='ostreeREST'>
+  <select name='acosfileref'>
+<?php
+    foreach ($acosSubRefs as $acosSubRef) {
+?>
+    <option value='<?= $acosSubRef?>'><?= $acosSubRef?></option>
+<?php
+    }
+?>
+  </select>
+  <button type='submit'>Построить</button>
+</form>
+<?php
+  }
 }
 ?>
 <ul>

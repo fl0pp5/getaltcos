@@ -1,8 +1,9 @@
  <?php
+require_once "repo.php";
+class acosfile {
 
- class acosfile {
-
-    function __construct($file) {
+    function __construct($ref) {
+      $file = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refToDir($ref) . "/ACOSfile";
       $this->operators = [];
       if (!file_exists($file)) {
         $this->error = "Файл $file отсутствует";
@@ -52,6 +53,22 @@
         $this->operators[] = [ $operator => $operatorContent ];
         $operator = false;
       }
+    }
+
+    static function getAcosSubRefs($ref) {
+      $refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refToDir($ref);
+      $ret = [];
+      $fd = dir($refDir);
+      while ($entry = $fd->read()) {
+        if (substr($entry, 0, 1) == '.' || in_array($entry, ['vars', 'roots'])) continue;
+        $acosDir = "$refDir/$entry";
+        $acosFile = "$acosDir/ACOSfile";
+        if (file_exists($acosFile)) {
+          $subRef = "$ref/$entry";
+          $ret[] = $subRef;
+        }
+      }
+      return $ret;
     }
 
 }
