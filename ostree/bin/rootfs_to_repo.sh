@@ -122,7 +122,7 @@ f /run/ostree/initramfs-mount-var 0755 root root -
 EOF
 chroot $MAIN_ROOT dracut --reproducible --gzip -v --no-hostonly \
 	-f /boot/initramfs-$SHA \
-	--add ignition --add ostree \
+	--add ignition-acos --add ostree \
 	--include /ostree.conf /etc/tmpfiles.d/ostree.conf \
 	--include /etc/systemd/network/eth0.network /etc/systemd/network/eth0.network \
 	--omit-drivers=floppy --omit=nfs --omit=lvm --omit=iscsi \
