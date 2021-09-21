@@ -63,6 +63,12 @@ $ git clone git@github.com:alt-cloud/getacos.git
 # systemctl start httpd2
 ```
 
+Раскомментируйте строку в `/etc/sudoers` для доступа пользователей группы `wheel` в `root` без пароля: 
+```
+WHEEL_USERS ALL=(ALL) NOPASSWD: ALL
+```
+
+
 Настройка доступа к серверу в файле `/etc/hosts`:
 ```
 ...
