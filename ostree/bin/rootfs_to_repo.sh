@@ -109,6 +109,8 @@ base_url=\"http://getacos.altlinux.org\"
 
 echo "$UPDATEIP getacos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
+chroot $MAIN_ROOT groupadd acos
+chroot $MAIN_ROOT useradd -g acos -G docker,wheel -d /var/home/acos --create-home -s /bin/bash acos
 
 KERNEL=`find $MAIN_ROOT/boot/ -type f -name "vmlinuz-*"`
 SHA=`sha256sum "$KERNEL" | awk '{print $1;}'`
