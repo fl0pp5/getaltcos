@@ -4,8 +4,9 @@ set -e
 
 if [ $# -gt 4 ]
 then
-	echo "Help: $0 [<branch>] [<commitid>] [<directory of main ostree repository>] [<out_file>]"
+	echo "Help: $0 [<branch>] [<commitid> or <vardir<] [<directory of main ostree repository>] [<out_file>]"
 	echo "For example: $0  acos/x86_64/sisyphus ac24e repo out/1.qcow2  "
+	echo "For example: $0  acos/x86_64/sisyphus out/var repo out/1.qcow2  "
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
 	exit 1
 fi
@@ -38,7 +39,14 @@ SHORTCOMMITID=$2
 if [ -z $SHORTCOMMITID ]
 then
   COMMITID=`lastCommitId $BRANCHDIR`
+  VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
 else
+  if [[ "$COMMITID" == */* ]] # It's VAR_DIR
+  then
+    VAR_DIR=$COMMITID
+  else
+    VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
+  fi
   COMMITID=`fullCommitId $BRANCHDIR $SHORTCOMMITID`
 fi
 if [ -z "$COMMITID" ]
@@ -66,7 +74,6 @@ then
 fi
 
 OS_NAME=alt-containeros
-VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
 
 MOUNT_DIR=`mktemp --tmpdir -d acos_make_qcow2-XXXXXX`
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
