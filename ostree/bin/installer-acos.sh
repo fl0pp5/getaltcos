@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
+
 # MAIN
 if [ $# -gt 4 ]
 then
@@ -8,26 +11,34 @@ then
 	exit 1
 fi
 
-BRANCHDIR=${1:-acos/x86_64/sisyphus}
-BRANCH=$2
-COMMITID=$3
-VERSIONDIR=$4
-IGNITION_CONFIG=${6:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
-DEVICE=${6:-/dev/sdb}
+BRANCH=${1:-acos/x86_64/sisyphus}
+COMMITID=$2
+IGNITION_CONFIG=${3:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
+DEVICE=${4:-/dev/sdb}
 
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
+
+
+BRANCHDIR=`refToDir $BRANCH`
+BRANCHREPODIR=`refRepoDir $BRANCH`
+
+BRANCH_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHREPODIR
 OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
-export VARS_DIR=$BRANCH_REPO/vars
+export VARS_DIR=$BRANCH_DIR/vars
 MAIN_REPO=$BRANCH_REPO/bare/repo
 
 STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
 
+if [ -n $COMMITID ]
+then
+  COMMITID=`lastCommitId $BRANCHDIR`
+fi
 
-ARCHIVE_DIR=$VARS_DIR/$VERSIONDIR
+ARCHIVE_DIR=$VARS_DIR/$COMMITID
 
 if [ ! -d $ARCHIVE_DIR ]
 then
@@ -114,9 +125,9 @@ echo
 echo -e "${STEP_COLOR}*** Setting root password ***${NO_COLOR}"
 chroot $MOUNT_DIR/ostree/boot.1/$OS_NAME/*/0/ passwd
 
-echo
-echo -e "${STEP_COLOR}*** Setting zincati password ***${NO_COLOR}"
-chroot $MOUNT_DIR/ostree/boot.1/$OS_NAME/*/0/ passwd zincati
+# echo
+# echo -e "${STEP_COLOR}*** Setting zincati password ***${NO_COLOR}"
+# chroot $MOUNT_DIR/ostree/boot.1/$OS_NAME/*/0/ passwd zincati
 
 
 echo -e "${STEP_COLOR}*** Unmounting ***${NO_COLOR}"

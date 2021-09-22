@@ -33,7 +33,7 @@ $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
 $refDir = repos::refRepoDir($ref);
 $version = repos::refVersion($ref);
-$versionVarSubDir = repos::versionVarSubDir($version);
+// $versionVarSubDir = repos::versionVarSubDir($version);
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
@@ -54,6 +54,7 @@ if ($lastCommitId != $commitId) {
   exit(1);
 }
 
+$versionVarSubDir = repos::versionVarSubDir($version);
 list($stream, $date, $major, $minor) = explode('.', $lastVersion);
 $nextMinor = intval($minor) + 1;
 $nextVersion = "$stream.$date.$major.$nextMinor";

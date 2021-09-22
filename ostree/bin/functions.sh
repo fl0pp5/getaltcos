@@ -4,40 +4,50 @@
 # /usr/etc/passwd - home users password file (uid >= 500)
 # /lib/passwd - system users password file (uid < 500)
 splitPasswd() {
-  > /usr/etc/passwd
-  > /lib/passwd
+  frompass=$1
+  syspass=$2
+  userpass=$3
+  > $syspass
+  > $userpass
   set -f
   ifs=$IFS
+  exec < $frompass
   while read line
   do
     IFS=:;set -- $line;IFS=$ifs
+    user=$1
     uid=$3
-    if [ $uid -lt 500 ]
+    if [ $uid -ge 500 -o $user = 'root' ]
     then
-      echo $line >> /lib/passwd
+      echo $line >> $userpass
     else
-      echo $line >> /usr/etc/passwd
+      echo $line >> $syspass
     fi
   done
 }
 
 # Split group file (/etc/group) into
-# /usr/etc/group - home users password file (uid >= 500)
-# /lib/group - system users password file (uid < 500)
+# /usr/etc/group - home users group file (uid >= 500)
+# /lib/group - system users group file (uid < 500)
 splitGroup() {
-  > /usr/etc/group
-  > /lib/group
+  fromgroup=$1
+  sysgroup=$2
+  usergroup=$3
+  > $sysgroup
+  > $usergroup
   set -f
   ifs=$IFS
+  exec < $fromgroup
   while read line
   do
     IFS=:;set -- $line;IFS=$ifs
+    user=$1
     uid=$3
-    if [ $uid -lt 500 ]
+    if [ $uid -ge 500 -o $user = 'root' -o $user = 'adm'  -o $user = 'wheel'  -o $user = 'systemd-network'  -o $user = 'systemd-journal'  -o $user = 'docker' ]
     then
-      echo $line >> /lib/group
+      echo $line >> $usergroup
     else
-      echo $line >> /usr/etc/group
+      echo $line >> $sysgroup
     fi
   done
 }
@@ -54,6 +64,14 @@ refRepoDir() {
 }
 
 
+# Возвращает тропу, где находятся данные ветки (vars, roots, ACOSfile, ...)
+# acos/x86_64/sisyphus -> acos/x86_64/sisyphus
+# acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus/apache
+refToDir() {
+  ref=$1
+  echo $ref | tr '[:upper:]' '[:lower:]'
+}
+
 # Возвращает иям поддиректория варианта в каталоге /vars
 # sisyphus.20210914.0.0 => 20210914/0/0
 # sisyphus_apache.20210914.0.0 => apache/20210914/0/0
@@ -69,6 +87,12 @@ versionVarSubDir() {
   echo "$dir/$date/$major/$minor"
 }
 
+lastCommitId() {
+  refDir=$1
+  cd $DOCUMENT_ROOT/ACOS/streams/$refDir/vars
+  id=`ls -1dr ???????????????????????????????????????????????????????????????? | tail -1`
+  echo $id
+}
 
 
 

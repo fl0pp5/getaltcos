@@ -227,6 +227,9 @@ foreach (repos::repoTypes() as $repoType) {
           ></a>
         </li>
 		    <li>Содержание коммита
+          <a href='/ostree/RPM/?ref=<?= $Ref?>&version=<?= $version?>' target=ostreeREST
+            ><button type='button'>RPM</button>
+          </a>
           <a href='/ostree/ls/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
             ><button type='button'>OSTREE</button>
           </a>

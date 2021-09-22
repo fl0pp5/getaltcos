@@ -10,7 +10,7 @@ $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 
 if (repos::isBaseRef($ref)) {
-  $cmd = "sudo $BINDIR/rootfs_to_repo.sh $ref";
+  $cmd = "sudo sh -x $BINDIR/rootfs_to_repo.sh $ref 2>&1";
   echo "ROOTFS_TO_REPO=$cmd\n";
   $output = [];
   exec($cmd, $output);

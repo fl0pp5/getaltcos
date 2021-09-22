@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
 
 if [ $# = 0 ]
 then
@@ -109,6 +110,18 @@ base_url=\"http://getacos.altlinux.org\"
 
 echo "$UPDATEIP getacos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
+chroot $MAIN_ROOT groupadd acos
+chroot $MAIN_ROOT useradd -g acos -G docker,wheel -d /var/home/acos --create-home -s /bin/bash acos
+
+# Split passwd file (/etc/passwd) into
+splitPasswd $MAIN_ROOT/etc/passwd $MAIN_ROOT/lib/passwd /tmp/passwd.$$
+mv /tmp/passwd.$$ $MAIN_ROOT/etc/passwd
+#
+# # Split group file (/etc/group)
+splitGroup $MAIN_ROOT/etc/group $MAIN_ROOT/lib/group /tmp/group.$$
+mv /tmp/group.$$ $MAIN_ROOT/etc/group
+
+sed -e 's/passwd:.*$/& altfiles/' -e 's/group.*$/& altfiles/' -i $MAIN_ROOT/etc/nsswitch.conf
 
 KERNEL=`find $MAIN_ROOT/boot/ -type f -name "vmlinuz-*"`
 SHA=`sha256sum "$KERNEL" | awk '{print $1;}'`
@@ -122,11 +135,12 @@ f /run/ostree/initramfs-mount-var 0755 root root -
 EOF
 chroot $MAIN_ROOT dracut --reproducible --gzip -v --no-hostonly \
 	-f /boot/initramfs-$SHA \
-	--add ignition-acos --add ostree \
+	--add ignition --add ostree \
 	--include /ostree.conf /etc/tmpfiles.d/ostree.conf \
 	--include /etc/systemd/network/eth0.network /etc/systemd/network/eth0.network \
 	--omit-drivers=floppy --omit=nfs --omit=lvm --omit=iscsi \
 	--kver `ls $MAIN_ROOT/lib/modules`
+
 rm -f $MAIN_ROOT/ostree.conf
 rm -rf $MAIN_ROOT/usr/etc
 mv $MAIN_ROOT/etc $MAIN_ROOT/usr/etc

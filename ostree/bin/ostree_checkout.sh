@@ -21,8 +21,9 @@ then
   sudo mv $rootsPath $rootsPathOld
   sudo umount $rootsPathOld/merged
   sudo  rm -rf $rootsPathOld
-  sudo mkdir -p $rootsPath
 fi
+sudo mkdir -p $rootsPath
+
 cd $rootsPath
 if [ ! -d $lastCommitId ]
 then
@@ -44,6 +45,5 @@ cd merged
 sudo ln -sf  /usr/etc/ ./etc;
 sudo rsync -av $varDir/var .
 sudo mkdir -p ./run/lock ./run/systemd/resolve/ ./tmp/.private/root/
-sudo cp /etc/resolv.conf .//run/systemd/resolve/resolv.conf
+sudo cp /etc/resolv.conf ./run/systemd/resolve/resolv.conf
 
-# sudo tar xvf $varFile

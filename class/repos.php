@@ -115,31 +115,16 @@ class repos {
   }
 
   /*
-   * Возвращает имя поддиректория дат ветки в каталоге $ref/vars/...
-   * acos/x86_64/Sisyphus => ./
-   * acos/x86_64/Sisyphus/apache => ./apache
-   */
-  static function refVersionDatesSubDir($ref) {
-    $path = explode('/', strtolower($ref));
-    $ret = './' . implode('/', array_slice($path, 3));
-    return $ret;
-  }
-
-
-  /*
    * Возвращает имя поддиректория варианта в каталоге /vars
    * sisyphus.20210914.0.0 => 20210914/0/0
    * sisyphus_apache.20210914.0.0 => apache/20210914/0/0
    */
   static function versionVarSubDir($version) {
     $path = explode('.', strtolower($version));
-    $stream = $path[0];
-    $path1 = explode('_', $stream);
-    $dir = implode('_', array_slice($path1, 1));
     $date = $path[1];
     $major = $path[2];
     $minor = $path[3];
-    $ret = "$dir/$date/$major/$minor";
+    $ret = "$date/$major/$minor";
     return $ret;
   }
 

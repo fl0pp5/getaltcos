@@ -5,11 +5,11 @@ class repo {
     $this->repoType = $repoType;
     $this->ref = $ref;
     $this->refs = false;
-    $this->refRepoDir = repos::refRepoDir($ref);
-    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . $this->refRepoDir;
-    $this->repoDir = $this->refDir . "/$repoType/repo";
+    $this->refRepoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refRepoDir($ref);
+    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refToDir($ref);
+    $this->repoDir = $this->refRepoDir . "/$repoType/repo";
     $this->rootsDir = $this->refDir . "/roots";
-    $this->varsDir = $this->refDir . "/vars/" . repos::refVersionDatesSubDir($ref);
+    $this->varsDir = $this->refDir . "/vars/";
     $this->commits = false;
     $this->lastCommit = false;
     $this->lastCommitId = false;
@@ -140,6 +140,9 @@ class repo {
     echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
     echo "<pre>REFS=" . print_r($output, 1) . "</pre>\n";
+    $cmd = "sudo rm -f " . $this->varsDir . "/$commitId;";
+    echo "<pre>CMD=$cmd</pre>\n";
+    exec($cmd);
     return $output;
   }
 

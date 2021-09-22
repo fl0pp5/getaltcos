@@ -17,10 +17,10 @@ $refDir = repos::refRepoDir($ref);
 $subRef = repos::subRef($ref, $subName);
 $subVersion = repos::refVersion($subRef);
 $subVersionVarSubDir = repos::versionVarSubDir($subVersion);
+
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
 $refRepoDir = $repo->refRepoDir;
-
 
 if (!$repo->haveConfig()) {
   echo "Bare repository $repoBarePath don't exists";

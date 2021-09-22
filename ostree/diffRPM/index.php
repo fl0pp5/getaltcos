@@ -1,9 +1,15 @@
 <?php
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
-$version1Dir = implode('/', array_slice(explode('.', $_REQUEST['version1']), 1));
-$version2Dir = implode('/', array_slice(explode('.', $_REQUEST['version2']), 1));
+// $version1Dir = implode('/', array_slice(explode('.', $_REQUEST['version1']), 1));
+// $version2Dir = implode('/', array_slice(explode('.', $_REQUEST['version2']), 1));
+$version1 = $_REQUEST['version1'];
+$version2 = $_REQUEST['version2'];
+$version1Dir = repos::versionVarSubDir($version1);
+$version2Dir = repos::versionVarSubDir($version2);
+
 $ref = $_REQUEST['ref'];
-$varsDir = "$rootdir/ACOS/streams/${ref}/vars/";
+$refDir = repos::refToDir($ref);
+$varsDir = "$rootdir/ACOS/streams/${refDir}/vars";
 $path1 = "$varsDir/$version1Dir";
 $path2 = "$varsDir/$version2Dir";
 // echo "PATH1=$path1";

@@ -18,23 +18,19 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
 Добавление виртуального WWW-сервера в файле `/etc/httpd2/conf/sites-available/vhosts.conf`:
 ```
 <VirtualHost *:80>
-       ServerAdmin user@domain     
+       ServerAdmin user@domain
        DocumentRoot "/var/www/vhosts/getacos"
        ServerName getacos.altlinux.org
-       ServerAlias acos.altlinux.org 
+       ServerAlias acos.altlinux.org
        ServerAlias builds.acos.altlinux.org
        ErrorLog "/var/log/httpd2/getacos/error.log"
        CustomLog "/var/log/httpd2/getacos/access.log" common
        <Directory /var/www/vhosts/getacos>
          Options Indexes FollowSymLinks
-       </Directory>       
+       </Directory>
 </VirtualHost>
 ```
 
-Создание каталогов логов сайта:
-```
-# chown root:webmaster  /var/www/vhosts/getacos
-```
 
 Включение пользователя в группу webmaster:
 ```
@@ -42,14 +38,15 @@ WEB-сервер Apache2 с поддержкой модуля PHP имеет д�
 # usermod  -a -G wheel apache2
 ```
 
-Копирование репозитория (из под обвчного пользователя-разработчика):
+Копирование репозитория (из под обычного пользователя-разработчика):
 ```
 $ cd /var/www/vhosts/
 $ git clone git@github.com:alt-cloud/getacos.git
 ```
 
-Включение поддержки втртуальных сайтов:
+Включение поддержки виртуальных сайтов:
 ```
+# chown root:webmaster  /var/www/vhosts/getacos
 # a2ensite vhosts
 # mkdir /var/log/httpd2/getacos/
 # chmod 777  /var/log/httpd2/getacos
