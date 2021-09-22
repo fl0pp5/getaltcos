@@ -4,7 +4,7 @@ set -e
 
 if [ $# -gt 4 ]
 then
-	echo "Help: $0 [<branch>] [<commitid> or <vardir<] [<directory of main ostree repository>] [<out_file>]"
+	echo "Help: $0 [<branch>] [<commitid> or <vardir>] [<directory of main ostree repository>] [<out_file>]"
 	echo "For example: $0  acos/x86_64/sisyphus ac24e repo out/1.qcow2  "
 	echo "For example: $0  acos/x86_64/sisyphus out/var repo out/1.qcow2  "
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
