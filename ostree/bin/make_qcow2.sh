@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
-. $DOCUMENT_ROOT/ostree/bin/functions.sh
+if [ -f functions.sh ]
+then
+  . functions.sh
+else
+  . $DOCUMENT_ROOT/ostree/bin/functions.sh
+fi
 
 if [ $# -gt 4 ]
 then
