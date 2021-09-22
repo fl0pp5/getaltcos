@@ -52,7 +52,7 @@ OUT_FILE=$4
 if [ -z "$OUT_FILE" ]
 then
   OUT_DIR="$BRANCH_DIR/images/qcow2"
-  if [ -d $OUT_DIR ]
+  if [ ! -d $OUT_DIR ]
   then
     mkdir -m 0775 -p $OUT_DIR
   fi
@@ -61,6 +61,7 @@ then
 fi
 
 OS_NAME=alt-containeros
+VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
 
 MOUNT_DIR=`mktemp --tmpdir -d acos_make_qcow2-XXXXXX`
 REPO_LOCAL=$MOUNT_DIR/ostree/repo

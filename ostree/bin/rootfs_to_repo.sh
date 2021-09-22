@@ -149,6 +149,7 @@ rsync -av $MAIN_ROOT/var $VERSION_FULLDIR
 
 # tar -cf $VAR_ARCH -C $MAIN_ROOT var
 rm -rf $MAIN_ROOT/var
+mkdir $MAIN_ROOT/var
 
 if [ ! -d $MAIN_REPO ]
 then
