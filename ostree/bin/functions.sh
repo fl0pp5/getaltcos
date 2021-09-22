@@ -72,7 +72,7 @@ refToDir() {
   echo $ref | tr '[:upper:]' '[:lower:]'
 }
 
-# Возвращает иям поддиректория варианта в каталоге /vars
+# Возвращает имя поддиректория варианта в каталоге /vars
 # sisyphus.20210914.0.0 => 20210914/0/0
 # sisyphus_apache.20210914.0.0 => apache/20210914/0/0
 versionVarSubDir() {
@@ -87,11 +87,63 @@ versionVarSubDir() {
   echo "$dir/$date/$major/$minor"
 }
 
+fullCommitId() {
+  refDir=$1
+  shortCommitId=$2
+  VarDir=$DOCUMENT_ROOT/ACOS/streams/$refDir/vars
+  cd $VarDir
+  ids=`ls -1dr $shortCommitId*`
+  set -- $ids
+  if [ $# -eq 0 ]
+  then
+    echo "Коммит $shortCommitId отсутствует" >&2
+    echo ''
+    return
+  fi
+  if [ $# -gt 1 ]
+  then
+    echo "Коммит $shortCommitId неоднозначен. Ему соответствуют несколько коммитов: $*" >&2
+    echo ''
+    return
+  fi
+  ret=$1
+  echo $ret
+}
+
 lastCommitId() {
   refDir=$1
   cd $DOCUMENT_ROOT/ACOS/streams/$refDir/vars
   id=`ls -1dr ???????????????????????????????????????????????????????????????? | tail -1`
   echo $id
+}
+
+
+
+# Возвращает вариант ветки
+# acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
+refVersion() {
+  ref=$1
+  commitId=$2
+  refDir=`refToDir $ref`
+  VarDir=$DOCUMENT_ROOT/ACOS/streams/$refDir/vars
+  fullCommitId=`fullCommitId $refDir $commitId`
+  cd $VarDir
+  ifs=$IFS;IFS=/;set -- `readlink $fullCommitId`;IFS=$ifs
+  date=$1
+  major=$2
+  minor=$3
+  refDir=`refToDir $ref`
+  IFS=/;set -- $refDir;IFS=$ifs
+  shift;shift
+  stream=$1
+  shift
+  while [ $# -gt 0 ]
+  do
+    stream="$stream_$1"
+    shift
+  done
+  ret="$stream.$date.$major.$minor"
+  echo $ret
 }
 
 

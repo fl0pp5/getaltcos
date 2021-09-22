@@ -6,37 +6,58 @@ set -e
 # MAIN
 if [ $# -gt 4 ]
 then
-	echo "Help: $0 <branchdir> <branch> <commitid> <versiondir> [<ignition configuration file>] [<device to install>]"
-	echo "For example: $0 acos/x86_64/sisyphus 20210830 /usr/share/acos/config_example.ign /dev/sdb"
+	echo "Help: $0 [<branch>] [<commitid>] [<ignition configuration file>] [<device to install>]"
+	echo "For example: $0 acos/x86_64/sisyphus ac24e /usr/share/acos/config_example.ign /dev/sdb"
 	exit 1
 fi
 
+# Set brach variables
 BRANCH=${1:-acos/x86_64/sisyphus}
-COMMITID=$2
+BRANCHREPODIR=`refRepoDir $BRANCH`
+BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHREPODIR
+MAIN_REPO=$BRANCH_REPO/bare/repo
+if [ ! -d $MAIN_REPO ]
+then
+	echo "ERROR: ostree repository must exist"
+	exit 1
+fi
+BRANCHDIR=`refToDir $BRANCH`
+BRANCH_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
+if [ ! -d  $BRANCH_DIR ]
+then
+  mkdir -m 0775 -p  $BRANCH_DIR
+fi
+
+# Set Commit variables
+SHORTCOMMITID=$2
+if [ -z $SHORTCOMMITID ]
+then
+  COMMITID=`lastCommitId $BRANCHDIR`
+else
+  COMMITID=`fullCommitId $BRANCHDIR $SHORTCOMMITID`
+fi
+if [ -z "$COMMITID" ]
+then
+  echo "ERROR: Commit $SHORTCOMMITID must exist"
+  exit 1
+fi
+
 IGNITION_CONFIG=${3:-$DOCUMENT_ROOT/ostree/data/config_example.ign}
 DEVICE=${4:-/dev/sdb}
 
 
 
-BRANCHDIR=`refToDir $BRANCH`
-BRANCHREPODIR=`refRepoDir $BRANCH`
 
-BRANCH_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHREPODIR
 OS_NAME=alt-containeros
 MOUNT_DIR=/tmp/acos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
 export VARS_DIR=$BRANCH_DIR/vars
-MAIN_REPO=$BRANCH_REPO/bare/repo
 
 STEP_COLOR='\033[1;32m'
 WARN_COLOR='\033[1;31m'
 NO_COLOR='\033[0m'
 
-if [ -n $COMMITID ]
-then
-  COMMITID=`lastCommitId $BRANCHDIR`
-fi
+
 
 ARCHIVE_DIR=$VARS_DIR/$COMMITID
 

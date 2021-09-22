@@ -100,19 +100,7 @@ class repos {
     return $ret;
   }
 
-  /*
-   * Возвращает вариант ветки
-   * acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
-   */
-  static function refVersion($ref, $date=false, $major=0, $minor=0) {
-    if (!$date) {
-      $date = strftime("%Y%m%d");
-    }
-    $path = explode('/', strtolower($ref));
-    $stream = implode('_', array_slice($path, 2));
-    $ret = "$stream.$date.$major.$minor";
-    return $ret;
-  }
+
 
   /*
    * Возвращает имя поддиректория варианта в каталоге /vars
@@ -128,7 +116,70 @@ class repos {
     return $ret;
   }
 
+  function fullCommitId($refDir, $shortCommitId) {
+    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$refDir/vars";
+    $fd = opendir($varsDir);
+    $commitIds = [];
+    $len =  strlen($shortCommitId);
+    while ($entry=readdir($fd)) {
+      $file = "$varsDir/$entry";
+      if (!is_link($file) || strlen($entry) != 64 || substr($entry, 0, $len) != $shortCommitId) continue;
+      $commitIds[] = $entry;
+    }
+    if (count($commitIds) == 0) {
+        echo "Коммит $shortCommitId отсутствует";
+        return false;
+    }
+    if (count($commitIds) > 1) {
+      echo "Коммит $shortCommitId неоднозначен. Ему соответствуют несколько коммитов: " . implode(', ', $commitIds);
+      return false;
+    }
+    $ret = $commitIds[0];
+    return $ret;
+  }
 
+  function lastCommitId($refDir) {
+    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$refDir/vars";
+    $fd = opendir($varsDir);
+    $commitIds = [];
+    $len =  strlen($shortCommitId);
+    while ($entry=readdir($fd)) {
+      $file = "$varsDir/$entry";
+      if (!is_link($file) || strlen($entry) != 64) continue;
+      $stat = stat($file);
+      $mtime = $stat['mtime'];
+      $commitIds[$mtime] = $entry;
+    }
+    ksort($commitIds, SORT_NUMERIC);
+    $commitIds = array_reverse(array_values($commitIds));
+    $ret = $commitIds[0];
+    return $ret;
+  }
+
+  /*
+   * Возвращает вариант ветки по $ref и $commitId
+   * acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
+   */
+  static function refVersion($ref, $commitId=false) {
+    if (!$commitId) {
+      $date = strftime("%Y%m%d");
+      $major = 0;
+      $minor = 0;
+    } else {
+      $fullCommitId = repos::fullCommitId($ref, $commitId);
+      $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$refDir/vars";
+      $commitLink = "$varsDir/$fullCommitId";
+      $dir = readlink($commitLink);
+      $path = explode($dir);
+      $date = $path[0];
+      $major = $path[1];
+      $minor = $path[2];
+    }
+    $path = explode('/', strtolower($ref));
+    $stream = implode('_', array_slice($path, 2));
+    $ret = "$stream.$date.$major.$minor";
+    return $ret;
+  }
 
 
 }
