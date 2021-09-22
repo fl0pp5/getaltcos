@@ -1,12 +1,19 @@
 #!/bin/sh
 set -x
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
 exec 2>&1
-refDir=$1
+
+ref=$1
+refRepoDir=`repos::refRepoDir $ref`
+refDir=`repos::refToDir $ref`
+
 commitId=$2
-version=$3
-ref=$4
-nextVersionVarSubDir=$5
-repoBarePath="$DOCUMENT_ROOT/ACOS/streams/$refDir/bare/repo";
+version=`refVersion $ref $commitId`
+
+nextVersion=$3
+nextVersionVarSubDir=`versionVarSubDir $nextVersion`
+
+repoBarePath="$DOCUMENT_ROOT/ACOS/streams/$refRepoDir/bare/repo";
 rootsPath="$DOCUMENT_ROOT/ACOS/streams/$refDir/roots";
 varsPath="$DOCUMENT_ROOT/ACOS/streams/$refDir/vars";
 

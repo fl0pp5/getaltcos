@@ -1,15 +1,23 @@
 #!/bin/sh
 set -x
+
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
+
 exec 2>&1
 ref=$1
 lastCommitId=$2
-versionVarSubDir=$3
-clear=$4
+clear=$3
+
+versionVarSubDir=`versionVarSubDir $ref`
+refRepoDir=`repos::refRepoDir $ref`
+refDir=`repos::refToDir $ref`
+branchRepoPath="$DOCUMENT_ROOT/ACOS/streams/$refRepoDir"
 branchPath="$DOCUMENT_ROOT/ACOS/streams/$ref"
-repoBarePath="$branchPath/bare/repo";
+repoBarePath="$branchRepoPath/bare/repo";
 rootsPath="$branchPath/roots"
 rootsPathOld="$branchPath/rootsi.$$";
 varDir="$branchPath/vars/$versionVarSubDir"
+
 if [ ! -d $varDir ]
 then
   echo "var directory $varDir don't exists"

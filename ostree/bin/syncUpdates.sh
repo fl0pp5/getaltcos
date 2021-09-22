@@ -1,12 +1,15 @@
 #!/bin/sh
 set -x
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
 exec 2>&1
 ref=$1
-versionVarSubDir=$2
-branchPath=$DOCUMENT_ROOT/ACOS/streams/$ref/
+refDir=`repos::refToDir $ref`
+commitId=$2
+
+branchPath=$DOCUMENT_ROOT/ACOS/streams/$refDir/
 rootsPath="$branchPath/roots";
 commitPath="$rootsPath/root"
-varDir="$branchPath/vars/$versionVarSubDir"
+varDir="$branchPath/vars/$commitId"
 
 cd $rootsPath/;
 sudo du -s upper
@@ -17,6 +20,7 @@ sudo mkdir --mode 0775 -p $varDir
 cd upper
 sudo rsync -av var $varDir
 sudo rm -rf ./var ./run
+sudo mkdir ./var
 delete=`sudo find . -type c`;
 echo DELETE $delete
 sudo rm -rf $delete

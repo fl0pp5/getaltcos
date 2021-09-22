@@ -31,8 +31,8 @@ putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
 $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
-$refDir = repos::refRepoDir($ref);
-$version = repos::refVersion($ref);
+$refRepoDir = repos::refRepoDir($ref);
+$version = repos::refVersion($ref, $commitId);
 // $versionVarSubDir = repos::versionVarSubDir($version);
 
 $repoType = 'bare';
@@ -61,14 +61,14 @@ $nextVersion = "$stream.$date.$major.$nextMinor";
 $nextVersionVarSubDir = repos::versionVarSubDir($nextVersion);
 
 
-$cmd = "$BINDIR/ostree_checkout.sh '$refDir' '$lastCommitId' '$versionVarSubDir' 'all'";
+$cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
 //exit(0);
 
-$cmd = "$BINDIR/apt-get_update.sh $refDir";
+$cmd = "$BINDIR/apt-get_update.sh $ref";
 echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -77,7 +77,7 @@ echo "APT-GET_UPDATE=<pre>" . print_r($output, 1). "</pre>";
 
 $rpmListFile = tempnam('/tmp', 'ostree_');
 echo "<br>rpmListFile=$rpmListFile<br>";
-$cmd = "$BINDIR/apt-get_dist-upgrade.sh $refDir '$rpmListFile'";
+$cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref '$rpmListFile'";
 echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -104,20 +104,20 @@ $refsConf = new refsConf($ref, $lastVersion);
 $refsConf->addRpmList($RpmList);
 $refsConf->save();
 
-$cmd = "$BINDIR/syncUpdates.sh $refDir $versionVarSubDir";
+$cmd = "$BINDIR/syncUpdates.sh $refRepoDir $lastCommitId";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/ostree_commit.sh $refDir $lastCommitId $nextVersion $ref $nextVersionVarSubDir";
+$cmd = "$BINDIR/ostree_commit.sh $ref $lastCommitId $nextVersion";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";
 $commitId = pop($output);
 
-// $cmd = "$BINDIR/ostree_pull-local.sh $refDir";
+// $cmd = "$BINDIR/ostree_pull-local.sh $refRepoDir";
 // echo "PULLCMD=$cmd\n";
 // $output = [];
 // exec($cmd, $output);

@@ -119,7 +119,7 @@ lastCommitId() {
 
 
 
-# Возвращает вариант ветки
+# Возвращает вариант ветки  и $commitId
 # acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
 refVersion() {
   ref=$1
