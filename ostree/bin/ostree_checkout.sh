@@ -8,15 +8,14 @@ ref=$1
 lastCommitId=$2
 clear=$3
 
-versionVarSubDir=`versionVarSubDir $ref`
-refRepoDir=`repos::refRepoDir $ref`
-refDir=`repos::refToDir $ref`
+refRepoDir=`refRepoDir $ref`
+refDir=`refToDir $ref`
 branchRepoPath="$DOCUMENT_ROOT/ACOS/streams/$refRepoDir"
 branchPath="$DOCUMENT_ROOT/ACOS/streams/$ref"
 repoBarePath="$branchRepoPath/bare/repo";
 rootsPath="$branchPath/roots"
 rootsPathOld="$branchPath/rootsi.$$";
-varDir="$branchPath/vars/$versionVarSubDir"
+varDir="$branchPath/vars/$lastCommitId"
 
 if [ ! -d $varDir ]
 then

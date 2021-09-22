@@ -4,7 +4,7 @@ set -x
 
 exec 2>&1
 ref=$1
-refDir=`repos::refToDir $ref`
+refDir=`refToDir $ref`
 
 rpmListFile=$2
 rootsPath="$DOCUMENT_ROOT/ACOS/streams/$refDir/roots";

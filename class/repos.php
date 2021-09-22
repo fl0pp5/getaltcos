@@ -117,7 +117,7 @@ class repos {
   }
 
   function fullCommitId($refDir, $shortCommitId) {
-    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$refDir/vars";
+    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$refDir/vars";
     $fd = opendir($varsDir);
     $commitIds = [];
     $len =  strlen($shortCommitId);
