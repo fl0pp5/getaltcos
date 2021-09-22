@@ -3,7 +3,7 @@ set -x
 . $DOCUMENT_ROOT/ostree/bin/functions.sh
 exec 2>&1
 ref=$1
-refDir=`repos::refToDir $ref`
+refDir=`refToDir $ref`
 commitId=$2
 
 branchPath=$DOCUMENT_ROOT/ACOS/streams/$refDir/

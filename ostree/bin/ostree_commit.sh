@@ -4,8 +4,8 @@ set -x
 exec 2>&1
 
 ref=$1
-refRepoDir=`repos::refRepoDir $ref`
-refDir=`repos::refToDir $ref`
+refRepoDir=`refRepoDir $ref`
+refDir=`refToDir $ref`
 
 commitId=$2
 version=`refVersion $ref $commitId`
