@@ -104,7 +104,7 @@ $refsConf = new refsConf($ref, $lastVersion);
 $refsConf->addRpmList($RpmList);
 $refsConf->save();
 
-$cmd = "$BINDIR/syncUpdates.sh $refRepoDir $lastCommitId";
+$cmd = "$BINDIR/syncUpdates.sh $ref $lastCommitId";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);

@@ -34,13 +34,13 @@ $lastCommit = $repo->lastCommit;
 $lastVersion = $lastCommit['Version'];
 $versionVarSubDir = repos::versionVarSubDir($lastVersion);
 
-$cmd = "$BINDIR/ostree_checkout.sh '$refRepoDir' '$lastCommitId' '$versionVarSubDir' 'all'";
+$cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
 
-$cmd = "$BINDIR/apt-get_update.sh $refRepoDir";
+$cmd = "$BINDIR/apt-get_update.sh $ref";
 echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -52,7 +52,7 @@ $output = [];
 exec($cmd, $output);
 echo "APT-GET_INSTALL=<pre>" . print_r($output, 1). "</pre>";
 
-$cmd = "$BINDIR/syncUpdates.sh $refRepoDir  $subVersionVarSubDir";
+$cmd = "$BINDIR/syncUpdates.sh $ref $lastCommitId";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
@@ -63,7 +63,7 @@ $refsConf = new refsConf($subRef, $subVersion, $pkgs);
 $refsConf->addRpmList($rpmList);
 $refsConf->save();
 
-$cmd = "$BINDIR/ostree_commit.sh '$refDir' '$lastCommitId' '$subVersion' '$subRef'";
+$cmd = "$BINDIR/ostree_commit.sh $ref $lastCommitId $subVersion";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
