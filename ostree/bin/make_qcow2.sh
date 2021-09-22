@@ -51,7 +51,12 @@ fi
 OUT_FILE=$4
 if [ -z "$OUT_FILE" ]
 then
-  OUT_DIR="$BRANCH_DIR/images/qcow2"
+  IMAGE_DIR="$BRANCH_DIR/images"
+  if [ ! -d $IMAGE_DIR ]
+  then
+    mkdir -m 0775 -p $IMAGE_DIR
+  fi
+  OUT_DIR="$IMAGE_DIR/qcow2"
   if [ ! -d $OUT_DIR ]
   then
     mkdir -m 0775 -p $OUT_DIR
