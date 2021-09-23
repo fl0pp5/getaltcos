@@ -5,11 +5,13 @@ exec 2>&1
 ref=$1
 refDir=`refToDir $ref`
 commitId=$2
+version=$3
 
+versionVarSubDir=`versionVarSubDir $version`
 branchPath=$DOCUMENT_ROOT/ACOS/streams/$refDir/
 rootsPath="$branchPath/roots";
 commitPath="$rootsPath/root"
-varDir="$branchPath/vars/$commitId"
+varDir="$branchPath/vars/$versionVarSubDir"
 
 cd $rootsPath/;
 sudo du -s upper

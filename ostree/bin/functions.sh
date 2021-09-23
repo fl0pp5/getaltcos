@@ -74,17 +74,15 @@ refToDir() {
 
 # Возвращает имя поддиректория варианта в каталоге /vars
 # sisyphus.20210914.0.0 => 20210914/0/0
-# sisyphus_apache.20210914.0.0 => apache/20210914/0/0
+# sisyphus_apache.20210914.0.0 => 20210914/0/0
 versionVarSubDir() {
-  version=$1
+  version=`echo $1 | tr '[:upper:]' '[:lower:]'`
   ifs=$IFS
-  IFS=.;set -- `echo $version | tr '[:upper:]' '[:lower:]'`;IFS=$ifs
-  stream=$1
-  major=$2
-  minor=$3
-  IFS=_;set -- $stream;IFS=$ifs
-  shift; dir=$1; while $# -gt 1; do dir="$dir_$1";shift; done
-  echo "$dir/$date/$major/$minor"
+  IFS=.;set -- $version;IFS=$ifs
+  date=$2
+  major=$3
+  minor=$4
+  echo "$date/$major/$minor"
 }
 
 fullCommitId() {

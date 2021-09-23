@@ -54,7 +54,7 @@ else
     VAR_DIR=$COMMITID
   else
     COMMITID=`fullCommitId $BRANCHDIR $SHORTCOMMITID`
-    VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
+    VAR_DIR=$BRANCH_DIR/vars/$COMMITID/var
   fi
 fi
 if [ -z "$COMMITID" ]
@@ -123,6 +123,6 @@ rm -rf $MOUNT_DIR
 losetup --detach "$LOOPDEV"
 qemu-img convert -O qcow2 $RAWFILE $OUT_FILE
 rm $RAWFILE
-(
-xz -9v < $OUT_FILE > $OUT_FILE.xz
-) &
+# (
+# xz -9v < $OUT_FILE > $OUT_FILE.xz
+# ) &

@@ -30,4 +30,4 @@ sudo ostree  summary --repo=$repoBarePath --update
 sudo mv $commitId $newCommitId
 sudo ln -sf $newCommitId root
 cd $varsPath
-ln -sf $nextVersionVarSubDir $newCommitId
+sudo ln -sf $nextVersionVarSubDir $newCommitId

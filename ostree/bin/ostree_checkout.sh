@@ -6,16 +6,23 @@ set -x
 exec 2>&1
 ref=$1
 lastCommitId=$2
-clear=$3
+toRef=$3
+clear=$4
 
 refRepoDir=`refRepoDir $ref`
-refDir=`refToDir $ref`
 branchRepoPath="$DOCUMENT_ROOT/ACOS/streams/$refRepoDir"
-branchPath="$DOCUMENT_ROOT/ACOS/streams/$ref"
 repoBarePath="$branchRepoPath/bare/repo";
+
+refDir=`refToDir $ref`
+branchPath="$DOCUMENT_ROOT/ACOS/streams/$refDir"
+varDir="$branchPath/vars/$lastCommitId"
+if [ -n "$toRef" ]
+then
+  refToDir=`refToDir $toRef`
+  branchPath="$DOCUMENT_ROOT/ACOS/streams/$refToDir"
+fi
 rootsPath="$branchPath/roots"
 rootsPathOld="$branchPath/rootsi.$$";
-varDir="$branchPath/vars/$lastCommitId"
 
 if [ ! -d $varDir ]
 then

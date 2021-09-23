@@ -16,11 +16,11 @@ $refDir = repos::refRepoDir($ref);
 
 $subRef = repos::subRef($ref, $subName);
 $subVersion = repos::refVersion($subRef);
-$subVersionVarSubDir = repos::versionVarSubDir($subVersion);
+// $subVersionVarSubDir = repos::versionVarSubDir($subVersion);
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
-$refRepoDir = $repo->refRepoDir;
+// $refRepoDir = $repo->refRepoDir;
 
 if (!$repo->haveConfig()) {
   echo "Bare repository $repoBarePath don't exists";
@@ -29,42 +29,42 @@ if (!$repo->haveConfig()) {
 
 $commits = $repo->getCommits($ref);
 $lastCommitId = $repo->lastCommitId;
-$lastCommit = $repo->lastCommit;
-# echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "</pre>";
-$lastVersion = $lastCommit['Version'];
-$versionVarSubDir = repos::versionVarSubDir($lastVersion);
+// $lastCommit = $repo->lastCommit;
+// # echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "</pre>";
+// $lastVersion = $lastCommit['Version'];
+// $versionVarSubDir = repos::versionVarSubDir($lastVersion);
 
-$cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId'";
+$cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId' '$subRef'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
+echo "CHECKOUT=<pre>" . implode("\n",$output) . "</pre>";
 
-$cmd = "$BINDIR/apt-get_update.sh $ref";
+$cmd = "$BINDIR/apt-get_update.sh $subRef";
 echo "APT-GET_UPDATETCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "APT-GET_UPDATE=<pre>" . print_r($output, 1). "</pre>";
+echo "APT-GET_UPDATE=<pre>" . implode("\n",$output). "</pre>";
 
-$cmd = "$BINDIR/apt-get_install.sh $refRepoDir $pkgs";
+$cmd = "$BINDIR/apt-get_install.sh $subRef $pkgs";
 echo "APT-GET_INSTALL=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "APT-GET_INSTALL=<pre>" . print_r($output, 1). "</pre>";
+echo "APT-GET_INSTALL=<pre>" . implode("\n",$output). "</pre>";
 
-$cmd = "$BINDIR/syncUpdates.sh $ref $lastCommitId";
+$cmd = "$BINDIR/syncUpdates.sh $subRef $lastCommitId $subVersion";
 echo "SYNCUPDATESCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
+echo "SYNCUPDATES=<pre>" . implode("\n",$output). "</pre>";
 
 $rpmList = $repo->rpmList($subVersion);
 $refsConf = new refsConf($subRef, $subVersion, $pkgs);
 $refsConf->addRpmList($rpmList);
 $refsConf->save();
 
-$cmd = "$BINDIR/ostree_commit.sh $ref $lastCommitId $subVersion";
+$cmd = "$BINDIR/ostree_commit.sh $subRef $lastCommitId $subVersion";
 echo "COMMITCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
-echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";
+echo "COMMIT=<pre>" . implode("\n",$output). "</pre>";
