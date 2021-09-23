@@ -261,9 +261,14 @@ foreach (repos::repoTypes() as $repoType) {
 <?php
     }
 ?>
-        <li>
+        <!--li>
           <a href='/ostree/installer-acos/?ref=<?= $Ref?>&commitId=<?= $commitId?>&version=<?= $version?>' target=ostreeREST>
             <button type='button'>Создать загрузочный QUEMU RAW диск</button>
+          </a>
+        </li-->
+        <li>
+          <a href='/ostree/make_qcow2/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST>
+            <button type='button'>Создать загрузочный QUEMU QCOW2 диск</button>
           </a>
         </li>
 		  </ul>

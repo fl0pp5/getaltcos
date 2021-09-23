@@ -7,6 +7,9 @@ else
   . $DOCUMENT_ROOT/ostree/bin/functions.sh
 fi
 
+exec 2>&1
+set -x
+
 if [ $# -gt 4 ]
 then
 	echo "Help: $0 [<branch>] [<commitid> or <vardir>] [<directory of main ostree repository>] [<out_file>]"
@@ -50,9 +53,9 @@ else
   then
     VAR_DIR=$COMMITID
   else
+    COMMITID=`fullCommitId $BRANCHDIR $SHORTCOMMITID`
     VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
   fi
-  COMMITID=`fullCommitId $BRANCHDIR $SHORTCOMMITID`
 fi
 if [ -z "$COMMITID" ]
 then
@@ -120,3 +123,6 @@ rm -rf $MOUNT_DIR
 losetup --detach "$LOOPDEV"
 qemu-img convert -O qcow2 $RAWFILE $OUT_FILE
 rm $RAWFILE
+(
+xz -9v < $OUT_FILE > $OUT_FILE.xz
+) &
