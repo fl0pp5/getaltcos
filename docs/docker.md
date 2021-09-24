@@ -103,3 +103,38 @@ ACOS на корневой директорий  `ACOS -> .`.
 Скрипт останавливает сервисы стека.
 
 
+## Порядок сборки образов и запуска сервисов
+
+1. Перейдите в каталог `/docker/getcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
+```
+# cd .../getacos/docker/getcos/
+# ./build.sh
+...
+Successfully built ....
+Successfully tagged getacos:latest
+```
+
+2. Перейдите в каталог `/docker/admingetcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
+```
+# cd .../getacos/docker/admingetcos/
+# ./build.sh
+...
+Successfully built ....
+Successfully tagged 1. Перейдите в каталог `/docker/getcos/` и запустите скрипт `buils.sh` сборки образа `getacos`:
+```
+# ./build.sh
+...
+Successfully built ....
+Successfully tagged getacos:latest
+```
+
+3. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.  
+
+4. Перейдите в каталог `/docker/` и запустите скрипт `start-compose.sh`:
+```
+# cd ../getacos/docker/
+# ./start-compose.sh
+Creating network "docker_default" with the default driver
+Creating docker_getacos_1      ... done
+Creating docker_admingetacos_1 ... done
+```
