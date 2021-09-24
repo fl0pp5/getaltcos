@@ -21,5 +21,6 @@
 ## Сборка docker-образа getacos клиентского инетрфейса
 Сборка производится в каталоге `/docker/getacos`.
 
-[Dockerfile](https://raw.githubusercontent.com/alt-cloud/getacos/feature-acosfile/docker/getacos/Dockerfile).
+[Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
 
+Сборка идет от docker-образа `alt:sisyphus`
