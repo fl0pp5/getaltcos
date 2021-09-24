@@ -15,3 +15,11 @@
 - корневым директорием является подкаталог данных /ACOS, вышележащие каталоги с скрипты недоступны;
 - пользователь apache2 под которым работает сайт имеет стандартные права;
 - корневой каталог /ACOS монтируется ТОЛЬКО НА ЧТЕНИЕ (RO);
+
+Оба интерфейса запускаются в виде docker-сервисов через docker-compose.
+
+## Сборка docker-образа getacos клиентского инетрфейса
+Сборка производится в каталоге `/docker/getacos`.
+
+[Dockerfile](https://raw.githubusercontent.com/alt-cloud/getacos/feature-acosfile/docker/getacos/Dockerfile).
+
