@@ -21,6 +21,17 @@
 ## Сборка docker-образа getacos клиентского инетрфейса
 Сборка производится в каталоге `/docker/getacos`.
 
-[Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
 
-Сборка идет от docker-образа `alt:sisyphus`
+### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
+
+Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливается основные пакеты для работы:
+```
+apache2 apache2-mod_ssl 
+apache2-mod_php7 php7-curl php7-mbstring php7  
+ostree 
+rsync 
+vim-console 
+less
+```
+
+
