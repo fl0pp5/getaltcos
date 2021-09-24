@@ -120,12 +120,7 @@ Successfully tagged getacos:latest
 # ./build.sh
 ...
 Successfully built ....
-Successfully tagged 1. Перейдите в каталог `/docker/getcos/` и запустите скрипт `buils.sh` сборки образа `getacos`:
-```
-# ./build.sh
-...
-Successfully built ....
-Successfully tagged getacos:latest
+Successfully tagged 
 ```
 
 3. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.  
