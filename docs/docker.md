@@ -76,21 +76,30 @@ ACOS на корневой директорий  `ACOS -> .`.
 
 Запуск сервисов производится в каталоге [/docker/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker).
 
+### Файл установки переменных [.env](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/.env)
+
 Каталог где установлен текущий git-репозиторий [getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile)
 на локальном сервере указыватся в файле [.env](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/.env).
+
+### Файл описания сервисов [docker-compose.yml](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/docker-compose.yml)
 
 Сервисы описываются в YML-файле [docker-compose.yml](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/docker-compose.yml).
 
 - сервис `getacos`:
   * пользовательский WEB-сервис привязывается к порту `80`.
   * корневой директорий сайта привязывается к поддиректирию данных [/ACOS/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/ACOS).
-  
 
 - сервис `admingetacos`:
   * административный WEB-сервис привязывается к порту `81`.
   * повышаются приведегии процессов для поддерки оверлейного (`overlay`) монтирования каталогов;
   * корневой директорий сайта привязывается к корневому каталога git-репозитория [/](https://github.com/alt-cloud/getacos/tree/feature-acosfile). 
 
+### Скрипт запуска сервисов [start-compose.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/start-compose.sh)
 
+Скрипт (пере)запускает сервисы стека.
+
+### Скрипт запуска сервисов [stop-compose.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/stop-compose.sh)
+
+Скрипт останавливает сервисы стека.
 
 
