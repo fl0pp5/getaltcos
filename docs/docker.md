@@ -76,6 +76,9 @@ ACOS на корневой директорий  `ACOS -> .`.
 
 Запуск сервисов производится в каталоге [/docker/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker).
 
+Каталог где установлен текущий git-репозиторий [getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile)
+на локальном сервере указыватся в файле [.env](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/.env).
+
 Сервисы описываются в YML-файле [docker-compose.yml](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/docker-compose.yml).
 
 
