@@ -72,4 +72,11 @@ ACOS на корневой директорий  `ACOS -> .`.
 Скрипт предназначен для сборки docker-образа `admingetacos`.
 
 
+## Запуск сервисов
+
+Запуск сервисов производится в каталоге [/docker/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker).
+
+Сервисы описываются в YML-файле [docker-compose.yml](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/docker-compose.yml).
+
+
 
