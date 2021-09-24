@@ -81,5 +81,16 @@ ACOS на корневой директорий  `ACOS -> .`.
 
 Сервисы описываются в YML-файле [docker-compose.yml](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/docker-compose.yml).
 
+- сервис `getacos`:
+  * пользовательский WEB-сервис привязывается к порту `80`.
+  * корневой директорий сайта привязывается к поддиректирию данных [/ACOS/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/ACOS).
+  
+
+- сервис `admingetacos`:
+  * административный WEB-сервис привязывается к порту `81`.
+  * повышаются приведегии процессов для поддерки оверлейного (`overlay`) монтирования каталогов;
+  * корневой директорий сайта привязывается к корневому каталога git-репозитория [/](https://github.com/alt-cloud/getacos/tree/feature-acosfile). 
+
+
 
 
