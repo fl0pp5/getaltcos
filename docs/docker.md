@@ -105,7 +105,15 @@ ACOS на корневой директорий  `ACOS -> .`.
 
 ## Порядок сборки образов и запуска сервисов
 
-1. Перейдите в каталог `/docker/getcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
+1. Убедитесь, что установлены пакеты `docker-engine`, `docker-compose` и запущен сервис `docker`.
+Если нет, устаовите их:
+```
+# apt-get install docker-engine docker-compose
+# systemctl enable docker
+# systemctl start docker
+```
+
+2. Перейдите в каталог `/docker/getcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
 ```
 # cd .../getacos/docker/getcos/
 # ./build.sh
@@ -114,23 +122,18 @@ Successfully built ....
 Successfully tagged getacos:latest
 ```
 
-2. Перейдите в каталог `/docker/admingetcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
+3. Перейдите в каталог `/docker/admingetcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
 ```
 # cd .../getacos/docker/admingetcos/
 # ./build.sh
 ...
 Successfully built ....
-Successfully tagged 1. Перейдите в каталог `/docker/getcos/` и запустите скрипт `buils.sh` сборки образа `getacos`:
-```
-# ./build.sh
-...
-Successfully built ....
-Successfully tagged getacos:latest
+Successfully tagged admingetacos:latest
 ```
 
-3. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.  
+4. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.  
 
-4. Перейдите в каталог `/docker/` и запустите скрипт `start-compose.sh`:
+5. Перейдите в каталог `/docker/` и запустите скрипт `start-compose.sh`:
 ```
 # cd ../getacos/docker/
 # ./start-compose.sh
