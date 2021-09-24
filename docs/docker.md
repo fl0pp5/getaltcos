@@ -34,4 +34,21 @@ vim-console
 less
 ```
 
+### Стартовый скрипт [startApache.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/startApache.sh)
 
+Для того, чтобы данные в каталоге данных `ACOS` в административном и клиентском  интерфейсе 
+были доступны под одним и тем же URL `/ACOS/...` в подкаталоге `/ACOS/` для клиенского сервера создается сиволическая ссылка 
+ACOS на корневой директорий  `ACOS -> .`.
+
+Затем запускается apache2-сервер.
+
+### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/build.sh)
+
+Скрипт предназначен для сборки docker-образа `getacos`.
+
+
+
+
+### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
+
+Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливается основные пакеты для работы:
