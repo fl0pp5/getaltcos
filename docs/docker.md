@@ -175,3 +175,13 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-lat
 В браузере наберите URL: `http://localhost:81/`. Отобразится начальный интерфейс:
 ![AdminPage1](./Images/adminPage1.png)
 
+Кликните по клавише `Создать ветку acos/x86_64/sisyphus`.
+В отдельной вкладке откроется интерфейс в котором через несколько десяток секунд
+появится результат выполнения команды:
+```
+/var/www/vhosts/getacos/ostree/bin/rootfs_to_repo.sh acos/x86_64/sisyphus
+...
+```
+
+Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`:
+![AdminPage2](./Images/adminPage2.png)
