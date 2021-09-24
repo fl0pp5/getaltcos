@@ -63,6 +63,10 @@ ACOS на корневой директорий  `ACOS -> .`.
 - правится файл `/etc/sudoers` для беспарольного доступа к правам `root`;
 - для повышения уровня защиты поднимается виртуальный хост под доменами `admingetacos.altlinux.org`, `builds.acos.altlinux.org`.
 
+### Стартовый скрипт [startApache.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/startApache.sh)
+
+Перед запуском сервера создается (если отсутствует) корневой каталог потока `acos/x86_64/sisyphus`.   
+
 ### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/build.sh)
 
 Скрипт предназначен для сборки docker-образа `admingetacos`.
