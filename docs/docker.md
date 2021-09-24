@@ -18,8 +18,8 @@
 
 Оба интерфейса запускаются в виде docker-сервисов через docker-compose.
 
-## Сборка docker-образа getacos клиентского инетрфейса
-Сборка производится в каталоге `/docker/getacos`.
+## Сборка docker-образа getacos клиентского интерфейса
+Сборка производится в каталоге [/docker/getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker/getacos).
 
 
 ### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
@@ -47,8 +47,14 @@ ACOS на корневой директорий  `ACOS -> .`.
 Скрипт предназначен для сборки docker-образа `getacos`.
 
 
+## Сборка docker-образа admingetacos административного интерфейса
+Сборка производится в каталоге [/docker/admingetacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker/admingetacos).
 
 
-### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
+### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/Dockerfile).
 
-Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливается основные пакеты для работы:
+Для уменьшение суммарного объема образов на диске и в оперативной памяти
+сборка образа `admingetacos` идет от docker-образа `getacos`, описанного выше. 
+В этом случае в образе `admingetacos` наследуются основные слои образа `getacos`.
+
+
