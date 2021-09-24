@@ -6,9 +6,6 @@ then
   MODULES="rewrite ssl deflate filter"
 fi
 
-cd /var/www/html/getacos/ACOS
-ln -sf . ACOS
-
 for module in $MODULES
 do
   a2enmod $module
