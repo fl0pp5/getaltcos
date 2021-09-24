@@ -50,20 +50,24 @@ $ git clone git@github.com:alt-cloud/getacos.git
 # a2ensite vhosts
 # mkdir /var/log/httpd2/getacos/
 # chmod 777  /var/log/httpd2/getacos
-# mkdir -p  /var/www/vhosts/getacos/ACOS/streams/acos/
-# chgrp root:webmaster /var/www/vhosts/getacos/ACOS/streams/acos/
+# mkdir -p  /var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus
+# chown -R root:webmaster /var/www/vhosts/getacos/ACOS/streams/acos/
 
 # apt-get install mkimage mkimage-preinstall hasher git-core
 
 ```
-
-
 
 Запуск сервера:
 ```
 # systemctl enable httpd2
 # systemctl start httpd2
 ```
+
+Раскомментируйте строку в `/etc/sudoers` для доступа пользователей группы `wheel` в `root` без пароля: 
+```
+WHEEL_USERS ALL=(ALL) NOPASSWD: ALL
+```
+
 
 Настройка доступа к серверу в файле `/etc/hosts`:
 ```
