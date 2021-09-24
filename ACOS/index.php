@@ -1,4 +1,4 @@
-<html>
+<html lang='ru'>
 <head>
 <title>Инструкция пользователя ACOS</title>
 </head>

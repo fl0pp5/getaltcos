@@ -1,5 +1,8 @@
 <?php
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
+ini_set('include_path', "$rootdir/class");
+require_once('repos.php');
+
 // $version1Dir = implode('/', array_slice(explode('.', $_REQUEST['version1']), 1));
 // $version2Dir = implode('/', array_slice(explode('.', $_REQUEST['version2']), 1));
 $version1 = $_REQUEST['version1'];
@@ -18,6 +21,12 @@ $path2 = "$varsDir/$version2Dir";
 $tmpDir = "$rootdir/ACOS/tmp/" . $_SERVER['REQUEST_TIME_FLOAT'];
 
 mkdir($tmpDir, 0777, true);
+$cmd = "mkdir -p $tmpDir 2>&1";
+$output = [];
+// echo "<pre>CMD=$cmd</pre>\n";
+exec($cmd, $output);
+// echo "<pre>mkdir=" . print_r($output, 1) . "</pre>\n";
+
 
 $cmd = "rpm -qa -r $path1 | sort > $tmpDir/a";
 $output = [];

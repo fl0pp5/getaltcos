@@ -22,6 +22,7 @@ require_once('acosfile.php');
 }
 </style>
 <?php
+$SERVER_NAME = $_SERVER['SERVER_NAME'];
 $Ref = false;
 $Os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
 $title[] = "Административный интерфейс OSTREE-потоков";
@@ -197,7 +198,7 @@ foreach (repos::repoTypes() as $repoType) {
 ?>
   <li>
     <ul><h3>Тип репозитория: <?= $repoType?></h3>
-        <li><a href='/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
+        <li><a href='http://<?= $SERVER_NAME?>/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
         <li>Коммиты:
           <form action='/ostree/deleteCommits/' target='ostreeREST'>
           <input type='hidden' name='ref' value='<?= $Ref?>' />

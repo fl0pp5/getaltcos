@@ -46,14 +46,15 @@ then
   COMMITID=`lastCommitId $BRANCHDIR`
   VAR_DIR=$BRANCH_REPO/vars/$COMMITID/var
 else
-  if [[ "$COMMITID" == */* ]] # It's VAR_DIR
+  if [[ "$SHORTCOMMITID" == */* ]] # It's VAR_DIR
   then
-    VAR_DIR=$COMMITID
+    VAR_DIR=$SHORTCOMMITID
   else
     COMMITID=`fullCommitId $BRANCHDIR $SHORTCOMMITID`
     VAR_DIR=$BRANCH_DIR/vars/$COMMITID/var
   fi
 fi
+
 if [ -z "$COMMITID" ]
 then
   echo "ERROR: Commit $SHORTCOMMITID must exist"
@@ -97,7 +98,7 @@ mkfs.ext4 -L boot $LOOPPART
 
 mount $LOOPPART $MOUNT_DIR
 ostree admin init-fs --modern $MOUNT_DIR
-ostree pull-local --repo $REPO_LOCAL $MAIN_REPO $BRANCH
+ostree pull-local --repo $REPO_LOCAL $MAIN_REPO $BRANCH $COMMITID
 grub-install --target=i386-pc --root-directory=$MOUNT_DIR $LOOPDEV
 ln -s ../loader/grub.cfg $MOUNT_DIR/boot/grub/grub.cfg
 ostree config --repo $REPO_LOCAL set sysroot.bootloader grub2

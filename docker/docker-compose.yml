@@ -9,8 +9,20 @@ services:
       - $GITHOME/ACOS:/var/www/html:ro
 
   admingetacos:
+    cap_add:
+      - ALL
     image: admingetacos
     ports:
       - 0.0.0.0:81:80
     volumes:
-      - $GITHOME/:/var/www/html
+      - $GITHOME/:/var/www/vhosts/getacos/
+      #- /dev/loop-control:/dev/loop-control
+      #- /dev/loop0:/dev/loop0
+      #- /dev/loop1:/dev/loop1
+      #- /dev/loop2:/dev/loop2
+      #- /dev/loop3:/dev/loop3
+      #- /dev/loop4:/dev/loop4
+      #- /dev/loop5:/dev/loop5
+      #- /dev/loop6:/dev/loop6
+      #- /dev/loop7:/dev/loop7
+

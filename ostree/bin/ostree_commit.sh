@@ -25,7 +25,7 @@ newCommitId=`sudo ostree commit \
         -b $ref  \
         --no-bindings \
         --mode-ro-executables \
-        --add-metadata-string=version=$version
+        --add-metadata-string=version=$nextVersion
 `
 sudo ostree  summary --repo=$repoBarePath --update
 sudo mv $commitId $newCommitId

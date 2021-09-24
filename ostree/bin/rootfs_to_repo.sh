@@ -116,12 +116,12 @@ chroot $MAIN_ROOT groupadd acos
 chroot $MAIN_ROOT useradd -g acos -G docker,wheel -d /var/home/acos --create-home -s /bin/bash acos
 
 # Split passwd file (/etc/passwd) into
-splitPasswd $MAIN_ROOT/etc/passwd $MAIN_ROOT/lib/passwd /tmp/passwd.$$
-mv /tmp/passwd.$$ $MAIN_ROOT/etc/passwd
+# splitPasswd $MAIN_ROOT/etc/passwd $MAIN_ROOT/lib/passwd /tmp/passwd.$$
+# mv /tmp/passwd.$$ $MAIN_ROOT/etc/passwd
 #
 # # Split group file (/etc/group)
-splitGroup $MAIN_ROOT/etc/group $MAIN_ROOT/lib/group /tmp/group.$$
-mv /tmp/group.$$ $MAIN_ROOT/etc/group
+# splitGroup $MAIN_ROOT/etc/group $MAIN_ROOT/lib/group /tmp/group.$$
+# mv /tmp/group.$$ $MAIN_ROOT/etc/group
 
 sed -e 's/passwd:.*$/& altfiles/' -e 's/group.*$/& altfiles/' -i $MAIN_ROOT/etc/nsswitch.conf
 
