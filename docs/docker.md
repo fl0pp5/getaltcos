@@ -120,7 +120,7 @@ Successfully tagged getacos:latest
 # ./build.sh
 ...
 Successfully built ....
-Successfully tagged 
+Successfully tagged admingetacos:latest
 ```
 
 3. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.  
