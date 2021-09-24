@@ -1,11 +1,8 @@
 #!/bin/sh
 set -e
-if [ -f functions.sh ]
-then
-  . functions.sh
-else
-  . $DOCUMENT_ROOT/ostree/bin/functions.sh
-fi
+export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
+
 
 exec 2>&1
 set -x
