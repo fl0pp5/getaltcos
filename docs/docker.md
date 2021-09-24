@@ -57,4 +57,15 @@ ACOS на корневой директорий  `ACOS -> .`.
 сборка образа `admingetacos` идет от docker-образа `getacos`, описанного выше. 
 В этом случае в образе `admingetacos` наследуются основные слои образа `getacos`.
 
+В образе:
+- дополнительно устанавливаются пакеты `sudo, su` для обеспечения доступа к правам root;
+- пользователь `apache2` добавляется к группе `wheel`;
+- правится файл `/etc/sudoers` для беспарольного доступа к правам `root`;
+- для повышения уровня защиты поднимается виртуальный хост под доменами `admingetacos.altlinux.org`, `builds.acos.altlinux.org`.
+
+### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/build.sh)
+
+Скрипт предназначен для сборки docker-образа `admingetacos`.
+
+
 
