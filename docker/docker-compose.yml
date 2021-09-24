@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  getacos:
+    image: getacos
+    ports:
+      - 0.0.0.0:80:80
+    volumes:
+      - $GITHOME/ACOS:/var/www/html:ro
+
+  admingetacos:
+    image: admingetacos
+    ports:
+      - 0.0.0.0:81:80
+    volumes:
+      - $GITHOME/:/var/www/html
