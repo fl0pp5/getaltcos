@@ -171,3 +171,7 @@ $ ./mkimage-profiles.sh sisyphus
 lrwxrwxrwx 1 kaf kaf         24 сен 24 23:28 acos-latest-x86_64.tar -> acos-20210924-x86_64.tar
 lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-latest-x86_64.tar
 ```
+
+В браузере наберите URL: `http://localhost:81/`. Отобразится начальный интерфейс:
+![AdminPage1](./Images/adminPage1.png)
+
