@@ -141,5 +141,3 @@ Creating network "docker_default" with the default driver
 Creating docker_getacos_1      ... done
 Creating docker_admingetacos_1 ... done
 ```
-
-> Предварительно установите пакеты docker
