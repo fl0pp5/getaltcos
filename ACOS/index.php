@@ -4,5 +4,6 @@
 </head>
 <body>
 
-<h2>Инструкция пользователя ACOS</h2>
+- <a href='/pdf/usermamual.pdf'>'>Инструкция пользователя ACOS</a>
+- <a href='streams.php'>Просмотр текущих версий потоков</a>
 
