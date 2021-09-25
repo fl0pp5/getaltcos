@@ -136,7 +136,7 @@ function markAfter(input) {
 if (count($refs) > 0) {
 ?>
 <p>
-<form action='ostree/install/' target='ostreeREST'>
+<!--form action='ostree/install/' target='ostreeREST'>
 <input type='hidden' name='ref' value='<?= $Ref?>' />
 <div class='addSubtef'>
 Добавить подветку:
@@ -147,7 +147,7 @@ if (count($refs) > 0) {
 <br />
 <button type='submit'>Добавить</button>
 </div>
-</form>
+</form-->
 <?php
   if (count($acosSubRefs) > 0) {
 ?>

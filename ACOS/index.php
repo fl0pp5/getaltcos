@@ -1,9 +1,12 @@
 <html lang='ru'>
 <head>
-<title>Инструкция пользователя ACOS</title>
+<title>Интерфейс пользователя ACOS</title>
 </head>
 <body>
 
-- <a href='/pdf/usermamual.pdf'>'>Инструкция пользователя ACOS</a>
-- <a href='streams.php'>Просмотр текущих версий потоков</a>
+<h2>Интерфейс пользователя ACOS</h2>
+<ul>
+  <li><a href='/pdf/usermanual.pdf'>Инструкция пользователя ACOS</a></li>
+  <li><a href='streams.php'>Текущие версии потоков</a></li>
+</ul>
 
