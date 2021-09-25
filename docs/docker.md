@@ -6,7 +6,7 @@
 
 Административный интерфейс предназначен для создания, обновления версий веток и подветок потоков:
 - доступен только в рамках подсети Базальт;
-- работает с корнем данного репозитория (начальная страница /index.php), 
+- работает с корнем данного репозитория (начальная страница /index.php),
 - пользователь apache2 под которым работает сайт входит в группу wheel, позволяющей выполнять shell скрипты с правами root;
 - все каталоги подкаталога данных ACOS доступны на чтение-запись.
 
@@ -26,11 +26,11 @@
 
 Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливается основные пакеты для работы:
 ```
-apache2 apache2-mod_ssl 
-apache2-mod_php7 php7-curl php7-mbstring php7  
-ostree 
-rsync 
-vim-console 
+apache2 apache2-mod_ssl
+apache2-mod_php7 php7-curl php7-mbstring php7
+ostree
+rsync
+vim-console
 less
 ```
 
@@ -50,7 +50,7 @@ less
 ### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/Dockerfile).
 
 Для уменьшение суммарного объема образов на диске и в оперативной памяти
-сборка образа `admingetacos` идет от docker-образа `getacos`, описанного выше. 
+сборка образа `admingetacos` идет от docker-образа `getacos`, описанного выше.
 В этом случае в образе `admingetacos` наследуются основные слои образа `getacos`.
 
 В образе:
@@ -61,7 +61,7 @@ less
 
 ### Стартовый скрипт [startApache.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/startApache.sh)
 
-Перед запуском сервера создается (если отсутствует) корневой каталог потока `acos/x86_64/sisyphus`.   
+Перед запуском сервера создается (если отсутствует) корневой каталог потока `acos/x86_64/sisyphus`.
 
 ### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/build.sh)
 
@@ -88,7 +88,7 @@ less
 - сервис `admingetacos`:
   * административный WEB-сервис привязывается к порту `81`.
   * повышаются приведегии процессов для поддерки оверлейного (`overlay`) монтирования каталогов;
-  * корневой директорий сайта привязывается к корневому каталога git-репозитория [/](https://github.com/alt-cloud/getacos/tree/feature-acosfile). 
+  * корневой директорий сайта привязывается к корневому каталога git-репозитория [/](https://github.com/alt-cloud/getacos/tree/feature-acosfile).
 
 ### Скрипт запуска сервисов [start-compose.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/start-compose.sh)
 
@@ -127,7 +127,7 @@ Successfully built ....
 Successfully tagged admingetacos:latest
 ```
 
-4. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.  
+4. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.
 
 5. Перейдите в каталог `/docker/` и запустите скрипт `start-compose.sh`:
 ```
@@ -138,49 +138,4 @@ Creating docker_getacos_1      ... done
 Creating docker_admingetacos_1 ... done
 ```
 
-
-## Работа с интерфейсом
-
-Установите в каталог, где находится поддиректорий данного репозитория репозиторий 
-mkimage-profiles@keremet:
-```
-$ git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b acos
-```
-
-Перейдите в терминальном режиме в каталог [/ostree/shell/](https://github.com/alt-cloud/getacos/tree/release_0.0.1/ostree/shell) и запустите команду
-```
-$ ./mkimage-profiles.sh sisyphus
-...
-23:23:52 initializing BUILDDIR: build/
-23:23:52 preparing distro config: build/distcfg.mk
-23:24:39 starting image build: tail -f build/build.log
-23:28:57 done (4:17)
-** image: .../getacos/ACOS/streams/acos/x86_64/sisyphus/mkimage-profiles/acos-20210924-x86_64.tar [1,1G]
-23:28:57 cleaning up after build
-```
-В результате рабоьы команды в директории `/ACOS/streams/acos/x86_64/sisyphus/mkimage-profiles/`
-появиься файлы  `acos-<YYYYMMDD>-x86_64.tar*` с символическими ссылками:
-```
--rw-r--r-- 1 kaf kaf 1073920000 сен 24 23:28 acos-20210924-x86_64.tar
--rw-r--r-- 1 kaf kaf       3895 сен 24 23:24 acos-20210924-x86_64.tar.cfg
--rw-r--r-- 1 kaf kaf     281331 сен 24 23:28 acos-20210924-x86_64.tar.log
-lrwxrwxrwx 1 kaf kaf         24 сен 24 23:28 acos-latest-x86_64.tar -> acos-20210924-x86_64.tar
-lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-latest-x86_64.tar
-```
-
-В браузере наберите URL: `http://localhost:81/`. Отобразится начальный интерфейс:
-![AdminPage1](./Images/adminPage1.png)
-
-Кликните по клавише `Создать ветку acos/x86_64/sisyphus`.
-В отдельной вкладке откроется интерфейс в котором через несколько десяток секунд
-появится результат выполнения команды:
-```
-/var/www/vhosts/getacos/ostree/bin/rootfs_to_repo.sh acos/x86_64/sisyphus
-...
-```
-
-Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`:
-![AdminPage2](./Images/adminPage2.png)
-
-Покликайте по кнопкам созданной версии соммита. В отдельной вкладке будут отображаться результаты выполнения команд.
 
