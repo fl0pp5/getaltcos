@@ -73,5 +73,5 @@ apt-get dist-upgrade
 `sysyphus.YYYYMMDD.0.0`, `sysyphus.YYYYMMDD.0.1`. 
 ![AdminPage4](./Images/adminPage4.png)
 
-  
+## Сборка QCOW2 образов  
 
