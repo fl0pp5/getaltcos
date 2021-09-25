@@ -75,3 +75,12 @@ apt-get dist-upgrade
 
 ## Сборка QCOW2 образов  
 
+В терминальном интерфейсе перейдите в каталог `/ostree/shell/` и запустите команду
+```
+$ sudo ./make_qcow2.sh acos/x86_64/sisyphus <commitId>
+...
+qemu-img convert -O qcow2 /tmp/.private/root/acos_make_qcow2-79DxqX.raw /home/kaf/AltlinuxContainerOS/getacos/ACOS/streams/acos/x86_64/sisyphus/images/qcow2/sisyphus.YYYYMMDD.0.0.qcow2
+```
+Где `<commitId>` - идентификатор коммита первой версии.
+
+Для сборки `qcow2`-образа второй версии повторите команду с идентификатором коммита второй версии. 
