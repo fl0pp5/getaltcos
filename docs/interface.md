@@ -54,12 +54,12 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-lat
 apt-get update
 apt-get dist-upgrade
 ```
-Если обновления отсутсвуют новая ветка не формируется.
+Если обновления отсутствуют, новая ветка не формируется.
 
 Если обновления есть, сформируется следующая версия репозитория `sysyphus.YYYYMMDD.0.1`.
 ![adminUpdatePage1](./Images/adminUpdatePage1.png)
 
-Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`:
+Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`.
 В интерфейсе отобразится собранная второй собранный в репозитории bare коммит версии `sysyphus.YYYYMMDD.0.1`: 
 ![AdminPage3](./Images/adminPage3.png)
 
@@ -80,7 +80,15 @@ apt-get dist-upgrade
 $ sudo ./make_qcow2.sh acos/x86_64/sisyphus <commitId>
 ...
 qemu-img convert -O qcow2 /tmp/.private/root/acos_make_qcow2-79DxqX.raw /home/kaf/AltlinuxContainerOS/getacos/ACOS/streams/acos/x86_64/sisyphus/images/qcow2/sisyphus.YYYYMMDD.0.0.qcow2
+Create compressed image (several minutes) (y/n)? y
+  100 %     251,9 MiB / 1 209,0 MiB = 0,208   3,1 MiB/s       6:27    
+
 ```
 Где `<commitId>` - идентификатор коммита первой версии.
 
 Для сборки `qcow2`-образа второй версии повторите команду с идентификатором коммита второй версии. 
+
+Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`.
+В интерфейсе отобразится список доступных для загрузки образов.
+
+
