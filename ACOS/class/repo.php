@@ -366,13 +366,13 @@ class repo {
 
   static function sizeToText($size) {
     if ($size > 2**30) {
-      $ret = sprintf( "%.2f", $size/(2**30)).'GB';
+      $ret = sprintf( "%.2f", $size/(2**30)).'GiB';
     } else {
       if ($size > 2**20) {
-      $ret = sprintf( "%.2f", $size/(2**20)).'MB';
+      $ret = sprintf( "%.2f", $size/(2**20)).'MiB';
       } else {
         if ($size > 2**10) {
-          $ret = sprintf( "%.2f", $size/(2**10)).'KB';
+          $ret = sprintf( "%.2f", $size/(2**10)).'KiB';
         } else {
           $ret = $size . "B";
         }

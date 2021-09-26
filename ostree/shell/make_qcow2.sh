@@ -5,7 +5,7 @@ export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
 
 
 exec 2>&1
-set -x
+# set -x
 
 if [ $# -gt 4 ]
 then
@@ -121,6 +121,13 @@ rm -rf $MOUNT_DIR
 losetup --detach "$LOOPDEV"
 qemu-img convert -O qcow2 $RAWFILE $OUT_FILE
 rm $RAWFILE
-# (
-# xz -9v < $OUT_FILE > $OUT_FILE.xz
-# ) &
+read -p "Create compressed image (several minutes) (y/n)? " -n 1 -r
+echo
+[[ $REPLY =~ ^[Yy]$ ]] || exit 0
+
+imagerdir=`dirname $OUT_FILE`
+xzfile=`basename $OUT_FILE`
+TMPFILE="/tmp/$xzfile.xz"
+xz -9v < $OUT_FILE > $TMPFILE
+mv $TMPFILE $imagerdir
+
