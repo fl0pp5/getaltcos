@@ -4,7 +4,7 @@ class repos {
   static $OSs = ['acos' => 'ALTLinux Container OS'];
 
   static function listOSs() {
-    $ret = array_keys(repos::OSs);
+    $ret = array_keys(repos::$OSs);
     return $ret;
   }
 
@@ -13,8 +13,8 @@ class repos {
     return $ret;
   }
 
-  static function listArchs() {
-    $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/");
+  static function listArchs($os='acos') {
+    $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$os/");
     $ret = [];
     while ($entry=readdir($fd)) {
       if (substr($entry,0,1) == '.') continue;
@@ -23,8 +23,10 @@ class repos {
     return $ret;
   }
 
-  static function listStreams($arch='x86_64') {
-    $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$arch");
+  static function listStreams($os='acos', $arch='x86_64') {
+    $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$os/$arch";
+//     echo "<pre>archDir=$archDir</pre>\n";
+    $fd = opendir($archDir);
     $ret = [];
     while ($entry=readdir($fd)) {
       if (substr($entry,0,1) == '.') continue;

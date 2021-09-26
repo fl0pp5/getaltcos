@@ -272,6 +272,66 @@ foreach (repos::repoTypes() as $repoType) {
             <button type='button'>Создать загрузочный QUEMU QCOW2 диск</button>
           </a>
         </li-->
+        <li>
+          <table border='1'>
+            <tr>
+<?php
+      $imageTypes = $repo->getImagesTypes();
+      $ncols = count($imageTypes) * 2;
+?>
+              <th colspan=<?= $ncols?>>Образы</th>
+            </tr>
+            <tr>
+<?php
+      foreach ($imageTypes as $imageType) {
+?>
+              <th colspan='2'><?= $imageType?></th>
+<?php
+      }
+?>
+            </tr>
+            <tr>
+<?php
+      foreach ($imageTypes as $imageType) {
+?>
+              <th>Полный</th>
+              <th>Сжатый</th>
+<?php
+      }
+?>
+            </tr>
+            <tr>
+              <td>
+<?php
+      $fullImage = $repo->getFullImageName($imageType, $version);
+      $fullImageSize = $repo->getFullImageSize($imageType, $version);
+      if ($fullImage) {
+        $ref = "/ACOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
+?>
+                <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button'>Скачать(<?= $fullImageSize?>)</button></a>
+<?php
+      } else {
+?>-<?php
+      }
+?>
+              </td>
+              <td>
+<?php
+      $compressedImage = $repo->getCompressedImageName($imageType, $version);
+      $compressedImageSize = $repo->getCompressedImageSize($imageType, $version);
+      if ($compressedImage) {
+        $ref = "/ACOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
+?>
+                  <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button'>Скачать(<?= $compressedImageSize?>)</button></a>
+<?php
+      } else {
+?>-<?php
+      }
+?>
+                </td>
+              </tr>
+          </table>
+        </li>
 		  </ul>
     </li>
 <?php

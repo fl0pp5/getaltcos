@@ -13,6 +13,7 @@ class repo {
     $this->commits = false;
     $this->lastCommit = false;
     $this->lastCommitId = false;
+    $this->imagesTree = $this->getImagesTree();
   }
 
   function haveConfig() {
@@ -267,10 +268,118 @@ class repo {
     }
   }
 
+  /* Вывести дерево доступеых образов
+   */
+
+  function getImagesTree() {
+    $imagesDir = $this->refDir . "/images";
+//     echo "<pre>imagesDir=$imagesDir</pre>";
+   $ret = [];
+    if (!is_dir($imagesDir)) return;
+    $fd = dir($imagesDir);
+    while ($imageType = $fd->read()) {
+      $imageTypeDir = "$imagesDir/$imageType";
+//       echo "<pre>imageTypeDir=$imageTypeDir</pre>";
+      if (substr($imageType, 0, 1) == '.') continue;
+      if (!is_dir($imageTypeDir)) continue;
+      $fd1 = dir($imageTypeDir);
+      while ($image = $fd1->read()) {
+//         echo "<pre>image=$image</pre>";
+        $path = explode('.', $image);
+        $nPath = count($path);
+//         echo "<pre>nPath=$nPath</pre>";
+        if ($nPath != 5 &&  $nPath != 6) continue;
+        $subPath = $path[0];
+        $date = $path[1];
+        $major = $path[2];
+        $minor = $path[3];
+        $suffix = $path[4];
+        $compressed = ($nPath == 6);
+        $compessSuffix = false;
+        if ($compressed) {
+          $index = 'compressed';
+          $compessSuffix = $path[5];
+        } else {
+          $index = 'full';
+        }
+        $ret[$imageType][$date][$major][$minor][$index] = [
+          'image'=>$image,
+          'imageType'=>$imageType,
+          'date'=>$date,
+          'major'=>$major,
+          'minor'=>$minor,
+          'compessSuffix'=>$compessSuffix,
+          'compressed'=>$compressed
+        ];
+      }
+    }
+    return $ret;
+  }
+
+  function getImagesTypes($asc=true) {
+    $ret = array_keys($this->imagesTree);
+//     echo "<pre>TYPES=" . print_r($ret, 1) . "</pre>\n";
+    sort($ret);
+    if (!$asc) $ret = array_reverse($ret);
+    return $ret;
+  }
+
+  function getFullImageName($imageType, $version) {
+    list($stream, $date, $major, $minor) = explode('.', $version);
+    $ret = @$this->imagesTree[$imageType][$date][$major][$minor]['full']['image'];
+    return $ret;
+  }
+
+  function getCompressedImageName($imageType, $version) {
+    list($stream, $date, $major, $minor) = explode('.', $version);
+    $ret = @$this->imagesTree[$imageType][$date][$major][$minor]['compressed']['image'];
+    return $ret;
+  }
+
+
+  function getFullImageSize($imageType, $version) {
+    list($stream, $date, $major, $minor) = explode('.', $version);
+    $imageName = @$this->imagesTree[$imageType][$date][$major][$minor]['full']['image'];
+    if (!$imageName) return 0;
+    $file = $this->refDir . "/images/$imageType/$imageName";
+    if (!file_exists($file)) return 0;
+    $size = filesize($file);
+    $ret = repo::sizeToText($size);
+    return $ret;
+  }
+
+  function getCompressedImageSize($imageType, $version) {
+    list($stream, $date, $major, $minor) = explode('.', $version);
+    $imageName = @$this->imagesTree[$imageType][$date][$major][$minor]['compressed']['image'];
+    if (!$imageName) return 0;
+    $file = $this->refDir . "/images/$imageType/$imageName";
+    if (!file_exists($file)) return 0;
+    $size = filesize($file);
+    $ret = repo::sizeToText($size);
+    return $ret;
+  }
+
   static function cmpByDate($c1, $c2) {
   $ret = strcmp($c1['Date'], $c2['Date']);
   return $ret;
-}
+  }
+
+  static function sizeToText($size) {
+    if ($size > 2**30) {
+      $ret = sprintf( "%.2f", $size/(2**30)).'GB';
+    } else {
+      if ($size > 2**20) {
+      $ret = sprintf( "%.2f", $size/(2**20)).'MB';
+      } else {
+        if ($size > 2**10) {
+          $ret = sprintf( "%.2f", $size/(2**10)).'KB';
+        } else {
+          $ret = $size . "B";
+        }
+      }
+    }
+    return $ret;
+  }
 
 
 }
