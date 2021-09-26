@@ -90,5 +90,6 @@ Create compressed image (several minutes) (y/n)? y
 
 Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`.
 В интерфейсе отобразится список доступных для загрузки образов.
+![AdminPage5](./Images/adminPage5.png)
 
 
