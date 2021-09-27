@@ -1,7 +1,7 @@
 <?php
 class repos {
 
-  static $OSs = ['acos' => 'ALTLinux Container OS'];
+  static $OSs = ['acos' => 'ALT Container OS'];
 
   static function listOSs() {
     $ret = array_keys(repos::$OSs);
