@@ -360,8 +360,20 @@ class repo {
   }
 
   /*
+   * Получить список RPM-пакетов в версии
+   */
+  function listRPMs($version) {
+    $versionDir = repos::versionVarSubDir($version);
+    $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
+    $cmd = "rpm -qa --dbpath=$path | sort";
+//     echo "<pre>CMD=$cmd</pre>\n";
+    $output = [];
+    exec($cmd, $output);
+    return $output;
+  }
+
+  /*
    * Сравнить список RPM-файлов различный версий
-   *
    */
   function cmpRPMs($version1, $version2) {
     $version1Dir = repos::versionVarSubDir($version1);

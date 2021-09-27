@@ -13,7 +13,7 @@ $repo = new repo($branch, 'archive');
 $repo->getCommits();
 $commitIds = array_reverse(array_keys($repo->commits));
 $nCommits = count($commitIds);
-// echo "<pre>COMMITIFS=".print_r($commitIds, 1) . "</pre>";
+// echo "<pre>COMMITIDS=".print_r($commitIds, 1) . "</pre>";
 for ($i=0; $i < $nCommits-1; $i++) {
   $commitId = $commitIds[$i];
   $commit = $repo->commits[$commitId];
@@ -89,3 +89,20 @@ for ($i=0; $i < $nCommits-1; $i++) {
 </ul>
 <?php
 }
+
+$firstCommitId = $commitIds[$nCommits-1];
+$firstCommit = $repo->commits[$firstCommitId];
+$firstVersion = $firstCommit['Version'];
+$rpmList = $repo->listRPMs($firstVersion);
+?>
+<h2>Пакеты базовой версия <?= $firstVersion?></h2>
+<ul>
+<?php
+// echo "<pre>RpmList" . print_r($rpmList, 1) . "</pre>";
+foreach ($rpmList as $rpm) {
+?>
+  <li><?= $rpm?></li>
+<?php
+}
+?>
+</ul>
