@@ -29,7 +29,7 @@ foreach (repos::listOSs() as $os) {
     // echo "<pre>STREAMS=".print_r($streams, 1) . "</pre>\n";
     foreach ($streams as $stream) {
       $ref = "$os/$arch/$stream";
-      $repo = new repo($ref, 'bare');
+      $repo = new repo($ref, 'archive');
       $repo->getCommits();
       $commits = array_reverse($repo->commits, true);
     ?>
