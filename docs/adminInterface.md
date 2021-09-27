@@ -1,14 +1,13 @@
 # Работа с административным интерфейсом
 
-## Установка начальной версии рпоезитория sysyphus.YYYYMMDD.0.0
+## Установка начальной версии рeпозитория sysyphus.YYYYMMDD.0.0
 
-Установите в каталог, где находится поддиректорий данного репозитория репозиторий
-mkimage-profiles@keremet:
+Установите репозиторий mkimage-profiles@keremet в каталог, где находится поддиректорий данного (getacos) репозитория:
 ```
 $ git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b acos
 ```
 
-Перейдите в терминальном режиме в каталог [/ostree/shell/](https://github.com/alt-cloud/getacos/tree/release_0.0.1/ostree/shell) и запустите команду
+Перейдите в терминальном режиме в каталог [ostree/shell/](https://github.com/alt-cloud/getacos/tree/release_0.0.1/ostree/shell) и запустите команду
 ```
 $ ./mkimage-profiles.sh sisyphus
 ...
@@ -19,8 +18,8 @@ $ ./mkimage-profiles.sh sisyphus
 ** image: .../getacos/ACOS/streams/acos/x86_64/sisyphus/mkimage-profiles/acos-20210924-x86_64.tar [1,1G]
 23:28:57 cleaning up after build
 ```
-В результате рабоьы команды в директории `/ACOS/streams/acos/x86_64/sisyphus/mkimage-profiles/`
-появиься файлы  `acos-<YYYYMMDD>-x86_64.tar*` с символическими ссылками:
+В результате работы команды в директории `ACOS/streams/acos/x86_64/sisyphus/mkimage-profiles/`
+появятся файлы  `acos-<YYYYMMDD>-x86_64.tar*` с символическими ссылками:
 ```
 -rw-r--r-- 1 kaf kaf 1073920000 сен 24 23:28 acos-20210924-x86_64.tar
 -rw-r--r-- 1 kaf kaf       3895 сен 24 23:24 acos-20210924-x86_64.tar.cfg
@@ -32,8 +31,8 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-lat
 В браузере наберите URL: `http://localhost:81/`. Отобразится начальный интерфейс:
 ![AdminPage1](./Images/adminPage1.png)
 
-Кликните по клавише `Создать ветку acos/x86_64/sisyphus`.
-В отдельной вкладке откроется интерфейс в котором через несколько десяток секунд
+Кликните по кнопке `Создать ветку acos/x86_64/sisyphus`.
+В отдельной вкладке откроется интерфейс, в котором через несколько десятков секунд
 появится результат выполнения команды:
 ```
 /var/www/vhosts/getacos/ostree/bin/rootfs_to_repo.sh acos/x86_64/sisyphus
@@ -41,7 +40,7 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-lat
 ```
 
 Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`. 
-В интерфейсе отобразится собранная первый собранный в репозитории bare коммит версии `sysyphus.YYYYMMDD.0.0`: 
+В интерфейсе отобразится первый собранный в репозитории bare коммит версии `sysyphus.YYYYMMDD.0.0`: 
 ![AdminPage2](./Images/adminPage2.png)
 
 Покликайте по кнопкам созданной версии соммита. В отдельной вкладке будут отображаться результаты выполнения команд.
@@ -49,7 +48,7 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> acos-lat
 ## Формирование следующей минорной версии репозитория sysyphus.YYYYMMDD.0.1
 
 Кликните кнопку `Обновить bare-ветку acos/x86_64/sisyphus версии sisyphus.20210924.0.0`.
-В отдельной вкладке будут отображаться результат выполнения команд
+В отдельной вкладке будут отображаться результаты выполнения команд
 ```
 apt-get update
 apt-get dist-upgrade
@@ -60,22 +59,22 @@ apt-get dist-upgrade
 ![adminUpdatePage1](./Images/adminUpdatePage1.png)
 
 Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`.
-В интерфейсе отобразится собранная второй собранный в репозитории bare коммит версии `sysyphus.YYYYMMDD.0.1`: 
+В интерфейсе отобразится второй собранный в репозитории bare коммит версии `sysyphus.YYYYMMDD.0.1`: 
 ![AdminPage3](./Images/adminPage3.png)
 
 ## Копирование коммитов из bare-репозитория в archive-репозиторий
 
 Кликните кнопку `Скопировать  bare-репозиторий в archive-репозиторий`.
-В отдельной вкладке будут отображаться результат выполнения команд.
+В отдельной вкладке будут отображаться результаты выполнения команд.
 
 Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`:
-В интерфейсе отобразится скопированные в репозитории `archive` коммиты версий 
+В интерфейсе отобразятся скопированные в репозитории `archive` коммиты версий 
 `sysyphus.YYYYMMDD.0.0`, `sysyphus.YYYYMMDD.0.1`. 
 ![AdminPage4](./Images/adminPage4.png)
 
 ## Сборка QCOW2 образов  
 
-В терминальном интерфейсе перейдите в каталог `/ostree/shell/` и запустите команду
+В терминальном интерфейсе перейдите в каталог `ostree/shell/` и запустите команду
 ```
 $ sudo ./make_qcow2.sh acos/x86_64/sisyphus <commitId>
 ...
@@ -92,6 +91,6 @@ Create compressed image (several minutes) (y/n)? y
 В интерфейсе отобразится список доступных для загрузки образов.
 ![AdminPage5](./Images/adminPage5.png)
 
-Для загрузки образов на локальный компьютер кликните по соответсвующей клавише `Скачать`.
+Для загрузки образов на локальный компьютер кликните по соответствующей кнопке `Скачать`.
 
 

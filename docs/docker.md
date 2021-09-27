@@ -1,4 +1,4 @@
-# Установка и настрока WEB-серверов для административного и клиентского WEB/REST интерфейсов
+# Установка и настройка WEB-серверов для административного и клиентского WEB/REST интерфейсов
 
 Для работы с ostree-репозиториями и образами ACOS поддерживаются два интерфейса:
 - административный интерфейс на порту 81;
@@ -7,24 +7,24 @@
 Административный интерфейс предназначен для создания, обновления версий веток и подветок потоков:
 - доступен только в рамках подсети Базальт;
 - работает с корнем данного репозитория (начальная страница /index.php),
-- пользователь apache2 под которым работает сайт входит в группу wheel, позволяющей выполнять shell скрипты с правами root;
+- пользователь apache2, под которым работает сайт, входит в группу wheel, позволяющую выполнять shell скрипты с правами root;
 - все каталоги подкаталога данных ACOS доступны на чтение-запись.
 
-Клиентский интерфейс преднаначен для предоставлении информации клиенту, скачивания образов и обровлений из архивного ostree-репозитория:
+Клиентский интерфейс предназначен для предоставлении информации клиенту, скачивания образов и обновлений из архивного ostree-репозитория:
 - доступен из Интернета;
-- корневым директорием является подкаталог данных /ACOS, вышележащие каталоги с скрипты недоступны;
-- пользователь apache2 под которым работает сайт имеет стандартные права;
-- корневой каталог /ACOS монтируется ТОЛЬКО НА ЧТЕНИЕ (RO);
+- корневым директорием является подкаталог данных ACOS, вышележащие каталоги и скрипты недоступны;
+- пользователь apache2, под которым работает сайт, имеет стандартные права;
+- корневой каталог ACOS монтируется ТОЛЬКО НА ЧТЕНИЕ (RO);
 
 Оба интерфейса запускаются в виде docker-сервисов через docker-compose.
 
 ## Сборка docker-образа getacos клиентского интерфейса
-Сборка производится в каталоге [/docker/getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker/getacos).
+Сборка производится в каталоге [docker/getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker/getacos).
 
 
 ### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/getacos/Dockerfile).
 
-Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливается основные пакеты для работы:
+Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливаются основные пакеты для работы:
 ```
 apache2 apache2-mod_ssl
 apache2-mod_php7 php7-curl php7-mbstring php7
@@ -44,13 +44,12 @@ less
 
 
 ## Сборка docker-образа admingetacos административного интерфейса
-Сборка производится в каталоге [/docker/admingetacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker/admingetacos).
+Сборка производится в каталоге [docker/admingetacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker/admingetacos).
 
 
 ### [Dockerfile](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/admingetacos/Dockerfile).
 
-Для уменьшение суммарного объема образов на диске и в оперативной памяти
-сборка образа `admingetacos` идет от docker-образа `getacos`, описанного выше.
+Для уменьшения суммарного объема образов на диске и в оперативной памяти сборка образа `admingetacos` идет от docker-образа `getacos`, описанного выше.
 В этом случае в образе `admingetacos` наследуются основные слои образа `getacos`.
 
 В образе:
@@ -70,12 +69,12 @@ less
 
 ## Запуск сервисов
 
-Запуск сервисов производится в каталоге [/docker/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker).
+Запуск сервисов производится в каталоге [docker/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/docker).
 
 ### Файл установки переменных [.env](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/.env)
 
-Каталог где установлен текущий git-репозиторий [getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile)
-на локальном сервере указыватся в файле [.env](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/.env).
+Каталог, где установлен текущий git-репозиторий [getacos](https://github.com/alt-cloud/getacos/tree/feature-acosfile)
+на локальном сервере указывается в файле [.env](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/.env).
 
 ### Файл описания сервисов [docker-compose.yml](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/docker-compose.yml)
 
@@ -83,12 +82,12 @@ less
 
 - сервис `getacos`:
   * пользовательский WEB-сервис привязывается к порту `80`.
-  * корневой директорий сайта привязывается к поддиректирию данных [/ACOS/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/ACOS).
+  * корневой директорий сайта привязывается к поддиректорию данных [/ACOS/](https://github.com/alt-cloud/getacos/tree/feature-acosfile/ACOS).
 
 - сервис `admingetacos`:
   * административный WEB-сервис привязывается к порту `81`.
-  * повышаются приведегии процессов для поддерки оверлейного (`overlay`) монтирования каталогов;
-  * корневой директорий сайта привязывается к корневому каталога git-репозитория [/](https://github.com/alt-cloud/getacos/tree/feature-acosfile).
+  * повышаются привилегии процессов для поддержки оверлейного (`overlay`) монтирования каталогов;
+  * корневой директорий сайта привязывается к корневому каталогу git-репозитория [/](https://github.com/alt-cloud/getacos/tree/feature-acosfile).
 
 ### Скрипт запуска сервисов [start-compose.sh](https://github.com/alt-cloud/getacos/blob/feature-acosfile/docker/start-compose.sh)
 
@@ -102,36 +101,35 @@ less
 ## Порядок сборки образов и запуска сервисов
 
 1. Убедитесь, что установлены пакеты `docker-engine`, `docker-compose` и запущен сервис `docker`.
-Если нет, устаовите их:
+Если нет, установите их:
 ```
 # apt-get install docker-engine docker-compose
-# systemctl enable docker
-# systemctl start docker
+# systemctl enable --now docker
 ```
 
-2. Перейдите в каталог `/docker/getcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
+2. Перейдите в каталог `docker/getacos/` и запустите скрипт `build.sh` сборки образа `getacos`:
 ```
-# cd .../getacos/docker/getcos/
+# cd getacos/docker/getacos/
 # ./build.sh
 ...
 Successfully built ....
 Successfully tagged getacos:latest
 ```
 
-3. Перейдите в каталог `/docker/admingetcos/` и запустите скрипт `build.sh` сборки образа `getacos`:
+3. Перейдите в каталог `docker/admingetacos/` и запустите скрипт `build.sh` сборки образа `admingetacos`:
 ```
-# cd .../getacos/docker/admingetcos/
+# cd ../admingetacos/
 # ./build.sh
 ...
 Successfully built ....
 Successfully tagged admingetacos:latest
 ```
 
-4. Укажите файле `/docker/.env`  каталог git-директория данного репозитория на локальном компьютере.
+4. Укажите в файле `docker/.env` каталог git-директория данного репозитория на локальном компьютере.
 
-5. Перейдите в каталог `/docker/` и запустите скрипт `start-compose.sh`:
+5. Перейдите в каталог `docker/` и запустите скрипт `start-compose.sh`:
 ```
-# cd ../getacos/docker/
+# cd ..
 # ./start-compose.sh
 Creating network "docker_default" with the default driver
 Creating docker_getacos_1      ... done
