@@ -4,7 +4,7 @@
 
 Установите репозиторий mkimage-profiles@keremet в каталог, где находится поддиректорий данного (getacos) репозитория:
 ```
-$ git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b acos
+git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b acos
 ```
 
 Перейдите в терминальном режиме в каталог [ostree/shell/](https://github.com/alt-cloud/getacos/tree/release_0.0.1/ostree/shell) и запустите команду
