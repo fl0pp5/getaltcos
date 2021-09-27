@@ -102,8 +102,6 @@ class repos {
     return $ret;
   }
 
-
-
   /*
    * Возвращает имя поддиректория варианта в каталоге /vars
    * sisyphus.20210914.0.0 => 20210914/0/0
@@ -183,5 +181,11 @@ class repos {
     return $ret;
   }
 
+  static function fullRPMNameToShort($fullName) {
+    $path = explode('-', $fullName);
+    $nPath = count($path);
+    $ret = implode('-', array_slice($path, 0, $nPath-2));
+    return $ret;
+  }
 
 }

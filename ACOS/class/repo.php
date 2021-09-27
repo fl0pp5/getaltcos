@@ -359,6 +359,64 @@ class repo {
     return $ret;
   }
 
+  /*
+   * Сравнить список RPM-файлов различный версий
+   *
+   */
+  function cmpRPMs($version1, $version2) {
+    $version1Dir = repos::versionVarSubDir($version1);
+    $version2Dir = repos::versionVarSubDir($version2);
+
+    $path1 = $this->varsDir . "/$version1Dir/var/lib/rpm/";
+    $rpmListFile1 = tempnam('/tmp', 'ostree_');
+    $cmd = "rpm -qa --dbpath=$path1 | sort > $rpmListFile1";
+//     echo "<pre>CMD1=$cmd</pre>\n";
+    exec($cmd);
+
+    $path2 = $this->varsDir . "/$version2Dir/var/lib/rpm/";
+    $rpmListFile2 = tempnam('/tmp', 'ostree_');
+    $cmd = "rpm -qa --dbpath=$path2 | sort > $rpmListFile2";
+//     echo "<pre>CMD2=$cmd</pre>\n";
+    exec($cmd);
+
+    $cmd = "comm -3 '--output-delimiter=|' $rpmListFile1 $rpmListFile2";
+    $output = [];
+//     echo "<pre>CMD3=$cmd</pre>\n";
+    exec($cmd, $output);
+//     echo "<pre>RPMCOMM=" . print_r($output, 1) . "</pre>\n";
+
+    $rpms1= []; $rpms2 = [];
+    foreach ($output as $diff) {
+      $path = explode('|', $diff);
+      if (count($path) == 1) {
+        $fullName = $path[0];
+        $shortName = repos::fullRPMNameToShort($fullName);
+        $rpms1[$shortName] = $fullName;
+      } else {
+        $fullName = $path[1];
+        $shortName = repos::fullRPMNameToShort($fullName);
+        $rpms2[$shortName] = $fullName;
+      }
+    }
+//     echo "<pre>RPMS1=". print_r($rpms1, 1) . "</pre>";
+//     echo "<pre>RPMS2=". print_r($rpms2, 1) . "</pre>";
+    $ret = ['new'=>[], 'changed'=>[], 'deleted'=>[]];
+    foreach ($rpms1 as $short=>$full) {
+      if (key_exists($short, $rpms2)) {
+        $full2 = $rpms2[$short];
+        $ret['changed'][$short] = [$full2, $full];
+      } else {
+        $ret['new'][$short] = $full;
+      }
+    }
+    foreach ($rpms2 as $short=>$full) {
+      if (!key_exists($short, $rpms1)) {
+        $ret['deleted'][$short] = $full;
+      }
+    }
+    return $ret;
+  }
+
   static function cmpByDate($c1, $c2) {
   $ret = strcmp($c1['Date'], $c2['Date']);
   return $ret;

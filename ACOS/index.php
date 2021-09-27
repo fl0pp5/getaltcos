@@ -28,12 +28,13 @@ foreach (repos::listOSs() as $os) {
     $streams = repos::listStreams($os, $arch);
     // echo "<pre>STREAMS=".print_r($streams, 1) . "</pre>\n";
     foreach ($streams as $stream) {
-      $branch = "$os/$arch/$stream";
-      $repo = new repo($branch, 'bare');
+      $ref = "$os/$arch/$stream";
+      $repo = new repo($ref, 'bare');
       $repo->getCommits();
       $commits = array_reverse($repo->commits, true);
     ?>
-<h5>Поток <?= "$os/$arch/$stream"?></h3>
+<h5>Поток <?= "$ref"?></h3>
+<a href='changelog.php?ref=<?= $ref?>'  target='clientsWindow'><button type='button'>История изменений</button></a>
 <table border='1'>
   <tr>
     <th rowspan='3'>Дата</th>
