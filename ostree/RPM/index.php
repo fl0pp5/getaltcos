@@ -6,15 +6,21 @@ require_once('repos.php');
 
 $ref = $_REQUEST['ref'];
 $version = $_REQUEST['version'];
-$versionDir = repos::versionVarSubDir($version);
 
-$refDir = repos::refToDir($ref);
-$varsDir = "$rootdir/ACOS/streams/${refDir}/vars";
-$path = "$varsDir/$versionDir";
+$repo = new repo($ref, 'bare');
 
-$cmd = "rpm -qa -r $path | sort ";
-$output = [];
-echo "<pre>CMD=$cmd</pre>\n";
-exec($cmd, $output);
-// echo "<pre>RPMa=" . print_r($output, 1) . "</pre>\n";
-echo "<pre>" . implode("\n", $output) . "</pre>";
+$rpmList = $repo->listRPMs($version);
+$rpmsInfo = $repo->rpmsInfo(array_keys($rpmList), $version, ['Summary']);
+?>
+<h2>Пакеты потока <?= $ref?> версии <?= $version?></h2>
+<ul>
+<?php
+// echo "<pre>RpmList" . print_r($rpmList, 1) . "</pre>";
+foreach ($rpmList as $shortName => $fullName) {
+?>
+  <li><b><?= $fullName?></b> - <i><?= $rpmsInfo[$shortName]['Summary']?></i></li>
+<?php
+}
+?>
+</ul>
+
