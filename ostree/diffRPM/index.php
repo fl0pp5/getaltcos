@@ -1,52 +1,83 @@
 <?php
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
-require_once('repos.php');
+require_once('repo.php');
 
 // $version1Dir = implode('/', array_slice(explode('.', $_REQUEST['version1']), 1));
 // $version2Dir = implode('/', array_slice(explode('.', $_REQUEST['version2']), 1));
+$ref = $_REQUEST['ref'];
 $version1 = $_REQUEST['version1'];
 $version2 = $_REQUEST['version2'];
-$version1Dir = repos::versionVarSubDir($version1);
-$version2Dir = repos::versionVarSubDir($version2);
 
-$ref = $_REQUEST['ref'];
-$refDir = repos::refToDir($ref);
-$varsDir = "$rootdir/ACOS/streams/${refDir}/vars";
-$path1 = "$varsDir/$version1Dir";
-$path2 = "$varsDir/$version2Dir";
-// echo "PATH1=$path1";
-// echo "PATH2=$path2";
+$repo = new repo($ref, 'bare');
+$rpmDiff = $repo->cmpRPMs($version1, $version2);
+// echo "<pre>RPMDIFF=" . print_r($rpmDiff, 1) . "</pre>";
+?>
+<h2>Сравнение пакетов версии <?= $version1?> и  <?= $version2?></h2>
+<ul>
+<li>
+  <h3>Новые</h3>
+  <ul>
+<?php
+  $new = $rpmDiff['new'];
+  if (count($new) == 0) {
+?>
+<b><i><u>Отсутствуют</u></i></b>
+<?php
+  } else {
+    $rpmsInfo = $repo->rpmsInfo(array_keys($new), $version1, ['Summary']);
+    foreach ($new as $short=>$full) {
+?>
+    <li><b><?= $full?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
+<?php
+    }
+  }
+?>
+  </ul>
+</li>
+<li>
+  <h3>Обновленные</h3>
+  <ul>
+<?php
+  $changed = $rpmDiff['changed'];
 
-$tmpDir = "$rootdir/ACOS/tmp/" . $_SERVER['REQUEST_TIME_FLOAT'];
+  if (count($changed) == 0) {
+?>
+<b><i><u>Отсутствуют</u></i></b>
+<?php
+  } else {
+    $rpmsInfo = $repo->rpmsInfo(array_keys($changed), $version1, ['Summary']);
+  //   echo "<pre>RPMSINFO=" . print_r($rpmsInfo, 1) . "</pre>";
+    foreach ($changed as $short=>$list) {
+      $full1 = $list[0];
+      $full2 = $list[1];
+?>
+    <li><b><?= $full1?></b> =&gt; <b><?= $full2?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
+<?php
+    }
+  }
+?>
+  </ul>
+</li>
+<li>
+  <h3>Удаленные</h3>
+  <ul>
+<?php
+  $deleted = $rpmDiff['deleted'];
+  if (count($deleted) == 0) {
+?>
+<b><i><u>Отсутствуют</u></i></b>
+<?php
+  } else {
+    $rpmsInfo = $repo->rpmsInfo(array_keys($deleted), $version1, ['Summary']);
+    foreach ($deleted as $short=>$full) {
+?>
+    <li><b><?= $full?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
+<?php
+    }
+  }
+?>
+  </ul>
+</li>
+</ul>
 
-mkdir($tmpDir, 0777, true);
-$cmd = "mkdir -p $tmpDir 2>&1";
-$output = [];
-// echo "<pre>CMD=$cmd</pre>\n";
-exec($cmd, $output);
-// echo "<pre>mkdir=" . print_r($output, 1) . "</pre>\n";
-
-
-$cmd = "rpm -qa -r $path1 | sort > $tmpDir/a";
-$output = [];
-// echo "<pre>CMD=$cmd</pre>\n";
-exec($cmd, $output);
-// echo "<pre>RPMa=" . print_r($output, 1) . "</pre>\n";
-
-$cmd = "rpm -qa -r $path2 | sort > $tmpDir/b";
-$output = [];
-// echo "<pre>CMD=$cmd</pre>\n";
-exec($cmd, $output);
-// echo "<pre>RPMb=" . print_r($output, 1) . "</pre>\n";
-
-$cmd = "cd $tmpDir; diff b a";
-$output = [];
-// echo "<pre>CMD=$cmd</pre>\n";
-exec($cmd, $output);
-// echo "<pre>DIFF=" . print_r($output, 1) . "</pre>\n";
-echo implode("<br>\n", $output);
-
-unlink("$tmpDir/a");
-unlink("$tmpDir/b");
-rmdir($tmpDir);

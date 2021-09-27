@@ -44,12 +44,12 @@ for ($i=0; $i < $nCommits-1; $i++) {
   <ul>
 <?php
   $new = $rpmDiff['new'];
-  $rpmsInfo = $repo->rpmsInfo(array_keys($new), $version, ['Summary']);
   if (count($new) == 0) {
 ?>
 <b><i><u>Отсутствуют</u></i></b>
 <?php
   } else {
+    $rpmsInfo = $repo->rpmsInfo(array_keys($new), $version, ['Summary']);
     foreach ($new as $short=>$full) {
 ?>
     <li><b><?= $full?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
@@ -64,13 +64,13 @@ for ($i=0; $i < $nCommits-1; $i++) {
   <ul>
 <?php
   $changed = $rpmDiff['changed'];
-  $rpmsInfo = $repo->rpmsInfo(array_keys($changed), $version, ['Summary']);
-//   echo "<pre>RPMSINFO=" . print_r($rpmsInfo, 1) . "</pre>";
   if (count($changed) == 0) {
 ?>
 <b><i><u>Отсутствуют</u></i></b>
 <?php
   } else {
+    $rpmsInfo = $repo->rpmsInfo(array_keys($changed), $version, ['Summary']);
+//   echo "<pre>RPMSINFO=" . print_r($rpmsInfo, 1) . "</pre>";
     foreach ($changed as $short=>$list) {
       $full1 = $list[0];
       $full2 = $list[1];
@@ -87,12 +87,12 @@ for ($i=0; $i < $nCommits-1; $i++) {
   <ul>
 <?php
   $deleted = $rpmDiff['deleted'];
-  $rpmsInfo = $repo->rpmsInfo(array_keys($deleted), $version, ['Summary']);
   if (count($deleted) == 0) {
 ?>
 <b><i><u>Отсутствуют</u></i></b>
 <?php
   } else {
+    $rpmsInfo = $repo->rpmsInfo(array_keys($deleted), $version, ['Summary']);
     foreach ($deleted as $short=>$full) {
 ?>
     <li><b><?= $full?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
