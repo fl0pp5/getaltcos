@@ -5,8 +5,14 @@ require_once('repo.php');
 require_once('repos.php');
 
 $branch = $_REQUEST['ref'];
+$title = "История изменений потока $branch";
 ?>
-<h1>История изменений потока <?= $branch?></h1>
+<html lang='ru'>
+<head>
+<title><?= $title?></title>
+</head>
+<body>
+<h1><?= $title?></h1>
 <?php
 
 $repo = new repo($branch, 'archive');
@@ -32,14 +38,15 @@ for ($i=0; $i < $nCommits-1; $i++) {
   <ul>
 <?php
   $new = $rpmDiff['new'];
+  $rpmsInfo = $repo->rpmsInfo(array_keys($new), $version, ['Summary']);
   if (count($new) == 0) {
 ?>
-Отсутствуют
+<b><i><u>Отсутствуют</u></i></b>
 <?php
   } else {
     foreach ($new as $short=>$full) {
 ?>
-    <li><?= $full?></li>
+    <li><b><?= $full?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
 <?php
     }
   }
@@ -51,16 +58,18 @@ for ($i=0; $i < $nCommits-1; $i++) {
   <ul>
 <?php
   $changed = $rpmDiff['changed'];
+  $rpmsInfo = $repo->rpmsInfo(array_keys($changed), $version, ['Summary']);
+//   echo "<pre>RPMSINFO=" . print_r($rpmsInfo, 1) . "</pre>";
   if (count($changed) == 0) {
 ?>
-Отсутствуют
+<b><i><u>Отсутствуют</u></i></b>
 <?php
   } else {
     foreach ($changed as $short=>$list) {
       $full1 = $list[0];
       $full2 = $list[1];
 ?>
-    <li><?= $full1?> =&gt; <?= $full2?></li>
+    <li><b><?= $full1?></b> =&gt; <b><?= $full2?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
 <?php
     }
   }
@@ -72,14 +81,15 @@ for ($i=0; $i < $nCommits-1; $i++) {
   <ul>
 <?php
   $deleted = $rpmDiff['deleted'];
+  $rpmsInfo = $repo->rpmsInfo(array_keys($deleted), $version, ['Summary']);
   if (count($deleted) == 0) {
 ?>
-Отсутствуют
+<b><i><u>Отсутствуют</u></i></b>
 <?php
   } else {
     foreach ($deleted as $short=>$full) {
 ?>
-    <li><?= $full?></li>
+    <li><b><?= $full?></b> - <i><?= $rpmsInfo[$short]['Summary']?></i></li>
 <?php
     }
   }
@@ -94,14 +104,16 @@ $firstCommitId = $commitIds[$nCommits-1];
 $firstCommit = $repo->commits[$firstCommitId];
 $firstVersion = $firstCommit['Version'];
 $rpmList = $repo->listRPMs($firstVersion);
+$rpmsInfo = $repo->rpmsInfo(array_keys($rpmList), $version, ['Summary']);
+
 ?>
 <h2>Пакеты базовой версия <?= $firstVersion?></h2>
 <ul>
 <?php
 // echo "<pre>RpmList" . print_r($rpmList, 1) . "</pre>";
-foreach ($rpmList as $rpm) {
+foreach ($rpmList as $shortName => $fullName) {
 ?>
-  <li><?= $rpm?></li>
+  <li><b><?= $fullName?></b> - <i><?= $rpmsInfo[$shortName]['Summary']?></i></li>
 <?php
 }
 ?>

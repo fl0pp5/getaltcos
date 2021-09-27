@@ -369,8 +369,56 @@ class repo {
 //     echo "<pre>CMD=$cmd</pre>\n";
     $output = [];
     exec($cmd, $output);
-    return $output;
+    $ret = [];
+    foreach ($output as $fullName) {
+      $shortName = repos::fullRPMNameToShort($fullName);
+      $ret[$shortName] = $fullName;
+    }
+    return $ret;
   }
+
+  /*
+   * Получить информацию по переданному списку пакетов
+   * !! ПОКА НЕ ОБРАБАТЫВАЮТСЯ МНОГОСТРОЧНЫЕ ОПИСАТЕЛИ и $listFields=false не выводит ни одного поля
+   */
+  function rpmsInfo($list, $version, $listFields=[]) {
+    $versionDir = repos::versionVarSubDir($version);
+    $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
+    $list = implode(' ', $list);
+    $cmd = "rpm -qi --dbpath=$path $list";
+//     echo "<pre>CMD=$cmd</pre>\n";
+    $output = [];
+    exec($cmd, $output);
+//     echo "<pre>RPMSLIST=" . print_r($output, 1) . "</pre>\n";
+    $ret = [];
+    $first = true;
+    foreach ($output as $line) {
+      $path = explode(':', $line, 2);
+      if (count($path) < 2) {
+        continue;
+      }
+      list($fieldName, $value) = $path;
+      $fieldName = trim($fieldName);
+//       echo "<pre>fieldName='$fieldName' value=$value listFields=". print_r($listFields, 1) . "</pre>";
+      if ($fieldName == 'Name') {
+        $pkgName = trim($value);
+//         echo "<pre>Name: $pkgName</pre>";
+        if ($first) {
+          $first = false;
+        } else {
+          $ret[$pkgName] = [];
+        }
+      } else {
+        if (in_array($fieldName, $listFields)) {
+//           echo "<pre>FIELDNAME=$fieldName VALUE=$value</pre>";
+          $ret[$pkgName][$fieldName] = $value;
+        }
+      }
+    }
+//     echo "<pre>RET=".print_r($ret, 1)."</pre>";
+    return $ret;
+  }
+
 
   /*
    * Сравнить список RPM-файлов различный версий

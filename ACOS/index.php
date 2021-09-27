@@ -12,7 +12,7 @@ require_once('repos.php');
 
 <h1>Интерфейс пользователя ACOS</h2>
 <ul>
-  <li><a href='/pdf/usermanual.pdf'>Инструкция пользователя ACOS</a></li>
+  <li><a href='/pdf/usermanual.pdf'><button type='button'>Инструкция пользователя ACOS</button></a></li>
 </ul>
 
 <h2>Поддерживаемые потоки</h3>
