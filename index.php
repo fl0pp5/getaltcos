@@ -24,9 +24,9 @@ require_once('acosfile.php');
 <?php
 $SERVER_NAME = $_SERVER['SERVER_NAME'];
 $Ref = false;
-$Os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
+$os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
 $title[] = "Административный интерфейс OSTREE-потоков";
-$title[] = repos::getOSName($Os);
+$title[] = repos::getOSName($os);
 
 $listArchs = repos::listArchs();
 $Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : (count($listArchs) == 1 ? $listArchs[0] : false);
@@ -35,7 +35,7 @@ $Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : (count($listArchs) =
 </head>
 <body>
 <form action='./'>
-<input type='hidden' name='os' value='<?= $Os?>'/>
+<input type='hidden' name='os' value='<?= $os?>'/>
 <h2><?= implode(" ", $title)?></h2>
 <span class='arch'>
 Архитектура:
@@ -70,11 +70,11 @@ if ($Arch) {
 </span>
 <?php
   if ($Stream) {
-    $repo = new repo("$Os/$Arch/$Stream", 'bare');
+    $repo = new repo("$os/$Arch/$Stream", 'bare');
     $refs = $repo->getRefs();
     $Ref = key_exists('ref', $_REQUEST) ? $_REQUEST['ref'] : (count($refs) == 1 ? $refs[0] : false);
     if (count($refs) == 0) {
-      $Ref="$Os/$Arch/$Stream";
+      $Ref="$os/$Arch/$Stream";
     }
 ?>
 <span class='ref'>
@@ -117,7 +117,7 @@ if (!$refExists && strlen($Ref) > 0) {
 }
 ?>
 
-<title>Административный интерфейс OSTREE-потоков ALTLinux Container OS</title>
+<title>Административный интерфейс OSTREE-потоков ALT Container OS</title>
 <script>
 function markAfter(input) {
   if (!input.checked) return;
