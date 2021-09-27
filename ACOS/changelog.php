@@ -110,7 +110,7 @@ $firstCommitId = $commitIds[$nCommits-1];
 $firstCommit = $repo->commits[$firstCommitId];
 $firstVersion = $firstCommit['Version'];
 $rpmList = $repo->listRPMs($firstVersion);
-$rpmsInfo = $repo->rpmsInfo(array_keys($rpmList), $version, ['Summary']);
+$rpmsInfo = $repo->rpmsInfo(array_keys($rpmList), $firstVersion, ['Summary']);
 
 ?>
 <h2>Пакеты базовой версии <?= $firstVersion?></h2>
