@@ -19,6 +19,11 @@ $repo = new repo($branch, 'archive');
 $repo->getCommits();
 $commitIds = array_reverse(array_keys($repo->commits));
 $nCommits = count($commitIds);
+if ($nCommits <= 0) {
+?>
+<b><i><u>Комиты отсутствуют</u></i></b>
+<?php
+}
 // echo "<pre>COMMITIDS=".print_r($commitIds, 1) . "</pre>";
 for ($i=0; $i < $nCommits-1; $i++) {
   $commitId = $commitIds[$i];
