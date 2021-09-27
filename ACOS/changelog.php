@@ -107,7 +107,7 @@ $rpmList = $repo->listRPMs($firstVersion);
 $rpmsInfo = $repo->rpmsInfo(array_keys($rpmList), $version, ['Summary']);
 
 ?>
-<h2>Пакеты базовой версия <?= $firstVersion?></h2>
+<h2>Пакеты базовой версии <?= $firstVersion?></h2>
 <ul>
 <?php
 // echo "<pre>RpmList" . print_r($rpmList, 1) . "</pre>";
