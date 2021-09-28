@@ -93,4 +93,25 @@ Create compressed image (several minutes) (y/n)? y
 
 Для загрузки образов на локальный компьютер кликните по соответствующей кнопке `Скачать`.
 
+## Сборка ISO образов  
+
+В терминальном интерфейсе перейдите в каталог `ostree/shell/` и запустите команду
+```
+$ ./make_iso.sh acos/x86_64/sisyphus <commitId>
+...
+15:29:18 initializing BUILDDIR: build/
+15:29:18 preparing distro config
+15:29:27 starting image build (coffee time)
+15:33:40 done (4:13)
+** image: ~/getacos/ACOS/streams/acos/x86_64/sisyphus/images/iso/installer-acos-20210928-x86_64.iso [776M]
+make: выход из каталога «/home/keremet/mkimage-profiles»
+```
+Где `<commitId>` - идентификатор коммита первой версии.
+
+Для сборки `iso`-образа второй версии повторите команду с идентификатором коммита второй версии. 
+
+Вернитесь на вкладку административного интерфейса и перегрузите страницу `<ALT><Shift>R`.
+В интерфейсе отобразится список доступных для загрузки образов.
+![AdminPage6](./Images/adminPage6.png)
+
 
