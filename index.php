@@ -301,6 +301,9 @@ foreach (repos::repoTypes() as $repoType) {
 ?>
             </tr>
             <tr>
+<?php
+      foreach ($imageTypes as $imageType) {
+?>
               <td>
 <?php
       $fullImage = $repo->getFullImageName($imageType, $version);
@@ -329,6 +332,9 @@ foreach (repos::repoTypes() as $repoType) {
       }
 ?>
                 </td>
+<?php
+      }
+?>
               </tr>
           </table>
         </li>
