@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t getacos .
+docker build -t getaltcos .

@@ -19,7 +19,7 @@ sudo hasher-useradd keremet
 mkdir -p ~/apt/lists/partial
 mkdir -p ~/apt/cache/sisyphus/archives/partial
 
-cat <<EOF > ~/apt/apt.conf.sisyphus.x86_64 
+cat <<EOF > ~/apt/apt.conf.sisyphus.x86_64
 Dir::Etc::SourceList "$HOME/apt/sources.list.sisyphus.x86_64";
 Dir::Etc::SourceParts /var/empty;
 Dir::Etc::main "/dev/null";
@@ -40,8 +40,8 @@ EOF
 git clone git://git.altlinux.org/gears/m/mkimage-profiles.git
 ```
 
-Сборка acos.tar. Если создан каталог ~/out, то результат сборки будет располагаться в нем, иначе - в каталоге $TMP/out.
+Сборка altcos.tar. Если создан каталог ~/out, то результат сборки будет располагаться в нем, иначе - в каталоге $TMP/out.
 ```
 cd mkimage-profiles
-make DEBUG=1 APTCONF=~/apt/apt.conf.sisyphus.x86_64 BRANCH=sisyphus ARCH=x86_64 vm/acos.tar
+make DEBUG=1 APTCONF=~/apt/apt.conf.sisyphus.x86_64 BRANCH=sisyphus ARCH=x86_64 vm/altcos.tar
 ```

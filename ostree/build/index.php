@@ -1,20 +1,20 @@
 <?php
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
-require_once "acosfile.php";
+require_once "altcosfile.php";
 
 $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
 putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
 $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $subRef = $_REQUEST['ref'];
 
-$subRef = $_REQUEST['acosfileref'];
+$subRef = $_REQUEST['altcosfileref'];
 $subVersion = repos::refVersion($subRef);
 $subVersionVarSubDir = repos::versionVarSubDir($subVersion);
 
-$acosfile = new acosfile($subRef);
-echo "<pre>". json_encode($acosfile, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . "</pre>";
-$ref = $acosfile->from;
+$altcosfile = new altcosfile($subRef);
+echo "<pre>". json_encode($altcosfile, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . "</pre>";
+$ref = $altcosfile->from;
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);

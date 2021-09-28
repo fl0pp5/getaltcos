@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t admingetacos .
+docker build -t admingetaltcos .

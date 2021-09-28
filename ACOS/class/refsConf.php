@@ -8,7 +8,7 @@ class refsConf {
     $this->ref = $ref;
     $this->version = $version;
     $this->refRepoDir = repos::refRepoDir($ref);
-    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . $this->refRepoDir;
+    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . $this->refRepoDir;
     $this->varsDir = $this->refDir . "/vars/" ;//. repos::refVersionDatesSubDir($ref);
     $this->versionDir = $this->varsDir . '/' . repos::versionVarSubDir($version);
     $this->refConfFile = $this->versionDir . "/refConf.json";

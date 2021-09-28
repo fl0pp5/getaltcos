@@ -53,8 +53,8 @@ splitGroup() {
 }
 
 # Возвращает тропу, где находятся репозитории bare, archive
-# acos/x86_64/sisyphus -> acos/x86_64/sisyphus
-# acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus
+# altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
+# altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus
 refRepoDir() {
   ref=$1
   ifs=$IFS
@@ -64,9 +64,9 @@ refRepoDir() {
 }
 
 
-# Возвращает тропу, где находятся данные ветки (vars, roots, ACOSfile, ...)
-# acos/x86_64/sisyphus -> acos/x86_64/sisyphus
-# acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus/apache
+# Возвращает тропу, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
+# altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
+# altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus/apache
 refToDir() {
   ref=$1
   echo $ref | tr '[:upper:]' '[:lower:]'
@@ -88,7 +88,7 @@ versionVarSubDir() {
 fullCommitId() {
   refDir=$1
   shortCommitId=$2
-  VarDir=$DOCUMENT_ROOT/ACOS/streams/$refDir/vars
+  VarDir=$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
   cd $VarDir
   ids=`ls -1dr $shortCommitId*`
   set -- $ids
@@ -110,7 +110,7 @@ fullCommitId() {
 
 lastCommitId() {
   refDir=$1
-  cd $DOCUMENT_ROOT/ACOS/streams/$refDir/vars
+  cd $DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
   id=`ls -1dr ???????????????????????????????????????????????????????????????? | tail -1`
   echo $id
 }
@@ -118,12 +118,12 @@ lastCommitId() {
 
 
 # Возвращает вариант ветки  и $commitId
-# acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
+# altcos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
 refVersion() {
   ref=$1
   commitId=$2
   refDir=`refToDir $ref`
-  VarDir=$DOCUMENT_ROOT/ACOS/streams/$refDir/vars
+  VarDir=$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
   fullCommitId=`fullCommitId $refDir $commitId`
   cd $VarDir
   ifs=$IFS;IFS=/;set -- `readlink $fullCommitId`;IFS=$ifs
