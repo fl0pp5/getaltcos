@@ -1,6 +1,6 @@
  <?php
 require_once "repo.php";
-class acosfile {
+class altcosfile {
 
     function __construct($ref) {
       $file = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . repos::refToDir($ref) . "/ALTCOSfile";
