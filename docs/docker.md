@@ -18,11 +18,11 @@
 
 Оба интерфейса запускаются в виде docker-сервисов через docker-compose.
 
-## Сборка docker-образа getaltcos клиентского интерфейса
-Сборка производится в каталоге [docker/getaltcos](https://github.com/alt-cloud/getaltcos/tree/main/docker/getaltcos).
+## Сборка docker-образа altcos клиентского интерфейса
+Сборка производится в каталоге [docker/altcos](https://github.com/alt-cloud/getaltcos/tree/main/docker/altcos).
 
 
-### [Dockerfile](https://github.com/alt-cloud/getaltcos/blob/main/docker/getaltcos/Dockerfile).
+### [Dockerfile](https://github.com/alt-cloud/getaltcos/blob/main/docker/altcos/Dockerfile).
 
 Сборка идет от docker-образа `alt:sisyphus`. В образ устанавливаются основные пакеты для работы:
 ```
@@ -38,33 +38,33 @@ less
 
 Скрипт запускает apache2-сервер.
 
-### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getaltcos/blob/main/docker/getaltcos/build.sh)
+### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getaltcos/blob/main/docker/altcos/build.sh)
 
-Скрипт предназначен для сборки docker-образа `getaltcos`.
-
-
-## Сборка docker-образа admingetaltcos административного интерфейса
-Сборка производится в каталоге [docker/admingetaltcos](https://github.com/alt-cloud/getaltcos/tree/main/docker/admingetaltcos).
+Скрипт предназначен для сборки docker-образа `altcos`.
 
 
-### [Dockerfile](https://github.com/alt-cloud/getaltcos/blob/main/docker/admingetaltcos/Dockerfile).
+## Сборка docker-образа adminaltcos административного интерфейса
+Сборка производится в каталоге [docker/adminaltcos](https://github.com/alt-cloud/getaltcos/tree/main/docker/adminaltcos).
 
-Для уменьшения суммарного объема образов на диске и в оперативной памяти сборка образа `admingetaltcos` идет от docker-образа `getaltcos`, описанного выше.
-В этом случае в образе `admingetaltcos` наследуются основные слои образа `getaltcos`.
+
+### [Dockerfile](https://github.com/alt-cloud/altcos/blob/main/docker/adminaltcos/Dockerfile).
+
+Для уменьшения суммарного объема образов на диске и в оперативной памяти сборка образа `adminaltcos` идет от docker-образа `altcos`, описанного выше.
+В этом случае в образе `adminaltcos` наследуются основные слои образа `altcos`.
 
 В образе:
 - дополнительно устанавливаются пакеты `sudo, su` для обеспечения доступа к правам root;
 - пользователь `apache2` добавляется к группе `wheel`;
 - правится файл `/etc/sudoers` для беспарольного доступа к правам `root`;
-- для повышения уровня защиты поднимается виртуальный хост под доменами `admingetaltcos.altlinux.org`, `builds.altcos.altlinux.org`.
+- для повышения уровня защиты поднимается виртуальный хост под доменами `adminaltcos.altlinux.org`, `builds.altcos.altlinux.org`.
 
-### Стартовый скрипт [startApache.sh](https://github.com/alt-cloud/getaltcos/blob/main/docker/admingetaltcos/startApache.sh)
+### Стартовый скрипт [startApache.sh](https://github.com/alt-cloud/getaltcos/blob/main/docker/adminaltcos/startApache.sh)
 
 Перед запуском сервера создается (если отсутствует) корневой каталог потока `altcos/x86_64/sisyphus`.
 
-### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getaltcos/blob/main/docker/admingetaltcos/build.sh)
+### Скрипт сборки образа [build.sh](https://github.com/alt-cloud/getaltcos/blob/main/docker/adminaltcos/build.sh)
 
-Скрипт предназначен для сборки docker-образа `admingetaltcos`.
+Скрипт предназначен для сборки docker-образа `adminaltcos`.
 
 
 ## Запуск сервисов
@@ -74,17 +74,17 @@ less
 ### Файл установки переменных [.env](https://github.com/alt-cloud/getaltcos/blob/main/docker/.env)
 
 Каталог, где установлен текущий git-репозиторий [getaltcos](https://github.com/alt-cloud/getaltcos/tree/main)
-на локальном сервере указывается в файле [.env](https://github.com/alt-cloud/getaltcos/blob/main/docker/.env).
+на локальном сервере указывается в файле [.env](https://github.com/alt-cloud/altcos/blob/main/docker/.env).
 
 ### Файл описания сервисов [docker-compose.yml](https://github.com/alt-cloud/getaltcos/blob/main/docker/docker-compose.yml)
 
 Сервисы описываются в YML-файле [docker-compose.yml](https://github.com/alt-cloud/getaltcos/blob/main/docker/docker-compose.yml).
 
-- сервис `getaltcos`:
+- сервис `altcos`:
   * пользовательский WEB-сервис привязывается к порту `80`.
   * корневой директорий сайта привязывается к поддиректорию данных [/ALTCOS/](https://github.com/alt-cloud/getaltcos/tree/main/ALTCOS).
 
-- сервис `admingetaltcos`:
+- сервис `adminaltcos`:
   * административный WEB-сервис привязывается к порту `81`.
   * повышаются привилегии процессов для поддержки оверлейного (`overlay`) монтирования каталогов;
   * корневой директорий сайта привязывается к корневому каталогу git-репозитория [/](https://github.com/alt-cloud/getaltcos/tree/main).
@@ -107,22 +107,22 @@ less
 # systemctl enable --now docker
 ```
 
-2. Перейдите в каталог `docker/getaltcos/` и запустите скрипт `build.sh` сборки образа `getaltcos`:
+2. Перейдите в каталог `docker/altcos/` и запустите скрипт `build.sh` сборки образа `altcos`:
 ```
-# cd getaltcos/docker/getaltcos/
+# cd altcos/docker/altcos/
 # ./build.sh
 ...
 Successfully built ....
-Successfully tagged getaltcos:latest
+Successfully tagged altcos:latest
 ```
 
-3. Перейдите в каталог `docker/admingetaltcos/` и запустите скрипт `build.sh` сборки образа `admingetaltcos`:
+3. Перейдите в каталог `docker/adminaltcos/` и запустите скрипт `build.sh` сборки образа `adminaltcos`:
 ```
-# cd ../admingetaltcos/
+# cd ../adminaltcos/
 # ./build.sh
 ...
 Successfully built ....
-Successfully tagged admingetaltcos:latest
+Successfully tagged adminaltcos:latest
 ```
 
 4. Укажите в файле `docker/.env` каталог git-директория данного репозитория на локальном компьютере.
@@ -132,8 +132,8 @@ Successfully tagged admingetaltcos:latest
 # cd ..
 # ./start-compose.sh
 Creating network "docker_default" with the default driver
-Creating docker_getaltcos_1      ... done
-Creating docker_admingetaltcos_1 ... done
+Creating docker_altcos_1      ... done
+Creating docker_adminaltcos_1 ... done
 ```
 
 
