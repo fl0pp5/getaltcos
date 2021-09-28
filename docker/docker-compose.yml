@@ -1,17 +1,17 @@
 version: '3.2'
 
 services:
-  getacos:
-    image: getacos
+  acos:
+    image: altcos
     ports:
       - 0.0.0.0:80:80
     volumes:
-      - $GITHOME/ACOS:/var/www/html:ro
+      - $GITHOME/ALTCOS:/var/www/html:ro
 
-  admingetacos:
+  adminacos:
     cap_add:
       - ALL
-    image: admingetacos
+    image: adminaltcos
     ports:
       - 0.0.0.0:81:80
     volumes:
