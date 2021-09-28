@@ -6,13 +6,13 @@ require_once('repos.php');
 ?>
 <html lang='ru'>
 <head>
-<title>Интерфейс пользователя ACOS</title>
+<title>Интерфейс пользователя ALT Container OS</title>
 </head>
 <body>
 
-<h1>Интерфейс пользователя ACOS</h2>
+<h1>Интерфейс пользователя ALT Container OS</h2>
 <ul>
-  <li><a href='/pdf/usermanual.pdf'><button type='button'>Инструкция пользователя ACOS</button></a></li>
+  <li><a href='/pdf/usermanual.pdf'><button type='button'>Инструкция пользователя ALT Container OS</button></a></li>
 </ul>
 
 <h2>Поддерживаемые потоки</h3>
@@ -77,7 +77,7 @@ foreach (repos::listOSs() as $os) {
       $fullImage = $repo->getFullImageName($imageType, $version);
       $fullImageSize = $repo->getFullImageSize($imageType, $version);
       if ($fullImage) {
-        $ref = "/ACOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
+        $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
 ?>
       <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button'>Скачать(<?= $fullImageSize?>)</button></a>
 <?php
@@ -91,7 +91,7 @@ foreach (repos::listOSs() as $os) {
       $compressedImage = $repo->getCompressedImageName($imageType, $version);
       $compressedImageSize = $repo->getCompressedImageSize($imageType, $version);
       if ($compressedImage) {
-        $ref = "/ACOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
+        $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
 ?>
       <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button'>Скачать(<?= $compressedImageSize?>)</button></a>
 <?php

@@ -11,16 +11,16 @@ toRef=$3
 clear=$4
 
 refRepoDir=`refRepoDir $ref`
-branchRepoPath="$DOCUMENT_ROOT/ACOS/streams/$refRepoDir"
+branchRepoPath="$DOCUMENT_ROOT/ALTCOS/streams/$refRepoDir"
 repoBarePath="$branchRepoPath/bare/repo";
 
 refDir=`refToDir $ref`
-branchPath="$DOCUMENT_ROOT/ACOS/streams/$refDir"
+branchPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir"
 varDir="$branchPath/vars/$lastCommitId"
 if [ -n "$toRef" ]
 then
   refToDir=`refToDir $toRef`
-  branchPath="$DOCUMENT_ROOT/ACOS/streams/$refToDir"
+  branchPath="$DOCUMENT_ROOT/ALTCOS/streams/$refToDir"
 fi
 rootsPath="$branchPath/roots"
 rootsPathOld="$branchPath/rootsi.$$";

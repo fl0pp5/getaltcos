@@ -9,7 +9,7 @@ commitId=$2
 version=$3
 
 versionVarSubDir=`versionVarSubDir $version`
-branchPath=$DOCUMENT_ROOT/ACOS/streams/$refDir/
+branchPath=$DOCUMENT_ROOT/ALTCOS/streams/$refDir/
 rootsPath="$branchPath/roots";
 commitPath="$rootsPath/root"
 varDir="$branchPath/vars/$versionVarSubDir"

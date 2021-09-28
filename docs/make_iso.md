@@ -1,4 +1,4 @@
-#  Сборка установочного ISO-образа ACOS
+#  Сборка установочного ISO-образа ALTCOS
 
 ## Подготовка ОС
 Установить пакеты
@@ -19,7 +19,7 @@ sudo hasher-useradd keremet
 
 Создать каталог и перейти в него
 ```
-mkdir acos_build
+mkdir altcos_build
 cd $_
 ```
 
@@ -31,7 +31,7 @@ mkdir -p rpmbuild/SOURCES
 mkdir -p x86_64/RPMS.dir
 mkdir out
 
-cat <<EOF > apt/apt.conf.sisyphus.x86_64 
+cat <<EOF > apt/apt.conf.sisyphus.x86_64
 Dir::Etc::SourceList "$PWD/apt/sources.list.sisyphus.x86_64";
 Dir::Etc::SourceParts /var/empty;
 Dir::Etc::main "/dev/null";
@@ -49,14 +49,14 @@ EOF
 ```
 
 
-Создать файл спецификации пакета acos-archives
+Создать файл спецификации пакета altcos-archives
 ```
-cat <<EOF > acos-archives.spec
-Name: acos-archives
+cat <<EOF > altcos-archives.spec
+Name: altcos-archives
 Version: 0.1
 Release: alt1
 
-Summary: Archives to install ACOS
+Summary: Archives to install ALTCOS
 License: GPL-3.0-or-later
 Group: System/Base
 
@@ -64,20 +64,20 @@ Group: System/Base
 Archives to install ALT Container OS
 
 %install
-mkdir -p %buildroot%_datadir/acos/
-install -m444 ../SOURCES/acos_root.tar.xz %buildroot%_datadir/acos/
-install -m444 ../SOURCES/var.tar.xz %buildroot%_datadir/acos/
+mkdir -p %buildroot%_datadir/altcos/
+install -m444 ../SOURCES/altcos_root.tar.xz %buildroot%_datadir/altcos/
+install -m444 ../SOURCES/var.tar.xz %buildroot%_datadir/altcos/
 
 %files
-%_datadir/acos/acos_root.tar.xz
-%_datadir/acos/var.tar.xz
+%_datadir/altcos/altcos_root.tar.xz
+%_datadir/altcos/var.tar.xz
 EOF
 ```
 
-Скачать mkimage-profiles и getacos
+Скачать mkimage-profiles и getaltcos
 ```
-git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b acos
-git clone https://github.com/alt-cloud/getacos
+git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b altcos
+git clone https://github.com/alt-cloud/getaltcos
 ```
 
 ## Сборка
@@ -86,35 +86,35 @@ git clone https://github.com/alt-cloud/getacos
 MAIN_REPO=repo
 export BRANCH=sisyphus
 export ARCH=x86_64
-OSTREE_BRANCH=acos/$ARCH/$BRANCH
+OSTREE_BRANCH=altcos/$ARCH/$BRANCH
 ```
 
-Сборка acos.tar. Результат сборки будет располагаться в каталоге out.
+Сборка altcos.tar. Результат сборки будет располагаться в каталоге out.
 ```
-make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out vm/acos.tar
+make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out vm/altcos.tar
 ```
 
 Создать коммит в репозитории ostree.
 ```
-VERSION_DATE=$(basename `realpath out/acos-latest-x86_64.tar`| awk -F- '{print $2;}')
+VERSION_DATE=$(basename `realpath out/altcos-latest-x86_64.tar`| awk -F- '{print $2;}')
 sudo rm -rf out/$VERSION_DATE/0/0
-sudo ./getacos/ostree/bin/rootfs_to_repo.sh $OSTREE_BRANCH out/acos-latest-x86_64.tar $MAIN_REPO out
+sudo ./getaltcos/ostree/bin/rootfs_to_repo.sh $OSTREE_BRANCH out/altcos-latest-x86_64.tar $MAIN_REPO out
 ```
 
-Создать пакет acos-archives с архивами для установки. Указать путь к каталогу var, созданному предыдущей командой в каталоге out (скорректировать дату).
+Создать пакет altcos-archives с архивами для установки. Указать путь к каталогу var, созданному предыдущей командой в каталоге out (скорректировать дату).
 ```
 sudo tar -cf - -C out/$VERSION_DATE/0/0 var | xz -9 -c - > rpmbuild/SOURCES/var.tar.xz
 
-sudo rm -rf acos_root
-mkdir acos_root
-ostree admin init-fs --modern acos_root
-sudo ostree pull-local --repo acos_root/ostree/repo $MAIN_REPO $OSTREE_BRANCH
-sudo tar -cf - -C acos_root . | xz -9 -c -T0 - > rpmbuild/SOURCES/acos_root.tar.xz
+sudo rm -rf altcos_root
+mkdir altcos_root
+ostree admin init-fs --modern altcos_root
+sudo ostree pull-local --repo altcos_root/ostree/repo $MAIN_REPO $OSTREE_BRANCH
+sudo tar -cf - -C altcos_root . | xz -9 -c -T0 - > rpmbuild/SOURCES/altcos_root.tar.xz
 
-rpmbuild --define "_topdir $PWD/rpmbuild" --define "_rpmdir $PWD/x86_64/RPMS.dir/" --define "_rpmfilename acos-archives-0.1-alt1.x86_64.rpm" -bb acos-archives.spec
+rpmbuild --define "_topdir $PWD/rpmbuild" --define "_rpmdir $PWD/x86_64/RPMS.dir/" --define "_rpmfilename altcos-archives-0.1-alt1.x86_64.rpm" -bb altcos-archives.spec
 ```
 
 Сборка установочного образа
 ```
-make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out installer-acos.iso
+make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out installer-altcos.iso
 ```

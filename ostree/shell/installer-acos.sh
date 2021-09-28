@@ -7,14 +7,14 @@ export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
 if [ $# -gt 4 ]
 then
 	echo "Help: $0 [<branch>] [<commitid>] [<ignition configuration file>] [<device to install>]"
-	echo "For example: $0 acos/x86_64/sisyphus ac24e /usr/share/acos/config_example.ign /dev/sdb"
+	echo "For example: $0 altcos/x86_64/sisyphus ac24e /usr/share/altcos/config_example.ign /dev/sdb"
 	exit 1
 fi
 
 # Set brach variables
-BRANCH=${1:-acos/x86_64/sisyphus}
+BRANCH=${1:-altcos/x86_64/sisyphus}
 BRANCHREPODIR=`refRepoDir $BRANCH`
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHREPODIR
+BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCHREPODIR
 MAIN_REPO=$BRANCH_REPO/bare/repo
 if [ ! -d $MAIN_REPO ]
 then
@@ -22,7 +22,7 @@ then
 	exit 1
 fi
 BRANCHDIR=`refToDir $BRANCH`
-BRANCH_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
+BRANCH_DIR=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCHDIR
 if [ ! -d  $BRANCH_DIR ]
 then
   mkdir -m 0775 -p  $BRANCH_DIR
@@ -49,7 +49,7 @@ DEVICE=${4:-/dev/sdb}
 
 
 OS_NAME=alt-containeros
-MOUNT_DIR=/tmp/acos
+MOUNT_DIR=/tmp/altcos
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
 export VARS_DIR=$BRANCH_DIR/vars
 
@@ -98,7 +98,7 @@ parted $DEVICE print
 [ "$?" -ne 0 ] && exit 1
 
 echo -en "${WARN_COLOR}All data on the disk will be destroyed.${NO_COLOR} "
-read -p "Are you sure you want to install ACOS on this disk (y/n)? " -n 1 -r
+read -p "Are you sure you want to install ALTCOS on this disk (y/n)? " -n 1 -r
 echo
 [[ $REPLY =~ ^[Yy]$ ]] || exit 1
 
@@ -155,5 +155,5 @@ echo -e "${STEP_COLOR}*** Unmounting ***${NO_COLOR}"
 umount $MOUNT_DIR
 rm -r $MOUNT_DIR
 
-echo -e "${STEP_COLOR}*** ACOS has been successfully installed ***${NO_COLOR}"
+echo -e "${STEP_COLOR}*** ALTCOS has been successfully installed ***${NO_COLOR}"
 

@@ -18,8 +18,8 @@ if (key_exists('repoType', $_REQUEST)) {
   $repoType = $_REQUEST['repoType'];
 } else {
   $repoType = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
-}  
-$repo = new repo("acos/$basearch/$stream", $repoType);
+}
+$repo = new repo("altcos/$basearch/$stream", $repoType);
 
 $output=[];
 //echo "REPO=$repo<br>\n";
@@ -27,7 +27,7 @@ if (!$repo->haveConfig()) {
   errorReply(3, "Stream $stream does not have reposutory");
 }
 
-$ref = "acos/$basearch/$stream";
+$ref = "altcos/$basearch/$stream";
 $commits = $repo->getCommits($ref);
 $index = 0;
 foreach($commits as $id => $commit) {
@@ -53,8 +53,8 @@ foreach($commits as $id => $commit) {
     $index = (int)$commit['index'];
     $edges[] = [ $parentIndex, $index ];
 #    $edges[] = [ $index, $parentIndex ];
- 
-  } 
+
+  }
 }
 
 $graph = [ 'nodes' => $nodes, 'edges' => $edges ];

@@ -23,14 +23,14 @@ else
 	NS=$BRANCH
 fi
 
-ref=acos/x86_64/$BRANCH
+ref=altcos/x86_64/$BRANCH
 
 if [ -z "$DOCUMENT_ROOT" ]
 then
 	echo "Variable DOCUMENT_ROOT must be defined"
 	exit 1
 fi
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$ref
+BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$ref
 export IMAGEDIR="$BRANCH_REPO/mkimage-profiles"
 sudo mkdir -p $IMAGEDIR
 sudo chmod 777 $IMAGEDIR
@@ -76,4 +76,4 @@ rpm [$NS] http://ftp.altlinux.org/pub/distributions/ALTLinux/ $REPOBRANCH/noarch
 EOF
 
 cd $MKIMAGEDIR
-make DEBUG=1 APTCONF=~/apt/apt.conf.$BRANCH.x86_64 BRANCH=$BRANCH ARCH=x86_64 vm/acos.tar
+make DEBUG=1 APTCONF=~/apt/apt.conf.$BRANCH.x86_64 BRANCH=$BRANCH ARCH=x86_64 vm/altcos.tar

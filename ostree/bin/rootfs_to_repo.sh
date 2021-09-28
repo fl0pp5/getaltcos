@@ -7,13 +7,13 @@ export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
 if [ $# = 0 ]
 then
 	echo "Help: $0 <branch> [<rootfs archive>] [<directory of main ostree repository>] [<directory for output archives>]"
-	echo "For example: $0 acos/x86_64/sisyphus out/acos-20210824-x86_64.tar repo out"
+	echo "For example: $0 altcos/x86_64/sisyphus out/altcos-20210824-x86_64.tar repo out"
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
 	echo "If directory of main ostree repository doesn't exists, new repository will be created"
 	echo "Default values:"
-	echo "- <rootfs archive> \$DOCUMENT_ROOT/ACOS/rootfs_archives/<branch>/acos-latest-x86_64.tar"
-	echo "- <directory of main ostree repository> \$DOCUMENT_ROOT/ACOS/streams/<branch>/bare"
-	echo "- <directory for output archives> \$DOCUMENT_ROOT/ACOS/streams/<branch>/vars"
+	echo "- <rootfs archive> \$DOCUMENT_ROOT/ALTCOS/rootfs_archives/<branch>/altcos-latest-x86_64.tar"
+	echo "- <directory of main ostree repository> \$DOCUMENT_ROOT/ALTCOS/streams/<branch>/bare"
+	echo "- <directory for output archives> \$DOCUMENT_ROOT/ALTCOS/streams/<branch>/vars"
 	exit 1
 fi
 
@@ -23,9 +23,9 @@ then
         exit 1
 fi
 
-BRANCH=${1:-acos/x86_64/sisyphus}
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCH
-ROOTFS_ARCHIVE="${2:-$BRANCH_REPO/mkimage-profiles/acos-latest-x86_64.tar}"
+BRANCH=${1:-altcos/x86_64/sisyphus}
+BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCH
+ROOTFS_ARCHIVE="${2:-$BRANCH_REPO/mkimage-profiles/altcos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$BRANCH_REPO/bare/repo}"
 OUT_DIR="${4:-$BRANCH_REPO/vars}"
 RPMS_DIR=$DOCUMENT_ROOT/ostree/data/rpms
@@ -100,20 +100,20 @@ ln -sf var/mnt $MAIN_ROOT/mnt
 
 mkdir --mode=0775 -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "
-[remote \"acos\"]
-url=http://getacos.altlinux.org/ACOS/streams/$BRANCH/archive/repo/
+[remote \"altcos\"]
+url=http://getaltcos.altlinux.org/ALTCOS/streams/$BRANCH/archive/repo/
 gpg-verify=false
-" > $MAIN_ROOT/etc/ostree/remotes.d/acos.conf
+" > $MAIN_ROOT/etc/ostree/remotes.d/altcos.conf
 echo "
 # ALTLinux CoreOS Cincinnati backend
 [cincinnati]
-base_url=\"http://getacos.altlinux.org\"
+base_url=\"http://getaltcos.altlinux.org\"
 " > $MAIN_ROOT/etc/zincati/config.d/50-fedora-coreos-cincinnati.toml
 
-echo "$UPDATEIP getacos.altlinux.org" >> $MAIN_ROOT/etc/hosts
+echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
-chroot $MAIN_ROOT groupadd acos
-chroot $MAIN_ROOT useradd -g acos -G docker,wheel -d /var/home/acos --create-home -s /bin/bash acos
+chroot $MAIN_ROOT groupadd altcos
+chroot $MAIN_ROOT useradd -g altcos -G docker,wheel -d /var/home/altcos --create-home -s /bin/bash altcos
 
 # Split passwd file (/etc/passwd) into
 # splitPasswd $MAIN_ROOT/etc/passwd $MAIN_ROOT/lib/passwd /tmp/passwd.$$
@@ -137,7 +137,7 @@ f /run/ostree/initramfs-mount-var 0755 root root -
 EOF
 chroot $MAIN_ROOT dracut --reproducible --gzip -v --no-hostonly \
 	-f /boot/initramfs-$SHA \
-	--add ignition-acos --add ostree \
+	--add ignition-altcos --add ostree \
 	--include /ostree.conf /etc/tmpfiles.d/ostree.conf \
 	--include /etc/systemd/network/eth0.network /etc/systemd/network/eth0.network \
 	--omit-drivers=floppy --omit=nfs --omit=lvm --omit=iscsi \

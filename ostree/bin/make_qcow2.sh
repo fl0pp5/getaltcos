@@ -4,7 +4,7 @@ set -e
 if [ $# -lt 2 ]
 then
 	echo "Help: $0 <output file> <var directory> [<branch>] [<directory of main ostree repository>]"
-	echo "For example: $0 out/1.qcow2 out/20210917/0/0/var acos/x86_64/sisyphus repo"
+	echo "For example: $0 out/1.qcow2 out/20210917/0/0/var altcos/x86_64/sisyphus repo"
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
 	exit 1
 fi
@@ -24,8 +24,8 @@ then
 	exit 1
 fi
 
-OSTREE_BRANCH=${3:-acos/x86_64/sisyphus}
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$OSTREE_BRANCH
+OSTREE_BRANCH=${3:-altcos/x86_64/sisyphus}
+BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$OSTREE_BRANCH
 MAIN_REPO="${4:-$BRANCH_REPO/bare/repo}"
 if [ ! -d $MAIN_REPO ]
 then
@@ -34,9 +34,9 @@ then
 fi
 
 
-MOUNT_DIR=`mktemp --tmpdir -d acos_make_qcow2-XXXXXX`
+MOUNT_DIR=`mktemp --tmpdir -d altcos_make_qcow2-XXXXXX`
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
-RAWFILE=`mktemp --tmpdir acos_make_qcow2-XXXXXX.raw`
+RAWFILE=`mktemp --tmpdir altcos_make_qcow2-XXXXXX.raw`
 
 fallocate -l 3GiB $RAWFILE
 
