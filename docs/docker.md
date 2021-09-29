@@ -109,7 +109,7 @@ less
 
 2. Перейдите в каталог `docker/altcos/` и запустите скрипт `build.sh` сборки образа `altcos`:
 ```
-# cd altcos/docker/altcos/
+# cd getaltcos/docker/altcos/
 # ./build.sh
 ...
 Successfully built ....
