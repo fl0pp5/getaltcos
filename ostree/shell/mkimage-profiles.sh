@@ -47,33 +47,39 @@ then
         exit 1
 fi
 
-APTDIR="~/apt"
+APTDIR="$HOME/apt"
 if [ ! $APTDIR ]
 then
-	mkdir -p ~/apt/
+	mkdir -p $APTDIR
 fi
-if [ ! -f  ~/apt/lists/partial ]
+if [ ! -f  $APTDIR/lists/partial ]
 then
-	mkdir -p ~/apt/lists/partial
+	mkdir -p $APTDIR/lists/partial
 fi
-if [ ! -f ~/apt/cache/$BRANCH/archives/partial ]
+if [ ! -f $APTDIR/cache/$BRANCH/archives/partial ]
 then
-	mkdir -p ~/apt/cache/$BRANCH/archives/partial
+	mkdir -p $APTDIR/cache/$BRANCH/archives/partial
 fi
-cat <<EOF > ~/apt/apt.conf.$BRANCH.x86_64
-Dir::Etc::SourceList "$HOME/apt/sources.list.$BRANCH.x86_64";
+if [ ! -d $APTDIR/x86_64/RPMS.dir ]
+then
+	mkdir -p $APTDIR/x86_64/RPMS.dir
+fi
+cat <<EOF > $APTDIR/apt.conf.$BRANCH.x86_64
+Dir::Etc::SourceList "$APTDIR/sources.list.$BRANCH.x86_64";
 Dir::Etc::SourceParts /var/empty;
 Dir::Etc::main "/dev/null";
 Dir::Etc::parts "/var/empty";
 APT::Architecture "64";
-Dir::State::lists "$HOME/apt/lists/";
-Dir::Cache "$HOME/apt/cache/$BRANCH/";
+Dir::State::lists "$APTDIR/lists/";
+Dir::Cache "$APTDIR/cache/$BRANCH/";
 EOF
 
-cat <<EOF > ~/apt/sources.list.$BRANCH.x86_64
+cat <<EOF > $APTDIR/sources.list.$BRANCH.x86_64
 rpm [$NS] http://ftp.altlinux.org/pub/distributions/ALTLinux/ $REPOBRANCH/x86_64 classic
 rpm [$NS] http://ftp.altlinux.org/pub/distributions/ALTLinux/ $REPOBRANCH/noarch classic
+rpm-dir file:$APTDIR x86_64 dir
 EOF
 
 cd $MKIMAGEDIR
-make DEBUG=1 APTCONF=~/apt/apt.conf.$BRANCH.x86_64 BRANCH=$BRANCH ARCH=x86_64 vm/altcos.tar
+
+make DEBUG=1 APTCONF=$APTDIR/apt.conf.$BRANCH.x86_64 BRANCH=$BRANCH ARCH=x86_64 vm/altcos.tar
