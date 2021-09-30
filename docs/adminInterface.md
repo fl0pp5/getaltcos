@@ -35,7 +35,7 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> altcos-l
 В отдельной вкладке откроется интерфейс, в котором через несколько десятков секунд
 появится результат выполнения команды:
 ```
-/var/www/vhosts/getaltcos/ostree/bin/rootfs_to_repo.sh altcos/x86_64/sisyphus
+/var/www/vhosts/altcos/ostree/bin/rootfs_to_repo.sh altcos/x86_64/sisyphus
 ...
 ```
 
@@ -78,9 +78,10 @@ apt-get dist-upgrade
 ```
 $ sudo ./make_qcow2.sh altcos/x86_64/sisyphus <commitId>
 ...
-qemu-img convert -O qcow2 /tmp/.private/root/altcos_make_qcow2-79DxqX.raw /home/kaf/AltlinuxContainerOS/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/images/qcow2/sisyphus.YYYYMMDD.0.0.qcow2
+sent 13,720,815 bytes  received 2,628 bytes  27,446,886.00 bytes/sec
+total size is 13,707,601  speedup is 1.00
 Create compressed image (several minutes) (y/n)? y
-  100 %     251,9 MiB / 1 209,0 MiB = 0,208   3,1 MiB/s       6:27
+  100 %     259,8 MiB / 1 254,8 MiB = 0,207   3,0 MiB/s       6:58
 
 ```
 Где `<commitId>` - идентификатор коммита первой версии.
@@ -99,11 +100,11 @@ Create compressed image (several minutes) (y/n)? y
 ```
 $ ./make_iso.sh altcos/x86_64/sisyphus <commitId>
 ...
-15:29:18 initializing BUILDDIR: build/
-15:29:18 preparing distro config
-15:29:27 starting image build (coffee time)
-15:33:40 done (4:13)
-** image: ~/getacos/ACOS/streams/acos/x86_64/sisyphus/images/iso/installer-acos-20210928-x86_64.iso [776M]
+15:47:44 initializing BUILDDIR: build/
+15:47:44 preparing distro config
+15:47:53 starting image build (coffee time)
+15:52:11 done (4:18)
+** image: ~/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/images/iso/installer-altcos-20210930-x86_64.iso [779M]
 make: выход из каталога «/home/keremet/mkimage-profiles»
 ```
 Где `<commitId>` - идентификатор коммита первой версии.
