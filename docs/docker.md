@@ -125,7 +125,10 @@ Successfully built ....
 Successfully tagged adminaltcos:latest
 ```
 
-4. Укажите в файле `docker/.env` каталог git-директория данного репозитория на локальном компьютере.
+4. Укажите в файле `docker/.env` каталог git-директория данного репозитория на локальном компьютере в формате GITHOME=каталог. Например
+```
+GITHOME=/home/keremet/getaltcos
+```
 
 5. Перейдите в каталог `docker/` и запустите скрипт `start-compose.sh`:
 ```
