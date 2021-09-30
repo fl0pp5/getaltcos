@@ -100,11 +100,11 @@ Create compressed image (several minutes) (y/n)? y
 ```
 $ ./make_iso.sh altcos/x86_64/sisyphus <commitId>
 ...
-15:29:18 initializing BUILDDIR: build/
-15:29:18 preparing distro config
-15:29:27 starting image build (coffee time)
-15:33:40 done (4:13)
-** image: ~/getacos/ACOS/streams/acos/x86_64/sisyphus/images/iso/installer-acos-20210928-x86_64.iso [776M]
+15:47:44 initializing BUILDDIR: build/
+15:47:44 preparing distro config
+15:47:53 starting image build (coffee time)
+15:52:11 done (4:18)
+** image: ~/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/images/iso/installer-altcos-20210930-x86_64.iso [779M]
 make: выход из каталога «/home/keremet/mkimage-profiles»
 ```
 Где `<commitId>` - идентификатор коммита первой версии.
