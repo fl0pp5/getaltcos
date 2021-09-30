@@ -97,7 +97,7 @@ Create compressed image (several minutes) (y/n)? y
 
 В терминальном интерфейсе перейдите в каталог `ostree/shell/` и запустите команду
 ```
-$ ./make_iso.sh acos/x86_64/sisyphus <commitId>
+$ ./make_iso.sh altcos/x86_64/sisyphus <commitId>
 ...
 15:29:18 initializing BUILDDIR: build/
 15:29:18 preparing distro config

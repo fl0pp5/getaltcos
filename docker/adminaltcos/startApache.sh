@@ -6,8 +6,8 @@ then
   MODULES="rewrite ssl deflate filter"
 fi
 
-mkdir -m 0775 -p /var/www/html/getaltcos/ALTCOS/streams/altcos/sisyphus
-chgrp -R root:webmaster /var/www/html/getaltcos/ALTCOS/
+mkdir -m 0775 -p /var/www/html/altcos/ALTCOS/streams/altcos/sisyphus
+chgrp -R root:webmaster /var/www/html/altcos/ALTCOS/
 
 for module in $MODULES
 do
