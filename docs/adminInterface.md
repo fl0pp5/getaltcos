@@ -35,7 +35,7 @@ lrwxrwxrwx 1 kaf kaf         22 сен 24 23:28 mkimage-profiles.tar -> altcos-l
 В отдельной вкладке откроется интерфейс, в котором через несколько десятков секунд
 появится результат выполнения команды:
 ```
-/var/www/vhosts/getaltcos/ostree/bin/rootfs_to_repo.sh altcos/x86_64/sisyphus
+/var/www/vhosts/altcos/ostree/bin/rootfs_to_repo.sh altcos/x86_64/sisyphus
 ...
 ```
 
