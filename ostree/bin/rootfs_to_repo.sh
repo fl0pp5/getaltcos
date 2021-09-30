@@ -28,7 +28,6 @@ BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCH
 ROOTFS_ARCHIVE="${2:-$BRANCH_REPO/mkimage-profiles/altcos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$BRANCH_REPO/bare/repo}"
 OUT_DIR="${4:-$BRANCH_REPO/vars}"
-RPMS_DIR=$DOCUMENT_ROOT/ostree/data/rpms
 
 if [ ! -e $ROOTFS_ARCHIVE ]
 then
@@ -78,6 +77,13 @@ tar xf $ROOTFS_ARCHIVE -C $MAIN_ROOT --exclude=./dev/tty --exclude=./dev/tty0 --
 #Вынести в m-i-p
 rm -f $MAIN_ROOT/etc/resolv.conf
 ln -sf /run/systemd/resolve/resolv.conf $MAIN_ROOT/etc/resolv.conf
+
+RPMS_DIR="/home/$SUDO_USER/apt/$BRANCH"
+if [ -d $RPMS_DIR ]
+then
+  apt-get update -y -o RPM::RootDir=$MAIN_ROOT
+  apt-get install -y -o RPM::RootDir=$MAIN_ROOT $RPMS_DIR/*
+fi
 
 sed -i 's/^LABEL=ROOT\t/LABEL=boot\t/g' $MAIN_ROOT/etc/fstab
 sed -i 's/^AcceptEnv /#AcceptEnv /g' $MAIN_ROOT/etc/openssh/sshd_config
