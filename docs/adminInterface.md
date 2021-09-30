@@ -78,9 +78,10 @@ apt-get dist-upgrade
 ```
 $ sudo ./make_qcow2.sh altcos/x86_64/sisyphus <commitId>
 ...
-qemu-img convert -O qcow2 /tmp/.private/root/altcos_make_qcow2-79DxqX.raw /home/kaf/AltlinuxContainerOS/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/images/qcow2/sisyphus.YYYYMMDD.0.0.qcow2
+sent 13,720,815 bytes  received 2,628 bytes  27,446,886.00 bytes/sec
+total size is 13,707,601  speedup is 1.00
 Create compressed image (several minutes) (y/n)? y
-  100 %     251,9 MiB / 1 209,0 MiB = 0,208   3,1 MiB/s       6:27
+  100 %     259,8 MiB / 1 254,8 MiB = 0,207   3,0 MiB/s       6:58
 
 ```
 Где `<commitId>` - идентификатор коммита первой версии.
