@@ -8,5 +8,5 @@ ref=$1
 refDir=`refToDir $ref`
 shift
 rpms=$*
-rootsPath="$DOCUMENT_ROOT/ACOS/streams/$refDir/roots";
+rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
 sudo chroot $rootsPath/merged apt-get install -y $rpms

@@ -10,8 +10,8 @@ exec 2>&1
 if [ $# -gt 4 ]
 then
 	echo "Help: $0 [<branch>] [<commitid> or <vardir>] [<directory of main ostree repository>] [<out_file>]"
-	echo "For example: $0  acos/x86_64/sisyphus ac24e repo out/1.qcow2  "
-	echo "For example: $0  acos/x86_64/sisyphus out/var repo out/1.qcow2  "
+	echo "For example: $0  altcos/x86_64/sisyphus ac24e repo out/1.qcow2  "
+	echo "For example: $0  altcos/x86_64/sisyphus out/var repo out/1.qcow2  "
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
 	exit 1
 fi
@@ -23,9 +23,9 @@ then
 fi
 
 # Set brach variables
-BRANCH=${1:-acos/x86_64/sisyphus}
+BRANCH=${1:-altcos/x86_64/sisyphus}
 BRANCHREPODIR=`refRepoDir $BRANCH`
-BRANCH_REPO=$DOCUMENT_ROOT/ACOS/streams/$BRANCHREPODIR
+BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCHREPODIR
 MAIN_REPO=${3:-$BRANCH_REPO/bare/repo}
 if [ ! -d $MAIN_REPO ]
 then
@@ -33,7 +33,7 @@ then
 	exit 1
 fi
 BRANCHDIR=`refToDir $BRANCH`
-BRANCH_DIR=$DOCUMENT_ROOT/ACOS/streams/$BRANCHDIR
+BRANCH_DIR=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCHDIR
 if [ ! -d  $BRANCH_DIR ]
 then
   mkdir -m 0775 -p  $BRANCH_DIR
@@ -81,9 +81,9 @@ fi
 
 OS_NAME=alt-containeros
 
-MOUNT_DIR=`mktemp --tmpdir -d acos_make_qcow2-XXXXXX`
+MOUNT_DIR=`mktemp --tmpdir -d altcos_make_qcow2-XXXXXX`
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
-RAWFILE=`mktemp --tmpdir acos_make_qcow2-XXXXXX.raw`
+RAWFILE=`mktemp --tmpdir altcos_make_qcow2-XXXXXX.raw`
 
 fallocate -l 3GiB $RAWFILE
 

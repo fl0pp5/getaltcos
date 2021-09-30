@@ -5,8 +5,8 @@ class repo {
     $this->repoType = $repoType;
     $this->ref = $ref;
     $this->refs = false;
-    $this->refRepoDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refRepoDir($ref);
-    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/" . repos::refToDir($ref);
+    $this->refRepoDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . repos::refRepoDir($ref);
+    $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . repos::refToDir($ref);
     $this->repoDir = $this->refRepoDir . "/$repoType/repo";
     $this->rootsDir = $this->refDir . "/roots";
     $this->varsDir = $this->refDir . "/vars/";

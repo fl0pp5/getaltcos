@@ -6,33 +6,33 @@
 Корневые каталоги:
 - `v1/graph`к - PHP-скрипт(ы) сервера графа, обеспечивающие доступ к дереву веток репозитория по протоколу `cincinatti`;
 - `ostree` - CLI и PHP скрипты создания репозитория и его веток;
-- `ACOS` - каталог ostree-репозиториев и промежуточных данных для них.
+- `ALTCOS` - каталог ostree-репозиториев и промежуточных данных для них.
 
-Каталоги `v1` и `ostree` разворачиваются и поддерживаются из git-репозитория [https://gitea.basealt.ru/kaf/getacos](https://gitea.basealt.ru/kaf/getacos).
+Каталоги `v1` и `ostree` разворачиваются и поддерживаются из git-репозитория [https://gitea.basealt.ru/kaf/getaltcos](https://gitea.basealt.ru/kaf/getaltcos).
 
-Каталог `ACOS` формируется динамически скриптами каталога `ostree` доступны скриптам формирования графа каталога `v1`.
+Каталог `ALTCOS` формируется динамически скриптами каталога `ostree` доступны скриптам формирования графа каталога `v1`.
 
-## Структура корневого каталога скриптов `/ostree` и производного каталога репозиториев `/ACOS`
+## Структура корневого каталога скриптов `/ostree` и производного каталога репозиториев `/ALTCOS`
 
 Корневой каталог скриптов `/ostree` содержит подкаталоги:
 - `bin/` - каталог shell-скриптов для вызова в режиме CLI или WEB-интерфейса из нижеописанных каталогов `update/`, `install/`.
-- `update/` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getacos.altlinux.org/ostree/update/` обновление текущей версии репозитория (при их наличии) до следующей версии.
-- `install` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getacos.altlinux.org/ostree/install/` форморование новой ветки репозитория с указанными для установки пакетами
+- `update/` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getaltcos.altlinux.org/ostree/update/` обновление текущей версии репозитория (при их наличии) до следующей версии.
+- `install` - содержит единственный скрипт `index.php`, обеспечивающий по REST-интерфейсу `http://getaltcos.altlinux.org/ostree/install/` форморование новой ветки репозитория с указанными для установки пакетами
 
-### Структура каталога '/ACOS'
+### Структура каталога '/ALTCOS'
 
 Каталог содержит следующие подкаталоги:
-- `images/acos` - каталог образов дистрибутива
-- `streams/acos` - каталог репозиториев дистрибутива.
+- `images/altcos` - каталог образов дистрибутива
+- `streams/altcos` - каталог репозиториев дистрибутива.
 
 Каждый подкаталог содержит деревья потоков `<arch>/<stream>` для поддержки различных архитектур различных потоков (`stream`).
 В настоящий момент `x86_64/sisyphus`, `x86_64/p10`.
 
-Подкаталог потока каталога `images/acos` содержит каталоги образов по их форматам данных.
+Подкаталог потока каталога `images/altcos` содержит каталоги образов по их форматам данных.
 
-Подкаталог потока каталога `streams/acos` содержит каталоги
+Подкаталог потока каталога `streams/altcos` содержит каталоги
 `roots`, `bare`, `archive`:
-- `bare` - репозиторий типа `bare` для разработки системы и разворачивания деревьев. Содержит единственный каталог `repo`. 
+- `bare` - репозиторий типа `bare` для разработки системы и разворачивания деревьев. Содержит единственный каталог `repo`.
 - `roots` - каталог развернутых деревьев различных коммитов репозитория `bare`;
 - `archive` - копия репозитория `bare` в формате `archive` (сжатые данные) для передачи содержимого пользователю.
 
@@ -41,11 +41,11 @@
 
 Перед запуском скриптов должна быть определена переменная `DOCUMENT_ROOT`, хранящая путь до корневого репозитория:
 ```
-# export DOCUMENT_ROOT=/var/www/vhosts/getacos
+# export DOCUMENT_ROOT=/var/www/vhosts/getaltcos
 ```
 
-- `createACOStar.sh` - создание tar-файла `~/out/acos-<date>-x86_64.tar` начального дистрибутива с символической ссылкой `~out/atacos-latest-x86_64.tar`.
-- `createRepo.sh` - создание репозитория на основе tar-файла 
+- `createALTCOStar.sh` - создание tar-файла `~/out/altcos-<date>-x86_64.tar` начального дистрибутива с символической ссылкой `~out/ataltcos-latest-x86_64.tar`.
+- `createRepo.sh` - создание репозитория на основе tar-файла
 - `ostree_log.sh` - отображение логов  по ссылке (`refs`).
 Формат:
 ```
@@ -54,7 +54,7 @@ ostree_log.sh ref
 
 Пример:
 ```
-$ ostree_log.sh acos/x86_64/sisyphus
+$ ostree_log.sh altcos/x86_64/sisyphus
 commit fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6
 ContentChecksum:  90456ba35e9af8bccf61bb3516e21dd695feae4a948d2bdc0714a81bce262a26
 Date:  2021-08-20 15:49:26 +0000
@@ -62,7 +62,7 @@ Version: sisyphus.20210820.0.0
 (no subject)
 ```
 
-- `ostree_checkout.sh` - разворачивание дерева дистрибутива в каталоге `/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/roots/<commitId>/` и монтирование overlay-каталогов.
+- `ostree_checkout.sh` - разворачивание дерева дистрибутива в каталоге `/var/www/vhosts/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/roots/<commitId>/` и монтирование overlay-каталогов.
 Формат вызова:
 ```
 ostree_checkout.sh ref commitId clear
@@ -70,13 +70,13 @@ ostree_checkout.sh ref commitId clear
 
 Пример:
 ```
-$ ostree_checkout.sh acos/x86_64/sisyphus fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6 all
+$ ostree_checkout.sh altcos/x86_64/sisyphus fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6 all
 ```
 Действия:
-- в случае значения 3-го параметра `all` удаление каталога 
-`/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/roots`
+- в случае значения 3-го параметра `all` удаление каталога
+`/var/www/vhosts/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/roots`
 и создание нового каталога `roots`;
-- разворачивание из каталога репозитория `/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/bare/repo` в каталог `/var/www/vhosts/getacos/ACOS/streams/acos/x86_64/sisyphus/roots/fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6` ветки `acos/x86_64/sisyphus` репозитория с комитом `fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6`.
+- разворачивание из каталога репозитория `/var/www/vhosts/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/bare/repo` в каталог `/var/www/vhosts/getaltcos/ALTCOS/streams/altcos/x86_64/sisyphus/roots/fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6` ветки `altcos/x86_64/sisyphus` репозитория с комитом `fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6`.
 - создание символической ссылки `root` на каталог `fafb6a2406f09bfee76d7d0565c32dd13743f79019d8ff32b2a0c40137e332b6`;
 - создание подкаталогов `merged`, `upper`, `work`.
 
@@ -113,7 +113,7 @@ syncUpdates.sh ref
 ```
 
 Файлы, помеченные как специальные файлы типа `character` удаляются из каталогов `upper` и `root`.
-Остальное содержимое каталога `upper` копируются в каталог комита `root`. 
+Остальное содержимое каталога `upper` копируются в каталог комита `root`.
 
 > (Рассмотреть вариант создания коммита на основе каталога `merged`).
 

@@ -1,4 +1,4 @@
-FROM getacos
+FROM altcos
 
 ENV LANG ru_RU.UTF-8
 
@@ -11,9 +11,9 @@ RUN \
   sed -i -e "s/# WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers; \
   chmod 400 /etc/sudoers; \
   sed -e 's/Options.*/Options +Indexes +FollowSymLinks/' -i /etc/httpd2/conf/include/Directory_root_default.conf; \
-  echo -ne "<VirtualHost *:80>\n  ServerAdmin user@domain\n  DocumentRoot "/var/www/vhosts/getacos"\n  ServerName admingetacos.altlinux.org\n  ServerAlias builds.acos.altlinux.org\n  ErrorLog \"/var/log/httpd2/error.log\"\n  CustomLog \"/var/log/httpd2/access.log\" common\n  <Directory /var/www/vhosts/getacos>\n Options Indexes FollowSymLinks\n  </Directory>\n</VirtualHost>" >> /etc/httpd2/conf/sites-available/vhosts.conf;\
+  echo -ne "<VirtualHost *:80>\n  ServerAdmin user@domain\n  DocumentRoot "/var/www/vhosts/altcos"\n  ServerName adminaltcos.altlinux.org\n  ServerAlias builds.altcos.altlinux.org\n  ErrorLog \"/var/log/httpd2/error.log\"\n  CustomLog \"/var/log/httpd2/access.log\" common\n  <Directory /var/www/vhosts/altcos>\n Options Indexes FollowSymLinks\n  </Directory>\n</VirtualHost>" >> /etc/httpd2/conf/sites-available/vhosts.conf;\
   a2ensite vhosts; \
-  adduser -d /var/www/vhosts/getacos getacos
+  adduser -d /var/www/vhosts/altcos altcos
 
 
 COPY /startApache.sh /bin/startApache.sh

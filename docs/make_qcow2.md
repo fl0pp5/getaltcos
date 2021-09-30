@@ -1,4 +1,4 @@
-#  Сборка образа ACOS в формате QCOW2 с нуля
+#  Сборка образа ALTCOS в формате QCOW2 с нуля
 
 ## Подготовка ОС
 Установить пакеты
@@ -19,7 +19,7 @@ sudo hasher-useradd keremet
 
 Создать каталог и перейти в него
 ```
-mkdir acos_build
+mkdir altcos_build
 cd $_
 ```
 
@@ -29,7 +29,7 @@ mkdir -p apt/lists/partial
 mkdir -p apt/cache/sisyphus/archives/partial
 mkdir out
 
-cat <<EOF > apt/apt.conf.sisyphus.x86_64 
+cat <<EOF > apt/apt.conf.sisyphus.x86_64
 Dir::Etc::SourceList "$PWD/apt/sources.list.sisyphus.x86_64";
 Dir::Etc::SourceParts /var/empty;
 Dir::Etc::main "/dev/null";
@@ -46,10 +46,10 @@ EOF
 ```
 
 
-Скачать mkimage-profiles и getacos
+Скачать mkimage-profiles и getaltcos
 ```
-git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b acos
-git clone https://github.com/alt-cloud/getacos
+git clone http://git.altlinux.org/people/keremet/packages/mkimage-profiles.git -b altcos
+git clone https://github.com/alt-cloud/getaltcos
 ```
 
 ## Сборка
@@ -58,27 +58,27 @@ git clone https://github.com/alt-cloud/getacos
 MAIN_REPO=repo
 export BRANCH=sisyphus
 export ARCH=x86_64
-OSTREE_BRANCH=acos/$ARCH/$BRANCH
+OSTREE_BRANCH=altcos/$ARCH/$BRANCH
 ```
 
-Сборка acos.tar. Результат сборки будет располагаться в каталоге out.
+Сборка altcos.tar. Результат сборки будет располагаться в каталоге out.
 ```
-make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out vm/acos.tar
+make -C mkimage-profiles DEBUG=1 APTCONF=$PWD/apt/apt.conf.sisyphus.x86_64 IMAGEDIR=$PWD/out vm/altcos.tar
 ```
 
 Создать коммит в репозитории ostree.
 ```
-VERSION_DATE=$(basename `realpath out/acos-latest-x86_64.tar`| awk -F- '{print $2;}')
+VERSION_DATE=$(basename `realpath out/altcos-latest-x86_64.tar`| awk -F- '{print $2;}')
 sudo rm -rf out/$VERSION_DATE/0/0
-sudo ./getacos/ostree/bin/rootfs_to_repo.sh $OSTREE_BRANCH out/acos-latest-x86_64.tar $MAIN_REPO out
+sudo ./getaltcos/ostree/bin/rootfs_to_repo.sh $OSTREE_BRANCH out/altcos-latest-x86_64.tar $MAIN_REPO out
 ```
 
 Сборка образа
 ```
-sudo ./getacos/ostree/bin/make_qcow2.sh out/1.qcow2 out/$VERSION_DATE/0/0/var $OSTREE_BRANCH $MAIN_REPO
+sudo ./getaltcos/ostree/bin/make_qcow2.sh out/1.qcow2 out/$VERSION_DATE/0/0/var $OSTREE_BRANCH $MAIN_REPO
 ```
 
-Запуск с передачей конфигурационного файла ignition. Пример файла можно взять [тут](http://git.altlinux.org/gears/s/startup-installer-acos.git?p=startup-installer-acos.git;a=blob;f=acos/config_example.ign;h=c29510932fb36a0b88e8c2b1079a1687318b3798;hb=96148075e0f0f74b0cfa31439adfbac337fc34e5)
+Запуск с передачей конфигурационного файла ignition. Пример файла можно взять [тут](http://git.altlinux.org/gears/s/startup-installer-altcos.git?p=startup-installer-altcos.git;a=blob;f=altcos/config_example.ign;h=c29510932fb36a0b88e8c2b1079a1687318b3798;hb=96148075e0f0f74b0cfa31439adfbac337fc34e5)
 ```
 sudo qemu-system-x86_64 -m 1024 -machine accel=kvm -cpu host -hda out/1.qcow2 -net user,hostfwd=tcp::10222-:22 -net nic -fw_cfg name=opt/com.coreos/config,file=/home/keremet/src/startup-installer-acos/acos/config_example.ign
 ```

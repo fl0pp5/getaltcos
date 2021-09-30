@@ -9,5 +9,5 @@ $commitId = $_REQUEST['commitId'];
 
 echo "<pre>RUN:
 export DOCUMENT_ROOT=$rootdir
-$rootdir/ostree/bin/installer-acos.sh $refDir $ref $commitId $versionDir
+$rootdir/ostree/bin/installer-altcos.sh $refDir $ref $commitId $versionDir
 </pre>";

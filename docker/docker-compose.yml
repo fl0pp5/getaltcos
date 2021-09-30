@@ -1,21 +1,21 @@
 version: '3.2'
 
 services:
-  getacos:
-    image: getacos
+  altcos:
+    image: altcos
     ports:
       - 0.0.0.0:80:80
     volumes:
-      - $GITHOME/ACOS:/var/www/html:ro
+      - $GITHOME/ALTCOS:/var/www/html:ro
 
-  admingetacos:
+  adminaltcos:
     cap_add:
       - ALL
-    image: admingetacos
+    image: adminaltcos
     ports:
       - 0.0.0.0:81:80
     volumes:
-      - $GITHOME/:/var/www/vhosts/getacos/
+      - $GITHOME/:/var/www/vhosts/altcos/
       #- /dev/loop-control:/dev/loop-control
       #- /dev/loop0:/dev/loop0
       #- /dev/loop1:/dev/loop1

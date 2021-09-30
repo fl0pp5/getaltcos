@@ -4,7 +4,7 @@ $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
 require_once('repos.php');
-require_once('acosfile.php');
+require_once('altcosfile.php');
 
 ?>
 <html>
@@ -24,7 +24,7 @@ require_once('acosfile.php');
 <?php
 $SERVER_NAME = $_SERVER['SERVER_NAME'];
 $Ref = false;
-$os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'acos';
+$os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'altcos';
 $title[] = "Административный интерфейс OSTREE-потоков";
 $title[] = repos::getOSName($os);
 
@@ -81,19 +81,19 @@ if ($Arch) {
 Ветка:
 <select name='ref'>
 <?php
-    $acosSubRefs = array_flip(acosfile::getAcosSubRefs($Ref));
-//     echo "<pre>ACOSSUBREFS=" . print_r($acosSubRefs, 1) . "</pre>";
+    $altcosSubRefs = array_flip(altcosfile::getAcosSubRefs($Ref));
+//     echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
     $refExists = false;
     foreach ($refs as $ref) {
       if ($ref == $Ref) $refExists=true;
-      if (key_exists($ref, $acosSubRefs)) unset($acosSubRefs[$ref]);
+      if (key_exists($ref, $altcosSubRefs)) unset($altcosSubRefs[$ref]);
       $selected = ($ref == $Ref) ? 'selected' : '';
 ?>
   <option value='<?= $ref?>' <?= $selected?>><?= $ref?></option>
 <?php
     }
-    $acosSubRefs = array_keys($acosSubRefs);
-//     echo "<pre>ACOSSUBREFS=" . print_r($acosSubRefs, 1) . "</pre>";
+    $altcosSubRefs = array_keys($altcosSubRefs);
+//     echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
 ?>
 </select>
 </span>
@@ -149,14 +149,14 @@ if (count($refs) > 0) {
 </div>
 </form-->
 <?php
-  if (count($acosSubRefs) > 0) {
+  if (count($altcosSubRefs) > 0) {
 ?>
 <form action='/ostree/build/' target='ostreeREST'>
-  <select name='acosfileref'>
+  <select name='altcosfileref'>
 <?php
-    foreach ($acosSubRefs as $acosSubRef) {
+    foreach ($altcosSubRefs as $altcosSubRef) {
 ?>
-    <option value='<?= $acosSubRef?>'><?= $acosSubRef?></option>
+    <option value='<?= $altcosSubRef?>'><?= $altcosSubRef?></option>
 <?php
     }
 ?>
@@ -263,7 +263,7 @@ foreach (repos::repoTypes() as $repoType) {
     }
 ?>
         <!--li>
-          <a href='/ostree/installer-acos/?ref=<?= $Ref?>&commitId=<?= $commitId?>&version=<?= $version?>' target=ostreeREST>
+          <a href='/ostree/installer-altcos/?ref=<?= $Ref?>&commitId=<?= $commitId?>&version=<?= $version?>' target=ostreeREST>
             <button type='button'>Создать загрузочный QUEMU RAW диск</button>
           </a>
         </li>
@@ -309,7 +309,7 @@ foreach (repos::repoTypes() as $repoType) {
       $fullImage = $repo->getFullImageName($imageType, $version);
       $fullImageSize = $repo->getFullImageSize($imageType, $version);
       if ($fullImage) {
-        $ref = "/ACOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
+        $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
 ?>
                 <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button'>Скачать(<?= $fullImageSize?>)</button></a>
 <?php
@@ -323,7 +323,7 @@ foreach (repos::repoTypes() as $repoType) {
       $compressedImage = $repo->getCompressedImageName($imageType, $version);
       $compressedImageSize = $repo->getCompressedImageSize($imageType, $version);
       if ($compressedImage) {
-        $ref = "/ACOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
+        $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
 ?>
                   <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button'>Скачать(<?= $compressedImageSize?>)</button></a>
 <?php

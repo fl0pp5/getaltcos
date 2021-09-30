@@ -1,7 +1,7 @@
 <?php
 class repos {
 
-  static $OSs = ['acos' => 'ALT Container OS'];
+  static $OSs = ['altcos' => 'ALT Container OS'];
 
   static function listOSs() {
     $ret = array_keys(repos::$OSs);
@@ -13,8 +13,8 @@ class repos {
     return $ret;
   }
 
-  static function listArchs($os='acos') {
-    $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$os/");
+  static function listArchs($os='altcos') {
+    $fd = opendir($_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/");
     $ret = [];
     while ($entry=readdir($fd)) {
       if (substr($entry,0,1) == '.') continue;
@@ -23,8 +23,8 @@ class repos {
     return $ret;
   }
 
-  static function listStreams($os='acos', $arch='x86_64') {
-    $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$os/$arch";
+  static function listStreams($os='altcos', $arch='x86_64') {
+    $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/$arch";
 //     echo "<pre>archDir=$archDir</pre>\n";
     $fd = opendir($archDir);
     $ret = [];
@@ -41,7 +41,7 @@ class repos {
   }
 
   /*
-   * Возвращает true, усли ref базовый: acos/x86_64/sisyphus
+   * Возвращает true, усли ref базовый: altcos/x86_64/sisyphus
    */
   static  function isBaseRef($ref) {
     $ret = count(explode('/', $ref)) == 3;
@@ -52,7 +52,7 @@ class repos {
    * Формирует имя подветки
    * переводя в верхний регистр первую букву текущей ветки и
    * добавляя через / имя подветки
-   * subRef('acos/x86_64/sisyphus', 'apache') => acos/x86_64/Sisyphus/apache
+   * subRef('altcos/x86_64/sisyphus', 'apache') => altcos/x86_64/Sisyphus/apache
    */
   static function subRef($ref, $subName) {
     $path = explode('/', $ref);
@@ -65,9 +65,9 @@ class repos {
 
 
   /**
-   * Возвращает тропу, где находятся данные ветки (vars, roots, ACOSfile, ...)
-   * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
-   * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus/apache
+   * Возвращает тропу, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
+   * altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
+   * altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus/apache
    */
   static function refToDir($ref) {
     $ret = strtolower($ref);
@@ -75,9 +75,9 @@ class repos {
   }
 
   /**
-   * Возвращает тропу, где находятся данные ветки (vars, roots, ACOSfile, ...)
-   * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
-   * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus/apache
+   * Возвращает тропу, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
+   * altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
+   * altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus/apache
    */
   static function dirToRef($ref) {
     $path = explode('/', $ref);
@@ -92,8 +92,8 @@ class repos {
 
   /**
    * Возвращает тропу, где находятся репозитории bare, archive
-   * acos/x86_64/sisyphus -> acos/x86_64/sisyphus
-   * acos/x86_64/Sisyphus/apache -> acos/x86_64/sisyphus
+   * altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
+   * altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus
    */
   static function refRepoDir($ref) {
     $path = array_slice(explode('/', $ref), 0, 3);
@@ -117,7 +117,7 @@ class repos {
   }
 
   function fullCommitId($refDir, $shortCommitId) {
-    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/$refDir/vars";
+    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$refDir/vars";
     $fd = opendir($varsDir);
     $commitIds = [];
     $len =  strlen($shortCommitId);
@@ -139,7 +139,7 @@ class repos {
   }
 
   function lastCommitId($refDir) {
-    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$refDir/vars";
+    $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/altcos/$refDir/vars";
     $fd = opendir($varsDir);
     $commitIds = [];
     $len =  strlen($shortCommitId);
@@ -158,7 +158,7 @@ class repos {
 
   /*
    * Возвращает вариант ветки по $ref и $commitId
-   * acos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
+   * altcos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
    */
   static function refVersion($ref, $commitId=false) {
     if (!$commitId) {
@@ -167,7 +167,7 @@ class repos {
       $minor = 0;
     } else {
       $fullCommitId = repos::fullCommitId($ref, $commitId);
-      $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ACOS/streams/acos/$refDir/vars";
+      $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/altcos/$refDir/vars";
       $commitLink = "$varsDir/$fullCommitId";
       $dir = readlink($commitLink);
       $path = explode($dir);

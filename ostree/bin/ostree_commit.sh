@@ -14,9 +14,9 @@ version=`refVersion $ref $commitId`
 nextVersion=$3
 nextVersionVarSubDir=`versionVarSubDir $nextVersion`
 
-repoBarePath="$DOCUMENT_ROOT/ACOS/streams/$refRepoDir/bare/repo";
-rootsPath="$DOCUMENT_ROOT/ACOS/streams/$refDir/roots";
-varsPath="$DOCUMENT_ROOT/ACOS/streams/$refDir/vars";
+repoBarePath="$DOCUMENT_ROOT/ALTCOS/streams/$refRepoDir/bare/repo";
+rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
+varsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars";
 
 cd $rootsPath
 newCommitId=`sudo ostree commit \
