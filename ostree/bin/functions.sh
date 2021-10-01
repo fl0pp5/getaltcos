@@ -43,7 +43,7 @@ splitGroup() {
     IFS=:;set -- $line;IFS=$ifs
     user=$1
     uid=$3
-    if [ $uid -ge 500 -o $user = 'root' -o $user = 'adm'  -o $user = 'wheel'  -o $user = 'systemd-network'  -o $user = 'systemd-journal'  -o $user = 'docker'  -o -o $user = 'systemd-network' ]
+    if [ $uid -ge 500 -o $user = 'root' -o $user = 'adm'  -o $user = 'wheel'  -o $user = 'systemd-network'  -o $user = 'systemd-journal'  -o $user = 'docker' ]
     then
       echo $line >> $usergroup
     else
