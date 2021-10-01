@@ -17,7 +17,7 @@ splitPasswd() {
     IFS=:;set -- $line;IFS=$ifs
     user=$1
     uid=$3
-    if [ $uid -ge 500 -o $user = 'root' ]
+    if [ $uid -ge 500 -o $user = 'root' -o $user = 'systemd-network' ]
     then
       echo $line >> $userpass
     else
@@ -43,7 +43,7 @@ splitGroup() {
     IFS=:;set -- $line;IFS=$ifs
     user=$1
     uid=$3
-    if [ $uid -ge 500 -o $user = 'root' -o $user = 'adm'  -o $user = 'wheel'  -o $user = 'systemd-network'  -o $user = 'systemd-journal'  -o $user = 'docker' ]
+    if [ $uid -ge 500 -o $user = 'root' -o $user = 'adm'  -o $user = 'wheel'  -o $user = 'systemd-network'  -o $user = 'systemd-journal'  -o $user = 'docker'  -o -o $user = 'systemd-network' ]
     then
       echo $line >> $usergroup
     else
