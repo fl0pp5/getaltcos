@@ -72,6 +72,9 @@ foreach (repos::listOSs() as $os) {
   <tr>
     <td><?= $Date?></td>
     <td><?= $version?></td>
+<?php
+      foreach ($imageTypes as $imageType) {
+?>
     <td>
 <?php
       $fullImage = $repo->getFullImageName($imageType, $version);
@@ -100,6 +103,9 @@ foreach (repos::listOSs() as $os) {
       }
 ?>
     </td>
+<?php
+      }
+?>
   </tr>
 <?php
       }
