@@ -21,9 +21,19 @@ sudo rm -f ./upper/etc ./root/etc;
 
 sudo mkdir --mode 0775 -p $varDir
 cd upper
+
+# Clean RPM data
+sudo rm -rf  ./var/lib/apt/ ./var/cache/apt
+sudo mkdir -p ./var/lib/apt/lists/ ./var/lib/apt/prefetch/ ./var/cache/apt/archives/partial
+sudo chmod -R 770 ./var/cache/apt/
+sudo chmod -R g+s ./var/cache/apt/
+sudo chown root:rpm ./var/cache/apt/
+
 sudo rsync -av var $varDir
 sudo rm -rf ./var ./run
 sudo mkdir ./var
+
+
 delete=`sudo find . -type c`;
 echo DELETE $delete
 sudo rm -rf $delete

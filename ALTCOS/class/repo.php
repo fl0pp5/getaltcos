@@ -263,6 +263,8 @@ class repo {
           echo "<br>$cmd<br>\n";
           exec($cmd, $output);
           print_r($output);
+        } else {
+          break;
         }
       }
     }
