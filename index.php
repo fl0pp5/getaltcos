@@ -20,6 +20,23 @@ require_once('altcosfile.php');
   font-weight: bold;
   font-size: 14pt;
 }
+
+select {
+  background-color: #AAFFAA
+}
+
+
+button.info {
+  background-color: #AAFFAA
+}
+
+button.create {
+  background-color: #FFFFAA
+}
+
+button.remove {
+  background-color: #FFAAAA
+}
 </style>
 <?php
 $SERVER_NAME = $_SERVER['SERVER_NAME'];
@@ -101,7 +118,7 @@ if ($Arch) {
   }
 }
 ?>
-<button type='submit'>Отобразить</button>
+<button type='submit' class='info'>Отобразить</button>
 </form>
 <?php
 if (!$Ref) exit(0);
@@ -110,7 +127,7 @@ if (!$refExists && strlen($Ref) > 0) {
 ?>
 <form action='ostree/createRef/' target='ostreeREST'>
 <input name='ref' value='<?= $Ref?>' type='hidden' />
-<button type='submit'>Создать ветку <?= $Ref?></button>
+<button type='submit' class='create'>Создать ветку <?= $Ref?></button>
 </form>
 <?php
   exit(0);
@@ -161,7 +178,7 @@ if (count($refs) > 0) {
     }
 ?>
   </select>
-  <button type='submit'>Построить</button>
+  <button type='submit'  class='create'>Построить</button>
 </form>
 <?php
   }
@@ -189,7 +206,7 @@ foreach (repos::repoTypes() as $repoType) {
 ?>
 <form action='ostree/createRef/' target='ostreeREST'>
 <input name='ref' value='<?= $Ref?>' type='hidden' />
-<button type='submit'>Создать ветку <?= $Ref?></button>
+<button type='submit' class='create'>Создать ветку <?= $Ref?></button>
 </form>
 <?php
     }
@@ -198,7 +215,7 @@ foreach (repos::repoTypes() as $repoType) {
 ?>
   <li>
     <ul><h3>Тип репозитория: <?= $repoType?></h3>
-        <li><a href='http://<?= $SERVER_NAME?>/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button><?= $repoType?>-граф</a></button></li>
+        <li><a href='http://<?= $SERVER_NAME?>/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button  class='info'><?= $repoType?>-граф</a></button></li>
         <li>Коммиты:
           <form action='/ostree/deleteCommits/' target='ostreeREST'>
           <input type='hidden' name='ref' value='<?= $Ref?>' />
@@ -224,23 +241,23 @@ foreach (repos::repoTypes() as $repoType) {
 ?>
 		    <li
           ><a href='/ostree/fsck/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
-            ><button type='button'>Проверка целостности коммита</button
+            ><button type='button' class='info'>Проверка целостности коммита</button
           ></a>
         </li>
 		    <li>Содержание коммита
           <a href='/ostree/RPM/?ref=<?= $Ref?>&version=<?= $version?>' target=ostreeREST
-            ><button type='button'>RPM</button>
+            ><button type='button' class='info'>RPM</button>
           </a>
           <a href='/ostree/ls/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
-            ><button type='button'>OSTREE</button>
+            ><button type='button' class='info'>OSTREE</button>
           </a>
           <a href='/ostree/lsTree/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST
-            ><button type='button'>Файловая система</button>
+            ><button type='button' class='info'>Файловая система</button>
           </a>
         </li>
         <li>Содержание каталога /var
           <a href='/ostree/lsvar/?ref=<?= $Ref?>&repoType=<?= $repoType?>&version=<?= $version?>' target=ostreeREST>
-            <button type='button'>Файловая система</button>
+            <button type='button' class='info'>Файловая система</button>
           </a>
         </li>
 <?php
@@ -249,13 +266,13 @@ foreach (repos::repoTypes() as $repoType) {
 		    <li>
           DIFF <?= $prevVersion?>
           <a href='/ostree/diffRPM/?ref=<?= $Ref?>&repoType=<?= $repoType?>&version1=<?= $version?>&version2=<?= $prevVersion?>' target=ostreeREST
-            ><button type='button'>RPM</button>
+            ><button type='button' class='info'>RPM</button>
           </a>
           <a href='/ostree/diff/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
-            ><button type='button'>OSTREE</button>
+            ><button type='button' class='info'>OSTREE</button>
           </a>
           <a href='/ostree/diffTree/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId1=<?= $commitId?>&commitId2=<?= $prevCommitId?>' target=ostreeREST
-            ><button type='button'>Файловая система</button>
+            ><button type='button' class='info'>Файловая система</button>
           </a>
         </li>
 
@@ -264,12 +281,12 @@ foreach (repos::repoTypes() as $repoType) {
 ?>
         <!--li>
           <a href='/ostree/installer-altcos/?ref=<?= $Ref?>&commitId=<?= $commitId?>&version=<?= $version?>' target=ostreeREST>
-            <button type='button'>Создать загрузочный QUEMU RAW диск</button>
+            <button type='button' class='info'>Создать загрузочный QUEMU RAW диск</button>
           </a>
         </li>
         <li>
           <a href='/ostree/make_qcow2/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST>
-            <button type='button'>Создать загрузочный QUEMU QCOW2 диск</button>
+            <button type='button' class='info'>Создать загрузочный QUEMU QCOW2 диск</button>
           </a>
         </li-->
         <li>
@@ -311,7 +328,7 @@ foreach (repos::repoTypes() as $repoType) {
       if ($fullImage) {
         $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
 ?>
-                <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button'>Скачать(<?= $fullImageSize?>)</button></a>
+                <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button' class='info'>Скачать(<?= $fullImageSize?>)</button></a>
 <?php
       } else {
 ?>-<?php
@@ -325,7 +342,7 @@ foreach (repos::repoTypes() as $repoType) {
       if ($compressedImage) {
         $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
 ?>
-                  <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button'>Скачать(<?= $compressedImageSize?>)</button></a>
+                  <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button' class='info'>Скачать(<?= $compressedImageSize?>)</button></a>
 <?php
       } else {
 ?>-<?php
@@ -344,14 +361,14 @@ foreach (repos::repoTypes() as $repoType) {
     $prevVersion = $version;
     $prevCommitId = $commitId;
   }
-?>	  	<button type='submit'>Удалить отмеченные коммиты</button>
+?>	  	<button type='submit' class='remove'>Удалить отмеченные коммиты</button>
 		</form>
   </ul>
 <?php
   if ($repoType == 'bare') {
 ?>
-	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
-        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>' target=ostreeREST><button type='button'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
+	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
 <?php
   }
 ?>
