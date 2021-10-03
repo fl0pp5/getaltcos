@@ -160,7 +160,7 @@ class repo {
     }
     $versionDir = $this->varsDir . '/' . repos::versionVarSubDir($version);
     $cmd = "rpm -qa --dbpath=$versionDir/var/lib/rpm";
-    echo "CMD=$cmd<br>\n";
+//     echo "CMD=$cmd<br>\n";
     exec($cmd, $output);
     $ret = [];
     foreach ($output as $rpm) {

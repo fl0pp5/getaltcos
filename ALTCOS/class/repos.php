@@ -166,11 +166,13 @@ class repos {
       $major = 0;
       $minor = 0;
     } else {
+      $refDir = repos::refToDir($ref);
       $fullCommitId = repos::fullCommitId($ref, $commitId);
-      $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/altcos/$refDir/vars";
+      $varsDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$refDir/vars";
       $commitLink = "$varsDir/$fullCommitId";
       $dir = readlink($commitLink);
-      $path = explode($dir);
+//       echo "<pre>COMMITLINK=$commitLink DIR=$dir</pre>\n";
+      $path = explode('/', $dir);
       $date = $path[0];
       $major = $path[1];
       $minor = $path[2];
@@ -178,6 +180,7 @@ class repos {
     $path = explode('/', strtolower($ref));
     $stream = implode('_', array_slice($path, 2));
     $ret = "$stream.$date.$major.$minor";
+//     echo "<pre>REF=$ref COMMITID=$commitId RET=$ret</pre>\n";
     return $ret;
   }
 

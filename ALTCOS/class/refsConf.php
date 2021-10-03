@@ -31,9 +31,9 @@ class refsConf {
     if (file_exists($this->refConfFile)) rename($this->refConfFile, $oldConf);
     $fp = fopen($this->refConfFile, 'w');
     $data = json_encode($this->data, JSON_PRETTY_PRINT);
-    echo "<pre>DATA=$data</pre><br>\n";
+//     echo "<pre>DATA=$data</pre><br>\n";
     fwrite($fp, $data);
-    echo "<pre>THIS=". print_r($this, 1); echo "</pre><br>\n";
+//     echo "<pre>THIS=". print_r($this, 1); echo "</pre><br>\n";
     fclose($fp);
   }
 

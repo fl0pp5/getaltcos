@@ -1,6 +1,8 @@
 <?php
+// phpinfo(); exit(0);
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
+require_once('log.php');
 require_once('repo.php');
 require_once('refsConf.php');
 
@@ -25,6 +27,7 @@ function isUpdated($output) {
 //phpinfo();//exit(0);
 
 //MAIN
+$log = new log('update');
 $startTime = time();
 $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
 putenv("DOCUMENT_ROOT=$DOCUMENT_ROOT");
@@ -39,18 +42,18 @@ $repoType = 'bare';
 $repo = new repo($ref, $repoType);
 
 if (!$repo->haveConfig()) {
-        echo "Bare repository $repoBarePath don't exists";
-        exit(1);
+  $log->write("Error: Bare repository $repoBarePath don't exists\n");
+  exit(1);
 }
 
 $commits = $repo->getCommits();
 $lastCommitId = $repo->lastCommitId;
 $lastCommit = $repo->lastCommit;
-# echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "</pre>";
+# echo "\nlastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "\n";
 $lastVersion = $lastCommit['Version'];
 
 if ($lastCommitId != $commitId) {
-  echo "Запрошенная коммит версии $version не совпадает с последнем коммитом $commitId\n";
+  $log->write("Error: Запрошенная коммит версии $version не совпадает с последнем коммитом $commitId\n");
   exit(1);
 }
 
@@ -62,36 +65,37 @@ $nextVersionVarSubDir = repos::versionVarSubDir($nextVersion);
 
 
 $cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId'";
-echo "CHECKOUTCMD=$cmd\n";
+$log->write("CHECKOUTCMD=$cmd\n");
 $output = [];
 exec($cmd, $output);
-echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
+$log->write("CHECKOUT:" . implode("\n", $output) . "\n");
 //exit(0);
 
 $cmd = "$BINDIR/apt-get_update.sh $ref";
-echo "APT-GET_UPDATETCMD=$cmd\n";
+$log->write("APT-GET_UPDATETCMD=$cmd\n");
 $output = [];
 exec($cmd, $output);
-echo "APT-GET_UPDATE=<pre>" . print_r($output, 1). "</pre>";
+$log->write("APT-GET_UPDATE:" . implode("\n", $output). "\n");
 //exit(0);
 
 $rpmListFile = tempnam('/tmp', 'ostree_');
-echo "<br>rpmListFile=$rpmListFile<br>";
+$log->write("rpmListFile=$rpmListFile<\n");
 $cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref '$rpmListFile'";
-echo "APT-GET_DIST-UPGRADECMD=$cmd\n";
+$log->write("APT-GET_DIST-UPGRADECMD=$cmd\n");
 $output = [];
 exec($cmd, $output);
-echo "APT-GET_DIST-UPGRADE=<pre>" . print_r($output, 1). "</pre>";
+$log->write("APT-GET_DIST-UPGRADE=\n" . implode("\n", $output). "\n");
 // exit(0);
 $fp = fopen($rpmListFile, 'r');
 $rpmList = explode("\n", fread($fp, filesize($rpmListFile)));
 fclose($fp);
-//unlink($rpmListFile);
+unlink($rpmListFile);
 
 if (!isUpdated($output)) {
-  echo "Обновлений нет";
+  $log->write("Обновлений нет");
   $endTime = time();
-  echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
+  $log->write("Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n");
+  echo json_encode(['new'=>[], 'changed'=>[], 'deleted'=>[]], JSON_PRETTY_PRINT);
   exit(0);
 }
 
@@ -105,23 +109,27 @@ $refsConf->addRpmList($RpmList);
 $refsConf->save();
 
 $cmd = "$BINDIR/syncUpdates.sh $ref $lastCommitId $nextVersion";
-echo "SYNCUPDATESCMD=$cmd\n";
+$log->write("SYNCUPDATESCMD=$cmd\n");
 $output = [];
 exec($cmd, $output);
-echo "SYNCUPDATES=<pre>" . print_r($output, 1). "</pre>";
+$log->write("SYNCUPDATES=\n" . implode("\n", $output). "\n");
 
 $cmd = "$BINDIR/ostree_commit.sh $ref $lastCommitId $nextVersion";
-echo "COMMITCMD=$cmd\n";
+$log->write("COMMITCMD=$cmd\n");
 $output = [];
 exec($cmd, $output);
-echo "COMMIT=<pre>" . print_r($output, 1). "</pre>";
-$commitId = pop($output);
+$log->write("COMMIT=\n" . implode("\n", $output). "\n");
+$commitId = array_pop($output);
+
+// echo "<pre>VERSION=$version NEXTVERSION=$nextVersion</pre>\n";
+$ret = $repo->cmpRPMs($nextVersion, $version);
+echo json_encode($ret, JSON_PRETTY_PRINT);
 
 // $cmd = "$BINDIR/ostree_pull-local.sh $refRepoDir";
-// echo "PULLCMD=$cmd\n";
+// $log->write("PULLCMD=$cmd\n");
 // $output = [];
 // exec($cmd, $output);
-// echo "PULL=<pre>" . print_r($output, 1). "</pre>";
+// $log->write("PULL=\n" . implode("\n", $output). "\n");
 // $endTime = time();
-// echo "Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n";
+// $log->write("Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n");
 

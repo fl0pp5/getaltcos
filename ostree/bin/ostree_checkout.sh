@@ -46,6 +46,10 @@ then
 fi
 sudo ln -sf $lastCommitId root
 
+# Гарантировать размонтирование merged
+while sudo umount ./merged; do :; done
+
+# Пересоздать каталоги
 for dir in merged upper work
 do
   if [ -d $dir ];
