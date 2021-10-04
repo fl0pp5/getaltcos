@@ -147,7 +147,8 @@ refVersion() {
 
 function checkAptDirs() {
   rootDir=$1
-  sudo mkdir -p $rootDir/var/lib/apt/lists/ $rootDir/var/lib/apt/prefetch/ $rootDir/var/cache/apt/archives/partial
+  sudo mkdir -p $rootDir/var/lib/apt/lists/partial $rootDir/var/lib/apt/prefetch/
+  sudo mkdir -p $rootDir/var/cache/apt/archives/partial $rootDir/var/cache/apt/gensrclist $rootDir/var/cache/apt/genpkglist
   sudo chmod -R 770 $rootDir/var/cache/apt/
   sudo chmod -R g+s $rootDir/var/cache/apt/
   sudo chown root:rpm $rootDir/var/cache/apt/

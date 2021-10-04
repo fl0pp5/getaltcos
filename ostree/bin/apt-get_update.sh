@@ -9,7 +9,7 @@ ref=$1
 refDir=`refToDir $ref`
 
 rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
-mergedDir=$mergedDir
+mergedDir=$rootsPath/merged
 checkAptDirs $mergedDir
 sudo sed -i -e 's/#rpm \[alt\] http/rpm [alt] http/' $mergedDir/usr/etc/apt/sources.list.d/alt.list
 sudo chroot $mergedDir  apt-get update
