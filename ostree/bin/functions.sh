@@ -145,5 +145,12 @@ refVersion() {
 }
 
 
+function checkAptDirs() {
+  rootDir=$1
+  sudo mkdir -p $rootDirvar/lib/apt/lists/ $rootDirvar/lib/apt/prefetch/ $rootDirvar/cache/apt/archives/partial
+  sudo chmod -R 770 $rootDirvar/cache/apt/
+  sudo chmod -R g+s $rootDirvar/cache/apt/
+  sudo chown root:rpm $rootDirvar/cache/apt/
+}
 
 

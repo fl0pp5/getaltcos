@@ -9,4 +9,5 @@ refDir=`refToDir $ref`
 shift
 rpms=$*
 rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
+checkAptDirs $rootsPath
 sudo chroot $rootsPath/merged apt-get install -y $rpms

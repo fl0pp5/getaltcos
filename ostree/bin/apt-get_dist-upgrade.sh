@@ -10,5 +10,6 @@ refDir=`refToDir $ref`
 
 rpmListFile=$2
 rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
+checkAptDirs $rootsPath
 sudo chroot $rootsPath/merged apt-get dist-upgrade -y
 sudo chroot $rootsPath/merged rpm -qa >  $rpmListFile
