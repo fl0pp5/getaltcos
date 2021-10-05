@@ -103,10 +103,10 @@ grub-install --target=i386-pc --root-directory=$MOUNT_DIR $LOOPDEV
 ln -s ../loader/grub.cfg $MOUNT_DIR/boot/grub/grub.cfg
 ostree config --repo $REPO_LOCAL set sysroot.bootloader grub2
 ostree config --repo $REPO_LOCAL set sysroot.readonly true
-ostree refs --repo $REPO_LOCAL --create alt:$BRANCH $BRANCH
+ostree refs --repo $REPO_LOCAL --create altcos:$BRANCH $BRANCH
 ostree admin os-init $OS_NAME --sysroot $MOUNT_DIR
 
-OSTREE_BOOT_PARTITION="/boot" ostree admin deploy alt:$BRANCH --sysroot $MOUNT_DIR --os $OS_NAME \
+OSTREE_BOOT_PARTITION="/boot" ostree admin deploy altcos:$BRANCH --sysroot $MOUNT_DIR --os $OS_NAME \
 	--karg-append=ignition.platform.id=qemu --karg-append=\$ignition_firstboot \
 	--karg-append=net.ifnames=0 --karg-append=biosdevname=0 \
 	--karg-append=rw \
