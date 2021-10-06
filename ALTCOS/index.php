@@ -12,7 +12,7 @@ require_once('repos.php');
 
 <h1>Интерфейс пользователя ALT Container OS</h2>
 <ul>
-  <li><a href='/pdf/usermanual.pdf'><button type='button'>Инструкция пользователя ALT Container OS</button></a></li>
+  <li><a href='https://www.altlinux.org/ALT_Container_OS'><button type='button'>Инструкция пользователя ALT Container OS</button></a></li>
 </ul>
 
 <h2>Поддерживаемые потоки</h3>
