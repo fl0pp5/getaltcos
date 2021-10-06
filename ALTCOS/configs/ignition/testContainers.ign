@@ -1,0 +1,102 @@
+{
+  "ignition": {
+    "version": "3.2.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "wheel",
+          "docker"
+        ],
+        "name": "altcos",
+        "passwordHash": "$y$j9T$ZEYmKSGPiNFOZNTjvobEm1$IXLGt5TxdNC/OhJyzFK5NVM.mt6VvdtP6mhhzSmvE94"
+      }
+    ]
+  },
+  "storage": {
+    "directories": [
+      {
+        "overwrite": true,
+        "path": "/opt/altcos/examples/docker/docker"
+      },
+      {
+        "overwrite": true,
+        "path": "/opt/altcos/examples/docker/podman"
+      },
+      {
+        "overwrite": true,
+        "path": "/opt/altcos/examples/docker/docker-compose"
+      }
+    ],
+    "files": [
+      {
+        "group": {
+          "name": "altcos"
+        },
+        "path": "/opt/altcos/examples/docker/docker/hello.sh",
+        "user": {
+          "name": "altcos"
+        },
+        "contents": {
+          "source": "data:;base64,IyEvYmluL3NoCnVudGlsIGRvY2tlciBwdWxsIGFsdDpwODsgZG8gc2xlZXAgMTsgZG9uZQpkb2NrZXIgcnVuIC0tcm0gLWkgYWx0OnA4IHNoIC1jICJlY2hvIC1uZSAn0J/RgNC40LLQtdGCINC40LcgZG9ja2VyLdC60L7QvdGC0LXQudC90LXRgNCwICc7IGNhdCAvZXRjL2FsdGxpbnV4LXJlbGVhc2UiCg=="
+        },
+        "mode": 493
+      },
+      {
+        "group": {
+          "name": "altcos"
+        },
+        "path": "/opt/altcos/examples/docker/podman/tetris.sh",
+        "user": {
+          "name": "altcos"
+        },
+        "contents": {
+          "source": "data:;base64,IyEvYmluL3NoCnVudGlsIHN1ZG8gcG9kbWFuIHB1bGwgLS1hbGwtdGFncyBmYW51eC90ZXRyaXMgOyBkbyBzbGVlcCAxOyBkb25lCnN1ZG8gcG9kbWFuIHJ1biAtLXJtIC1pdCBmYW51eC90ZXRyaXMgZ2FtZQo="
+        },
+        "mode": 493
+      },
+      {
+        "group": {
+          "name": "altcos"
+        },
+        "path": "/opt/altcos/examples/docker/docker-compose/docker-compose.yml",
+        "user": {
+          "name": "altcos"
+        },
+        "contents": {
+          "compression": "gzip",
+          "source": "data:;base64,H4sIAAAAAAAC/3SPTUvDQBCG7/kVQ+/NVuohLBRM2SqFVotRPJYxGZfF/XJ3uvjzxfgVD70NvM/7MG+hlE3wEmbLWZUpFdNTlhVADJl1+roBjENNEl7xxVMJg0DLdWzmv9DFcsRKsCf30wGYg1pLUTAJa55F1PnNigEZP/UaB2f8P/sQUZP4Ti7HhHwxKXhHnv+kh5tW7be3R7W5bh93D8fNvt3uVkyZr9ByH3KNlq3xp/c6JH22dmi77unuXq066hPxyMWQePJ+s5DNopqsUmtZfQQAAP//KOxqvzMBAAA="
+        },
+        "mode": 493
+      },
+      {
+        "group": {
+          "name": "altcos"
+        },
+        "path": "/opt/altcos/examples/docker/docker-compose/start.sh",
+        "user": {
+          "name": "altcos"
+        },
+        "contents": {
+          "compression": "gzip",
+          "source": "data:;base64,H4sIAAAAAAAC/3SMsc7CMAwG9z7F9+ufQ1TBgOBpQm1CVNe26oTnR4gVthvu7v8v35rmeExDexPEIAPZsvIOHyJYy135aZSL9IOfk1v0unNc5iOuIEMIs2N+s/KvC3mpnL0W2pqevoUfOy22uQVjOBJNrwAAAP//iialw54AAAA="
+        },
+        "mode": 493
+      },
+      {
+        "group": {
+          "name": "altcos"
+        },
+        "path": "/opt/altcos/examples/docker/docker-compose/stop.sh",
+        "user": {
+          "name": "altcos"
+        },
+        "contents": {
+          "source": "data:,%23!%2Fbin%2Fsh%0Adocker-compose%20down%0A"
+        },
+        "mode": 493
+      }
+    ]
+  }
+}
