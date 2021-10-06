@@ -107,13 +107,13 @@ ln -sf var/mnt $MAIN_ROOT/mnt
 mkdir --mode=0775 -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "
 [remote \"altcos\"]
-url=http://getaltcos.altlinux.org/ALTCOS/streams/$BRANCH/archive/repo/
+url=https://altcos.altlinux.org/ALTCOS/streams/$BRANCH/archive/repo/
 gpg-verify=false
 " > $MAIN_ROOT/etc/ostree/remotes.d/altcos.conf
 echo "
 # ALTLinux CoreOS Cincinnati backend
 [cincinnati]
-base_url=\"http://getaltcos.altlinux.org\"
+base_url=\"https://altcos.altlinux.org\"
 " > $MAIN_ROOT/etc/zincati/config.d/50-fedora-coreos-cincinnati.toml
 
 echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
