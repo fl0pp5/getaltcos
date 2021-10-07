@@ -3,7 +3,7 @@
 ## Подготовка ОС
 Установить пакеты
 ```
-sudo apt-get install mkimage mkimage-preinstall hasher git-core ostree
+sudo apt-get install mkimage mkimage-preinstall hasher git-core ostree isomd5sum
 ```
 
 Добавить своего пользователя (в данном случае - keremet) в группы, необходимые для запуска hasher
