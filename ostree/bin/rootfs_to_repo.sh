@@ -114,7 +114,7 @@ echo "
 # ALTLinux CoreOS Cincinnati backend
 [cincinnati]
 base_url=\"https://altcos.altlinux.org\"
-" > $MAIN_ROOT/etc/zincati/config.d/50-fedora-coreos-cincinnati.toml
+" > $MAIN_ROOT/etc/zincati/config.d/50-altcos-cincinnati.toml
 
 echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
