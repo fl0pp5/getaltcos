@@ -85,7 +85,7 @@ MOUNT_DIR=`mktemp --tmpdir -d altcos_make_qcow2-XXXXXX`
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
 RAWFILE=`mktemp --tmpdir altcos_make_qcow2-XXXXXX.raw`
 
-fallocate -l 3GiB $RAWFILE
+fallocate -l 4GiB $RAWFILE
 
 LOOPDEV=`losetup --show -f $RAWFILE`
 LOOPPART="$LOOPDEV"p1
