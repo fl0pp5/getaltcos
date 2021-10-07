@@ -103,6 +103,7 @@ ln -sf var/srv $MAIN_ROOT/srv
 ln -sf var/roothome $MAIN_ROOT/root
 ln -sf ../var/usrlocal $MAIN_ROOT/usr/local
 ln -sf var/mnt $MAIN_ROOT/mnt
+rsync -avd $MAIN_ROOT/var/lib/rpm $MAIN_ROOT/usr/share/
 
 mkdir --mode=0775 -p $MAIN_ROOT/etc/ostree/remotes.d/
 echo "

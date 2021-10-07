@@ -31,6 +31,7 @@ checkAptDirs $PWD
 # sudo chown root:rpm ./var/cache/apt/
 
 sudo rsync -av var $varDir
+sudo rsync -avd var/lib/rpm usr/share/
 sudo rm -rf ./var ./run
 sudo mkdir ./var
 
