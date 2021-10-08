@@ -116,6 +116,13 @@ echo "
 [cincinnati]
 base_url=\"https://altcos.altlinux.org\"
 " > $MAIN_ROOT/etc/zincati/config.d/50-altcos-cincinnati.toml
+echo "
+[Match]
+Name=eth0
+
+[Network]
+DHCP=yes
+" > $MAIN_ROOT/etc/systemd/network/20-wired.network
 
 echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
