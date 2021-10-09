@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export TMPDIR=$DOCUMENT_ROOT/ALTCOS/tmp
+
 # Split passwd file (/etc/passwd) into
 # /usr/etc/passwd - home users password file (uid >= 500)
 # /lib/passwd - system users password file (uid < 500)

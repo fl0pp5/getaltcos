@@ -5,7 +5,7 @@ ENV LANG ru_RU.UTF-8
 MAINTAINER kaf@altlinux.org
 
 RUN \
-  apt-get install -y sudo su; \
+  apt-get install -y sudo su isomd5sum; \
   usermod  -a -G wheel apache2; \
   chmod 777 /etc/sudoers; \
   sed -i -e "s/# WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers; \
