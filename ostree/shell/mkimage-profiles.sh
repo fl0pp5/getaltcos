@@ -1,5 +1,6 @@
 #!/bin/sh
 export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
+. $DOCUMENT_ROOT/ostree/bin/functions.sh
 
 if [ $UID -eq 0 ]
 then
