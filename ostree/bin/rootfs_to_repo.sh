@@ -124,7 +124,7 @@ Name=eth0
 DHCP=yes
 " > $MAIN_ROOT/etc/systemd/network/20-wired.network
 
-sed -i -e 's|#AuthorizedKeysFile\(.*\)|AuthorizedKeysFile\1 ~/.ssh/authorized_keys.d/ignition|'  $MAIN_ROOT/etc/openssh/sshd_config
+sed -i -e 's|#AuthorizedKeysFile\(.*\)|AuthorizedKeysFile\1 .ssh/authorized_keys.d/ignition|'  $MAIN_ROOT/etc/openssh/sshd_config
 
 echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
