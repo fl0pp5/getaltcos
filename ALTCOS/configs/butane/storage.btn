@@ -28,7 +28,3 @@ storage:
       label: varlib
       with_mount_unit: true
 
-  directories:
-    - path: /var/home/altcos/examples/docker/docker-compose
-      overwrite: true
-
