@@ -1,0 +1,27 @@
+{
+  "ignition": {
+    "version": "3.2.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "wheel",
+          "docker"
+        ],
+        "name": "altcos",
+        "passwordHash": "$y$j9T$ZEYmKSGPiNFOZNTjvobEm1$IXLGt5TxdNC/OhJyzFK5NVM.mt6VvdtP6mhhzSmvE94",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1/GiEhIOcqs14pHPU9tNPKmV9XswRK91KEfqnhLtl9wWkojzuFekosSbCiy6g9DKTWK7rps7uZ4HAAGAof78e60kRWFgNWkQQqG/NKe1rrb0Iwv7kWwGhIWysWgZi466suvEGRFy1ysBpP1K0ChMRti+BWOqe8+OVCjSgT0WpguzL4j6onTXT8WJNTInPty6Fcfw2nMeq0JOu6zh49eblKAuB8nYJqUCNXYy5XJVUB5Qg54dKi2V0kBzbUWeKLhSGsHyBWW6HMsuOC5U9PVAX++h1+25vEarLyK1/R1EhTATkFJ2c6AMCTkrbhlkij0KrnpyHWd7G7vMb14+6Ewih kaf@basealt"
+        ]
+      },
+      {
+        "name": "user",
+        "passwordHash": "$y$j9T$HyZoHlt2qSNvYZYEw.t7j0$1i2z03nAWBGCG6OcYUBu1yrV4LyF/9RUzH86yH3m6H3",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1/GiEhIOcqs14pHPU9tNPKmV9XswRK91KEfqnhLtl9wWkojzuFekosSbCiy6g9DKTWK7rps7uZ4HAAGAof78e60kRWFgNWkQQqG/NKe1rrb0Iwv7kWwGhIWysWgZi466suvEGRFy1ysBpP1K0ChMRti+BWOqe8+OVCjSgT0WpguzL4j6onTXT8WJNTInPty6Fcfw2nMeq0JOu6zh49eblKAuB8nYJqUCNXYy5XJVUB5Qg54dKi2V0kBzbUWeKLhSGsHyBWW6HMsuOC5U9PVAX++h1+25vEarLyK1/R1EhTATkFJ2c6AMCTkrbhlkij0KrnpyHWd7G7vMb14+6Ewih kaf@basealt"
+        ]
+      }
+    ]
+  }
+}

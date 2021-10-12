@@ -10,7 +10,10 @@
           "docker"
         ],
         "name": "altcos",
-        "passwordHash": "$y$j9T$ZEYmKSGPiNFOZNTjvobEm1$IXLGt5TxdNC/OhJyzFK5NVM.mt6VvdtP6mhhzSmvE94"
+        "passwordHash": "$y$j9T$ZEYmKSGPiNFOZNTjvobEm1$IXLGt5TxdNC/OhJyzFK5NVM.mt6VvdtP6mhhzSmvE94",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1/GiEhIOcqs14pHPU9tNPKmV9XswRK91KEfqnhLtl9wWkojzuFekosSbCiy6g9DKTWK7rps7uZ4HAAGAof78e60kRWFgNWkQQqG/NKe1rrb0Iwv7kWwGhIWysWgZi466suvEGRFy1ysBpP1K0ChMRti+BWOqe8+OVCjSgT0WpguzL4j6onTXT8WJNTInPty6Fcfw2nMeq0JOu6zh49eblKAuB8nYJqUCNXYy5XJVUB5Qg54dKi2V0kBzbUWeKLhSGsHyBWW6HMsuOC5U9PVAX++h1+25vEarLyK1/R1EhTATkFJ2c6AMCTkrbhlkij0KrnpyHWd7G7vMb14+6Ewih kaf@basealt"
+        ]
       }
     ]
   },
@@ -18,15 +21,15 @@
     "directories": [
       {
         "overwrite": true,
-        "path": "/opt/altcos/examples/docker/docker"
+        "path": "/var/home/altcos/examples/docker/docker"
       },
       {
         "overwrite": true,
-        "path": "/opt/altcos/examples/docker/podman"
+        "path": "/var/home/altcos/examples/docker/podman"
       },
       {
         "overwrite": true,
-        "path": "/opt/altcos/examples/docker/docker-compose"
+        "path": "/var/home/altcos/examples/docker/docker-compose"
       }
     ],
     "files": [
@@ -34,7 +37,7 @@
         "group": {
           "name": "altcos"
         },
-        "path": "/opt/altcos/examples/docker/docker/hello.sh",
+        "path": "/var/home/altcos/examples/docker/docker/hello.sh",
         "user": {
           "name": "altcos"
         },
@@ -47,7 +50,7 @@
         "group": {
           "name": "altcos"
         },
-        "path": "/opt/altcos/examples/docker/podman/tetris.sh",
+        "path": "/var/home/altcos/examples/docker/podman/tetris.sh",
         "user": {
           "name": "altcos"
         },
@@ -60,7 +63,7 @@
         "group": {
           "name": "altcos"
         },
-        "path": "/opt/altcos/examples/docker/docker-compose/docker-compose.yml",
+        "path": "/var/home/altcos/examples/docker/docker-compose/docker-compose.yml",
         "user": {
           "name": "altcos"
         },
@@ -74,7 +77,7 @@
         "group": {
           "name": "altcos"
         },
-        "path": "/opt/altcos/examples/docker/docker-compose/start.sh",
+        "path": "/var/home/altcos/examples/docker/docker-compose/start.sh",
         "user": {
           "name": "altcos"
         },
@@ -88,7 +91,7 @@
         "group": {
           "name": "altcos"
         },
-        "path": "/opt/altcos/examples/docker/docker-compose/stop.sh",
+        "path": "/var/home/altcos/examples/docker/docker-compose/stop.sh",
         "user": {
           "name": "altcos"
         },

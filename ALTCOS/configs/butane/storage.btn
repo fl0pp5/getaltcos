@@ -1,0 +1,78 @@
+variant: fcos
+version: 1.3.0
+passwd:
+  users:
+    - name: altcos
+      groups:
+        - wheel
+        - docker
+      password_hash: $y$j9T$ZEYmKSGPiNFOZNTjvobEm1$IXLGt5TxdNC/OhJyzFK5NVM.mt6VvdtP6mhhzSmvE94
+      ssh_authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1/GiEhIOcqs14pHPU9tNPKmV9XswRK91KEfqnhLtl9wWkojzuFekosSbCiy6g9DKTWK7rps7uZ4HAAGAof78e60kRWFgNWkQQqG/NKe1rrb0Iwv7kWwGhIWysWgZi466suvEGRFy1ysBpP1K0ChMRti+BWOqe8+OVCjSgT0WpguzL4j6onTXT8WJNTInPty6Fcfw2nMeq0JOu6zh49eblKAuB8nYJqUCNXYy5XJVUB5Qg54dKi2V0kBzbUWeKLhSGsHyBWW6HMsuOC5U9PVAX++h1+25vEarLyK1/R1EhTATkFJ2c6AMCTkrbhlkij0KrnpyHWd7G7vMb14+6Ewih kaf@basealt
+
+storage:
+
+  disks:
+    -
+      device: /dev/sdb
+      wipe_table: true
+      partitions:
+        - number: 1
+          label: varlib
+
+  filesystems:
+    - path: /var/lib
+      device: /dev/sdb1
+      format: ext4
+      wipe_filesystem: true
+      label: varlib
+      with_mount_unit: true
+
+  directories:
+    - path: /var/home/altcos/examples/docker/docker-compose
+      overwrite: true
+
+  files:
+
+    - path: /var/home/altcos/examples/docker/docker-compose/docker-compose.yml
+      mode: 0755
+      user:
+        name: altcos
+      group:
+        name: altcos
+      contents:
+        inline: |
+          version: "3"
+          services:
+            postgres:
+              image: kafnevod/alt.p8-postgres:13
+              volumes:
+                - DB:/var/lib/pgsql/data
+            pgadmin:
+              image: dpage/pgadmin4
+              environment:
+                - PGADMIN_DEFAULT_EMAIL=test@altcos.altlinux.org
+                - PGADMIN_DEFAULT_PASSWORD=Secret
+              ports:
+                - 80:80
+          volumes:
+            DB:
+
+systemd:
+  units:
+    - name: hello.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=PGApp
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=/usr/bin/docker pull kafnevod/alt.p8-postgres:13
+        ExecStartPre=/usr/bin/docker pull dpage/pgadmin4
+        ExecStart=(cd /var/home/altcos/examples/docker/docker-compose; /usr/bin/docker-compose up)
+
+        [Install]
+        WantedBy=multi-user.target
