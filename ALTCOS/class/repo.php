@@ -387,8 +387,8 @@ class repo {
     $versionDir = repos::versionVarSubDir($version);
     $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
     $list = implode(' ', $list);
-    $cmd = "rpm -qi --dbpath=$path $list";
-//     echo "<pre>CMD=$cmd</pre>\n";
+    $cmd = "export LANG=C;rpm -qi --dbpath=$path $list";
+//      echo "<pre>CMD=$cmd</pre>\n";
     $output = [];
     exec($cmd, $output);
 //     echo "<pre>RPMSLIST=" . print_r($output, 1) . "</pre>\n";
