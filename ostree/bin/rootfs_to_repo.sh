@@ -28,6 +28,7 @@ BRANCH_REPO=$DOCUMENT_ROOT/ALTCOS/streams/$BRANCH
 ROOTFS_ARCHIVE="${2:-$BRANCH_REPO/mkimage-profiles/altcos-latest-x86_64.tar}"
 MAIN_REPO="${3:-$BRANCH_REPO/bare/repo}"
 OUT_DIR="${4:-$BRANCH_REPO/vars}"
+STREAM=`refStream $BRANCH`
 
 if [ ! -e $ROOTFS_ARCHIVE ]
 then
@@ -47,9 +48,9 @@ then
 fi
 
 DATA_DIR=${OUT_DIR}/$VERSION_DATE
-if [ -d $DATA_DIR  -a -n "`ls -1 $DATA_DIR`" ]
+if [ -d $DATA_DIR  -a -n "`ls -1 $DATA_DIR` 2>/dev/null" ]
 then
-  let MAJOR=`ls -1 $DATA_DIR | sort -n | tail -1`+1
+  let MAJOR=`ls -1 $DATA_DIR 2>/dev/null | sort -n | tail -1`+1
 else
   MAJOR=0
 fi
@@ -178,7 +179,7 @@ fi
 
 COMMITID=`ostree commit --repo=$MAIN_REPO --tree=dir=$MAIN_ROOT -b $BRANCH \
 	--no-xattrs --no-bindings --mode-ro-executables \
-	--add-metadata-string=version=sisyphus.$VERSION_DATE.$MAJOR.0`
+	--add-metadata-string=version=$STREAM.$VERSION_DATE.$MAJOR.0`
 
 cd ${OUT_DIR}
 ln -sf $VERSION_DIR $COMMITID

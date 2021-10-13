@@ -118,6 +118,16 @@ lastCommitId() {
 }
 
 
+# Возвращает имя потока
+# altcos/x86_64/Sisyphus/apache -> sisyphus
+refStream() {
+  ref=$1
+  refDir=`refToDir $ref`
+  ifs=$IFS;IFS=/;set -- $refDir;IFS=$ifs
+  shift;shift
+  stream=$1
+  echo $stream
+}
 
 # Возвращает вариант ветки  и $commitId
 # altcos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
@@ -132,7 +142,7 @@ refVersion() {
   date=$1
   major=$2
   minor=$3
-  refDir=`refToDir $ref`
+#   refDir=`refToDir $ref`
   IFS=/;set -- $refDir;IFS=$ifs
   shift;shift
   stream=$1
