@@ -47,16 +47,31 @@ $title[] = repos::getOSName($os);
 
 $listArchs = repos::listArchs();
 $Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : (count($listArchs) == 1 ? $listArchs[0] : false);
+$selected = $Arch ? '' : 'selected';
 ?>
 <title><?= implode('/', array_reverse($title))?></title>
+<script>
+function submitStreamForm(changedSelect) {
+  var form = document.getElementById('streamForm');
+  var selects = form.getElementsByTagName('SELECT');
+  var i = 0;
+  for (i = 0; i < selects.length && selects[i].id != changedSelect.id; i += 1);
+  for (i += 1; i < selects.length; i+= 1) {
+    select = selects[i];
+    select.selectedIndex = 0;
+  }
+  form.submit();
+}
+</script>
 </head>
 <body>
-<form action='./'>
+<form action='./' id='streamForm'>
 <input type='hidden' name='os' value='<?= $os?>'/>
 <h2><?= implode(" ", $title)?></h2>
 <span class='arch'>
 Архитектура:
-<select name='arch'>
+<select name='arch' id='selectArch' onchange="submitStreamForm(this)">
+  <option value='' id='selectArch' <?= $selected?>></option>
 <?php
 foreach ($listArchs as $arch) {
   $selected = ($arch === $Arch) ? 'selected' : '';
@@ -70,11 +85,13 @@ foreach ($listArchs as $arch) {
 <?php
 $listStreams = repos::listStreams();
 $Stream = (key_exists('stream', $_REQUEST)) ? $_REQUEST['stream'] : (count($listStreams) == 1 ? $listStreams[0] : false);
+$selected = $Stream ? '' : 'selected';
 if ($Arch) {
 ?>
 <span class='stream'>
 Поток:
-<select name='stream'>
+<select name='stream' id='selectStream' onchange="submitStreamForm(this)">
+  <option value='' <?= $selected?>></option>
 <?php
   foreach ($listStreams as $stream) {
     $selected = ($stream == $Stream) ? 'selected' : '';
@@ -93,10 +110,12 @@ if ($Arch) {
     if (count($refs) == 0) {
       $Ref="$os/$Arch/$Stream";
     }
+  $selected = $Ref ? '' : 'selected';
 ?>
 <span class='ref'>
 Ветка:
-<select name='ref'>
+<select name='ref' id='selectRef' onchange="submitStreamForm(this)">
+  <option value='' <?= $selected?>></option>
 <?php
     $altcosSubRefs = array_flip(altcosfile::getAcosSubRefs($Ref));
 //     echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
