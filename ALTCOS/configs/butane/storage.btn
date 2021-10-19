@@ -23,7 +23,7 @@ storage:
   filesystems:
     - path: /var/lib
       device: /dev/sdb1
-      format: ext4
+      format: btrfs
       wipe_filesystem: true
       label: varlib
       with_mount_unit: true
