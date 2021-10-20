@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   altcos:
-    image: altcos
+    image: quay.io/kafbasealt/uialtcos
     ports:
       - 0.0.0.0:80:80
     volumes:
@@ -11,7 +11,7 @@ services:
   adminaltcos:
     cap_add:
       - ALL
-    image: adminaltcos
+    image: quay.io/kafbasealt/uiadminaltcos
     ports:
       - 0.0.0.0:81:80
     volumes:

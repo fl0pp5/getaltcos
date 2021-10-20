@@ -1,4 +1,4 @@
-FROM altcos
+FROM quay.io/kafbasealt/uialtcos
 
 ENV LANG ru_RU.UTF-8
 
