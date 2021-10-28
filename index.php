@@ -345,7 +345,7 @@ foreach (repos::repoTypes() as $repoType) {
       $fullImage = $repo->getFullImageName($imageType, $version);
       $fullImageSize = $repo->getFullImageSize($imageType, $version);
       if ($fullImage) {
-        $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$fullImage";
+        $ref = "/ALTCOS/streams/$os/$Arch/$Stream/images/$imageType/$fullImage";
 ?>
                 <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button' class='info'>Скачать(<?= $fullImageSize?>)</button></a>
 <?php
@@ -359,7 +359,7 @@ foreach (repos::repoTypes() as $repoType) {
       $compressedImage = $repo->getCompressedImageName($imageType, $version);
       $compressedImageSize = $repo->getCompressedImageSize($imageType, $version);
       if ($compressedImage) {
-        $ref = "/ALTCOS/streams/$os/$arch/$stream/images/$imageType/$compressedImage";
+        $ref = "/ALTCOS/streams/$os/$Arch/$Stream/images/$imageType/$compressedImage";
 ?>
                   <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button' class='info'>Скачать(<?= $compressedImageSize?>)</button></a>
 <?php
