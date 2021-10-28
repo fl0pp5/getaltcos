@@ -7,9 +7,9 @@ export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
 exec 2>&1
 # set -x
 
-if [ $# -gt 4 ]
+if [ $# -gt 5 ]
 then
-	echo "Help: $0 [<branch>] [<commitid> or <vardir>] [<directory of main ostree repository>] [<out_file>]"
+	echo "Help: $0 [<branch>] [<commitid> or <vardir>] [<directory of main ostree repository>] [<out_file>] [<compress (1 or 0)>]"
 	echo "For example: $0  altcos/x86_64/sisyphus ac24e repo out/1.qcow2  "
 	echo "For example: $0  altcos/x86_64/sisyphus out/var repo out/1.qcow2  "
 	echo "You can change TMPDIR environment variable to set another directory where temporary files will be stored"
@@ -123,9 +123,16 @@ rm -rf $MOUNT_DIR
 losetup --detach "$LOOPDEV"
 qemu-img convert -O qcow2 $RAWFILE $OUT_FILE
 rm $RAWFILE
-read -p "Create compressed image (several minutes) (y/n)? " -n 1 -r
-echo
-[[ $REPLY =~ ^[Yy]$ ]] || exit 0
+
+COMPRESS=$5
+if [ -z $COMPRESS ]
+then
+  read -p "Create compressed image (several minutes) (y/n)? " -n 1 -r
+  echo
+  [[ $REPLY =~ ^[Yy]$ ]] || exit 0
+else
+  [[ $COMPRESS -eq "1" ]] || exit 0
+fi
 
 imagerdir=`dirname $OUT_FILE`
 xzfile=`basename $OUT_FILE`
