@@ -57,6 +57,15 @@ foreach($commits as $id => $commit) {
   }
 }
 
+//echo "<pre>EDGES=". print_r($edges, 1) . "</pre>";
+$nNodes = count($nodes);
+for ($n1 = 0; $n1 < $nNodes; $n1 += 1) {
+  for ($n2 = $n1+2; $n2 < $nNodes; $n2 += 1) {
+    $edges[] = [$n1, $n2];
+  }
+}
+//echo "<pre>EDGES=". print_r($edges, 1) . "</pre>";
+
 $graph = [ 'nodes' => $nodes, 'edges' => $edges ];
 
 $ret = json_encode($graph, JSON_PRETTY_PRINT);
