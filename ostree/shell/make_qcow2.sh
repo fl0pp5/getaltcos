@@ -98,12 +98,12 @@ mkfs.ext4 -L boot $LOOPPART
 
 mount $LOOPPART $MOUNT_DIR
 ostree admin init-fs --modern $MOUNT_DIR
-ostree pull-local --repo $REPO_LOCAL $MAIN_REPO $BRANCH $COMMITID
+ostree pull-local --repo $REPO_LOCAL $MAIN_REPO $COMMITID
 grub-install --target=i386-pc --root-directory=$MOUNT_DIR $LOOPDEV
 ln -s ../loader/grub.cfg $MOUNT_DIR/boot/grub/grub.cfg
 ostree config --repo $REPO_LOCAL set sysroot.bootloader grub2
 ostree config --repo $REPO_LOCAL set sysroot.readonly true
-ostree refs --repo $REPO_LOCAL --create altcos:$BRANCH $BRANCH
+ostree refs --repo $REPO_LOCAL --create altcos:$BRANCH $COMMITID
 ostree admin os-init $OS_NAME --sysroot $MOUNT_DIR
 
 OSTREE_BOOT_PARTITION="/boot" ostree admin deploy altcos:$BRANCH --sysroot $MOUNT_DIR --os $OS_NAME \
