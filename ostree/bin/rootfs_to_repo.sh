@@ -127,7 +127,7 @@ DHCP=yes
 
 sed -i -e 's|#AuthorizedKeysFile\(.*\)|AuthorizedKeysFile\1 .ssh/authorized_keys.d/ignition|'  $MAIN_ROOT/etc/openssh/sshd_config
 
-echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
+# echo "$UPDATEIP getaltcos.altlinux.org" >> $MAIN_ROOT/etc/hosts
 
 chroot $MAIN_ROOT groupadd altcos
 chroot $MAIN_ROOT useradd -g altcos -G docker,wheel -d /var/home/altcos --create-home -s /bin/bash altcos
