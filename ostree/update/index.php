@@ -96,7 +96,7 @@ if (!isUpdated($output)) {
   $endTime = time();
   $log->write("Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n");
   echo json_encode(['new'=>[], 'changed'=>[], 'deleted'=>[]], JSON_PRETTY_PRINT);
-  exit(0);
+  exit(1);
 }
 
 $RpmList = [];
@@ -124,12 +124,6 @@ $commitId = array_pop($output);
 // echo "<pre>VERSION=$version NEXTVERSION=$nextVersion</pre>\n";
 $ret = $repo->cmpRPMs($nextVersion, $version);
 echo json_encode($ret, JSON_PRETTY_PRINT);
+exit(0);
 
-// $cmd = "$BINDIR/ostree_pull-local.sh $refRepoDir";
-// $log->write("PULLCMD=$cmd\n");
-// $output = [];
-// exec($cmd, $output);
-// $log->write("PULL=\n" . implode("\n", $output). "\n");
-// $endTime = time();
-// $log->write("Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n");
 
