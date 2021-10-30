@@ -88,6 +88,7 @@ versionVarSubDir() {
 }
 
 fullCommitId() {
+  (
   refDir=$1
   shortCommitId=$2
   VarDir=$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
@@ -108,13 +109,16 @@ fullCommitId() {
   fi
   ret=$1
   echo $ret
+  )
 }
 
 lastCommitId() {
+  (
   refDir=$1
   cd $DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
   id=`ls -1dr ???????????????????????????????????????????????????????????????? | tail -1`
   echo $id
+  )
 }
 
 
@@ -132,6 +136,7 @@ refStream() {
 # Возвращает вариант ветки  и $commitId
 # altcos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
 refVersion() {
+  (
   ref=$1
   commitId=$2
   refDir=`refToDir $ref`
@@ -154,6 +159,7 @@ refVersion() {
   done
   ret="$stream.$date.$major.$minor"
   echo $ret
+  )
 }
 
 
