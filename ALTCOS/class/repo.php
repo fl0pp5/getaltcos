@@ -26,16 +26,14 @@ class repo {
   function init() {
     $cmd = "sudo mkdir -p " .  $this->repoDir .' 2>&1';;
     $output = [];
-    echo "<pre>CMD=$cmd</pre>\n";
+//     echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
-    echo "<pre>MKDIR=" . print_r($output, 1) . "</pre>\n";
+//     echo "<pre>MKDIR=" . print_r($output, 1) . "</pre>\n";
     $cmd = "sudo ostree init --mode=" . $this->repoType . " --repo=" .  $this->repoDir .' 2>&1';;
     $output = [];
-    echo "<pre>CMD=$cmd</pre>\n";
+//     echo "<pre>CMD=$cmd</pre>\n";
     exec($cmd, $output);
-    echo "<pre>INIT=" . print_r($output, 1) . "</pre>\n";
-
-
+//     echo "<pre>INIT=" . print_r($output, 1) . "</pre>\n";
   }
 
   function getRefs() {

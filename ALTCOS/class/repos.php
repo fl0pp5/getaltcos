@@ -24,14 +24,24 @@ class repos {
   }
 
   static function listStreams($os='altcos', $arch='x86_64') {
-    $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/$arch";
-//     echo "<pre>archDir=$archDir</pre>\n";
-    $fd = opendir($archDir);
-    $ret = [];
-    while ($entry=readdir($fd)) {
-      if (substr($entry,0,1) == '.') continue;
-      $ret[] = $entry;
+    $archs = $arch ? [$arch] : repos::listArchs($os);
+    foreach ($archs as $arch) {
+      $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/$arch";
+  //     echo "<pre>archDir=$archDir</pre>\n";
+      $fd = opendir($archDir);
+      $ret = [];
+      while ($entry=readdir($fd)) {
+        if (substr($entry,0,1) == '.') continue;
+        $ret[] = $entry;
+      }
     }
+    return $ret;
+  }
+
+  static function haveRepo($ref, $mode) {
+    $refRepoDir = repos::refRepoDir($ref);
+    $repoConfig = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$refRepoDir/$mode/repo/config";
+    $ret = is_file($repoConfig);
     return $ret;
   }
 
@@ -189,6 +199,25 @@ class repos {
     $nPath = count($path);
     $ret = implode('-', array_slice($path, 0, $nPath-2));
     return $ret;
+  }
+
+  static function mirror($url, $streams) {
+    foreach ($streams as $stream) {
+      $repo = new repo($stream, 'archive');
+      if (!$repo->haveConfig()) {
+        $repo->init();
+      }
+      $cmd = "sudo ostree remote add mirror $url/$stream/archive/repo/ --no-gpg-verify --repo=" . $repo->repoDir . " 2>&1";
+      $output = [];
+      echo "<pre>CMD OSTREE REMOTE ADD =$cmd</pre>\n";
+      exec($cmd, $output);
+      echo "<pre>OUTPUT OSTREE REMOTE ADD=" . print_r($output, 1) . "</pre>\n";
+      $cmd = "sudo ostree pull mirror $stream --mirror --repo=" . $repo->repoDir . " 2>&1";
+      $output = [];
+      echo "<pre>CMD OSTREE PULL MIRROR=$cmd</pre>\n";
+      exec($cmd, $output);
+      echo "<pre>OUTPUT OSTREE PULL MIRRIR=" . print_r($output, 1) . "</pre>\n";
+    }
   }
 
 }
