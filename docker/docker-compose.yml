@@ -12,6 +12,9 @@ services:
     cap_add:
       - ALL
     image: quay.io/kafbasealt/uiadminaltcos
+    environment:
+      - MIRRORURL=${MIRRORURL}
+      - MIRRORSTREAMS=${MIRRORSTREAMS}
     security_opt:
       - seccomp:unconfined
     ports:
