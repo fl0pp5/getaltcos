@@ -1,13 +1,16 @@
 <?php
 require_once "repos.php";
 class repo {
-  function __construct($ref, $repoType='bare') {
+  function __construct($ref, $repoType='bare', $repoDir=false) {
+    if (!$repoDir) {
+      $repoDir = $repoType;
+    }
     $this->repoType = $repoType;
     $this->ref = $ref;
     $this->refs = false;
     $this->refRepoDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . repos::refRepoDir($ref);
     $this->refDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . repos::refToDir($ref);
-    $this->repoDir = $this->refRepoDir . "/$repoType/repo";
+    $this->repoDir = $this->refRepoDir . "/$repoDir/repo";
     $this->rootsDir = $this->refDir . "/roots";
     $this->varsDir = $this->refDir . "/vars/";
     $this->commits = false;
