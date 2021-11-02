@@ -15,6 +15,7 @@ services:
     environment:
       - MIRRORURL=${MIRRORURL}
       - MIRRORSTREAMS=${MIRRORSTREAMS}
+      - MIRRORMODE=${MIRRORMODE}
     security_opt:
       - seccomp:unconfined
     ports:

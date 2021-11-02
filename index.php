@@ -51,6 +51,8 @@ foreach (explode(',', getenv("MIRRORSTREAMS")) as $mirror) {
   $MIRRORSTREAMS[] = trim($mirror);
 }
 // echo "<pre>MIRRORURL=$MIRRORURL MIRRORSTREAMS=". print_r($MIRRORSTREAMS, 1) . "</pre>";
+$MIRRORBARE = getenv("MIRRORBARE");
+
 
 $title[] = "Административный интерфейс OSTREE-потоков";
 $title[] = repos::getOSName($os);
@@ -430,7 +432,8 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
     if ($repoType == 'bare') {
 ?>
 	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
-        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=archive' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=barearchive'' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в barearchive-репозиторий</button></a></li>
 <?php
     }
   }
