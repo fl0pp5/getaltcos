@@ -3,6 +3,8 @@ version: '3.2'
 services:
   altcos:
     image: quay.io/kafbasealt/uialtcos
+    security_opt:
+      - seccomp:unconfined
     ports:
       - 0.0.0.0:80:80
     volumes:
