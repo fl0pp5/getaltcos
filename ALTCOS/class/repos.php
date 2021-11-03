@@ -23,7 +23,7 @@ class repos {
     return $ret;
   }
 
-  static function listStreams($os='altcos', $arch='x86_64', $mirrorstreams) {
+  static function listStreams($os='altcos', $arch='x86_64', $mirrorstreams=[]) {
     $Archs = $arch ? [$arch] : repos::listArchs($os);
     foreach ($Archs as $Arch) {
       $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/$Arch";

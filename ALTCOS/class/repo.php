@@ -277,8 +277,8 @@ class repo {
   function getImagesTree() {
     $imagesDir = $this->refDir . "/images";
 //     echo "<pre>imagesDir=$imagesDir</pre>";
-   $ret = [];
-    if (!is_dir($imagesDir)) return;
+    $ret = [];
+    if (!is_dir($imagesDir)) return $ret;
     $fd = dir($imagesDir);
     while ($imageType = $fd->read()) {
       $imageTypeDir = "$imagesDir/$imageType";
