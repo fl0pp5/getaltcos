@@ -23,18 +23,27 @@ class repos {
     return $ret;
   }
 
-  static function listStreams($os='altcos', $arch='x86_64') {
-    $archs = $arch ? [$arch] : repos::listArchs($os);
-    foreach ($archs as $arch) {
-      $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/$arch";
+  static function listStreams($os='altcos', $arch='x86_64', $mirrorstreams) {
+    $Archs = $arch ? [$arch] : repos::listArchs($os);
+    foreach ($Archs as $Arch) {
+      $archDir = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/$os/$Arch";
   //     echo "<pre>archDir=$archDir</pre>\n";
       $fd = opendir($archDir);
       $ret = [];
       while ($entry=readdir($fd)) {
         if (substr($entry,0,1) == '.') continue;
-        $ret[] = $entry;
+        $ret[$entry] = true;
       }
     }
+    foreach ($mirrorstreams as $mirrortreams) {
+      $path = explode('/', $mirrortreams);
+//       echo "<pre>PATH=" . print_r($path, 1) . "</pre>";
+      if ($path[0] == $os && $path[1] == $arch) {
+        $stream = implode('/', array_slice($path, 2));
+        $ret[$stream] = true;
+      }
+    }
+    $ret = array_keys($ret);
     return $ret;
   }
 
@@ -45,8 +54,12 @@ class repos {
     return $ret;
   }
 
-  static function repoTypes() {
-    $ret = ['bare', 'archive'];
+  static function repoTypes($mirrorMode) {
+    if ($mirrorMode) {
+      $ret = ['archive', 'bare'];
+    } else {
+      $ret = ['bare', 'archive'];
+    }
     return $ret;
   }
 
@@ -202,22 +215,46 @@ class repos {
   }
 
   static function mirror($url, $streams) {
+    $repoDirs = [];
+    $mirrormode=getenv('MIRRORMODE');
     foreach ($streams as $stream) {
-      $repo = new repo($stream, 'archive');
-      if (!$repo->haveConfig()) {
-        $repo->init();
+      $repoArchive = new repo($stream, 'archive');
+      if (!$repoArchive->haveConfig()) {
+        $repoArchive->init();
       }
-      $cmd = "sudo ostree remote add mirror $url/$stream/archive/repo/ --no-gpg-verify --repo=" . $repo->repoDir . " 2>&1";
+      $repoDir = $repoArchive->repoDir;
+      $baseStream = repos::refToDir($stream);
+      $cmd = "sudo ostree remote delete mirror --repo=$repoDir 2>&1";
+      echo "<pre>CMD OSTREE REMOTE DELETE =$cmd</pre>\n";
+      $output = [];
+      exec($cmd, $output);
+      echo "<pre>OUTPUT OSTREE REMOTE DELETE=" . print_r($output, 1) . "</pre>\n";
+      $mirrorRepo = ($mirrormode == 'admin') ? 'barearchive' : 'archive';
+      $cmd = "sudo ostree remote add mirror $url/$stream/$mirrorRepo/repo/ --no-gpg-verify --repo=$repoDir 2>&1";
+      $repoDirs[$repoDir] = $baseStream;
       $output = [];
       echo "<pre>CMD OSTREE REMOTE ADD =$cmd</pre>\n";
       exec($cmd, $output);
       echo "<pre>OUTPUT OSTREE REMOTE ADD=" . print_r($output, 1) . "</pre>\n";
-      $cmd = "sudo ostree pull mirror $stream --mirror --repo=" . $repo->repoDir . " 2>&1";
+      $cmd = "sudo ostree pull mirror $stream --mirror --repo=$repoDir --depth=-1 2>&1";
       $output = [];
       echo "<pre>CMD OSTREE PULL MIRROR=$cmd</pre>\n";
       exec($cmd, $output);
       echo "<pre>OUTPUT OSTREE PULL MIRRIR=" . print_r($output, 1) . "</pre>\n";
     }
+    foreach ($repoDirs as $archiveRepoDir => $baseStream) {
+      $repoBare = new repo($baseStream, 'bare');
+      if (!$repoBare->haveConfig()) {
+        $repoBare->init();
+      }
+      $bareRepoDir = $repoBare->repoDir;
+      $cmd = "sudo ostree pull-local $archiveRepoDir  --repo=$bareRepoDir --depth=-1 2>&1";
+      $output = [];
+      echo "<pre>CMD OSTREE PULL LOCAL=$cmd</pre>\n";
+      exec($cmd, $output);
+      echo "<pre>OUTPUT OSTREE PULL LOCAL=" . print_r($output, 1) . "</pre>\n";
+    }
+
   }
 
 }

@@ -1,5 +1,5 @@
 <?php
-//phpinfo();
+// phpinfo();
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
@@ -42,10 +42,22 @@ button.remove {
 $SERVER_NAME = $_SERVER['SERVER_NAME'];
 $Ref = false;
 $os = key_exists('os',$_REQUEST) ? $_REQUEST['os'] : 'altcos';
+$MIRRORURL = getenv("MIRRORURL");
+if (strlen(trim($MIRRORURL)) == 0) {
+  $MIRRORURL = 'https://altcos.altlinux.org/ALTCOS/streams';
+}
+$MIRRORSTREAMS = [];
+foreach (explode(',', getenv("MIRRORSTREAMS")) as $mirror) {
+  $MIRRORSTREAMS[] = trim($mirror);
+}
+// echo "<pre>MIRRORURL=$MIRRORURL MIRRORSTREAMS=". print_r($MIRRORSTREAMS, 1) . "</pre>";
+$MIRRORBARE = getenv("MIRRORBARE");
+
+
 $title[] = "Административный интерфейс OSTREE-потоков";
 $title[] = repos::getOSName($os);
 
-$listArchs = repos::listArchs();
+$listArchs = repos::listArchs('altcos');
 $Arch = key_exists('arch', $_REQUEST) ? $_REQUEST['arch'] : (count($listArchs) == 1 ? $listArchs[0] : false);
 $selected = $Arch ? '' : 'selected';
 ?>
@@ -83,7 +95,7 @@ foreach ($listArchs as $arch) {
 </select>
 </span>
 <?php
-$listStreams = repos::listStreams();
+$listStreams = repos::listStreams('altcos', $Arch, $MIRRORSTREAMS);
 $Stream = (key_exists('stream', $_REQUEST)) ? $_REQUEST['stream'] : (count($listStreams) == 1 ? $listStreams[0] : false);
 $selected = $Stream ? '' : 'selected';
 if ($Arch) {
@@ -106,6 +118,14 @@ if ($Arch) {
   if ($Stream) {
     $repo = new repo("$os/$Arch/$Stream", 'bare');
     $refs = $repo->getRefs();
+    if (count($MIRRORSTREAMS) > 0) {
+      foreach ($MIRRORSTREAMS as $mirrorstream) {
+        $path = explode('/', $mirrorstream);
+        if ($path[0] == $os && $path[1] == $Arch && strtolower($path[2] == $Stream)) {
+          $refs[] = $mirrorstream;
+        }
+      }
+    }
     $Ref = key_exists('ref', $_REQUEST) ? $_REQUEST['ref'] : (count($refs) == 1 ? $refs[0] : false);
     if (count($refs) == 0) {
       $Ref="$os/$Arch/$Stream";
@@ -117,7 +137,10 @@ if ($Arch) {
 <select name='ref' id='selectRef' onchange="submitStreamForm(this)">
   <option value='' <?= $selected?>></option>
 <?php
-    $altcosSubRefs = array_flip(altcosfile::getAcosSubRefs($Ref));
+    $altcosSubRefs = [];
+    if ($repo->haveConfig()) {
+      $altcosSubRefs = array_flip(altcosfile::getAcosSubRefs($Ref));
+    }
 //     echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
     $refExists = false;
     foreach ($refs as $ref) {
@@ -141,6 +164,19 @@ if ($Arch) {
 </form>
 <?php
 if (!$Ref) exit(0);
+$mirrorMode = in_array($Ref, $MIRRORSTREAMS);
+if ($mirrorMode && !$repo->haveConfig()) {
+?>
+<div class='warning'>Запрошенная ветка '<?= $Ref?>' еще не отзеркалирована</div>
+<form action='ostree/mirror/' target='ostreeREST'>
+<input name='url' value='<?= $MIRRORURL?>' type='hidden' />
+<input name='streams' value='<?= $Ref?>' type='hidden' />
+<button type='submit' class='create'>Создать зеркало ветки <?= $Ref?></button>
+</form>
+<?php
+  exit(0);
+}
+
 if (!$refExists && strlen($Ref) > 0) {
   echo "<div class='warning'>Запрошенная ветка '$Ref' отсутствует в bare-репозитории</div>";
 ?>
@@ -205,7 +241,7 @@ if (count($refs) > 0) {
 ?>
 <ul>
 <?php
-foreach (repos::repoTypes() as $repoType) {
+foreach (repos::repoTypes($mirrorMode) as $repoType) {
   $repo = new repo($Ref, $repoType);
   $commits = $repo->getCommits();
   // echo "<pre>COMMITS=" . print_r($commits, 1) . "</pre>\n";
@@ -233,7 +269,7 @@ foreach (repos::repoTypes() as $repoType) {
   }
 ?>
   <li>
-    <ul><h3>Тип репозитория: <?= $repoType?></h3>
+    <ul><h3>Тип репозитория: <?= $repoType?> <?= $mirrorMode? "(зеркало $MIRRORURL/$Ref)":'' ?></h3>
         <li><a href='http://<?= $SERVER_NAME?>/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button  class='info'><?= $repoType?>-граф</a></button></li>
         <li>Коммиты:
           <form action='/ostree/deleteCommits/' target='ostreeREST'>
@@ -380,16 +416,28 @@ foreach (repos::repoTypes() as $repoType) {
     $prevVersion = $version;
     $prevCommitId = $commitId;
   }
+  if (!$mirrorMode):
 ?>	  	<button type='submit' class='remove'>Удалить отмеченные коммиты</button>
+<?php endif; ?>
 		</form>
   </ul>
 <?php
-  if ($repoType == 'bare') {
+  if ($mirrorMode) {
+    if ($repoType == 'archive') {
+?>
+      <li><a href='/ostree/mirror/?url=<?= $MIRRORURL?>&streams=<?= $Ref?>' target=ostreeREST><button type='button' class='create'>Отзеркалировать</button></a></li><?php
+
+    }
+  } else {
+    if ($repoType == 'bare') {
 ?>
 	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
-        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=archive' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=barearchive'' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в barearchive-репозиторий</button></a></li>
 <?php
+    }
   }
+
 ?>
 
 </ul>
