@@ -368,6 +368,10 @@ class repo {
   function listRPMs($version) {
     $versionDir = repos::versionVarSubDir($version);
     $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
+    if (!is_dir($path)) {
+      $commitId = $this->commitIdFromVersion($version);
+      $path = $this->rootsDir . "/$commitId/lib/rpm/";
+    }
     $cmd = "rpm -qa --dbpath=$path | sort";
 //     echo "<pre>CMD=$cmd</pre>\n";
     $output = [];
@@ -380,6 +384,18 @@ class repo {
     return $ret;
   }
 
+  function commitIdFromVersion($version) {
+    if (!$this->commits) {
+      $this->getCommits($ref);
+    }
+    foreach ($this->commits as $commitId=>$commit) {
+      if ($commit['Version'] == $version) {
+        return $commitId;
+      }
+    }
+    return false;
+  }
+
   /*
    * Получить информацию по переданному списку пакетов
    * !! ПОКА НЕ ОБРАБАТЫВАЮТСЯ МНОГОСТРОЧНЫЕ ОПИСАТЕЛИ и $listFields=false не выводит ни одного поля
@@ -387,6 +403,10 @@ class repo {
   function rpmsInfo($list, $version, $listFields=[]) {
     $versionDir = repos::versionVarSubDir($version);
     $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
+    if (!is_dir($path)) {
+      $commitId = $this->commitIdFromVersion($version);
+      $path = $this->rootsDir . "/$commitId/lib/rpm/";
+    }
     $list = implode(' ', $list);
     $cmd = "export LANG=C;rpm -qi --dbpath=$path $list";
 //      echo "<pre>CMD=$cmd</pre>\n";
@@ -431,12 +451,20 @@ class repo {
     $version2Dir = repos::versionVarSubDir($version2);
 
     $path1 = $this->varsDir . "/$version1Dir/var/lib/rpm/";
+    if (!is_dir($path1)) {
+      $commitId1 = $this->commitIdFromVersion($version1);
+      $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
+    }
     $rpmListFile1 = tempnam('/tmp', 'ostree_');
     $cmd = "rpm -qa --dbpath=$path1 | sort > $rpmListFile1";
 //     echo "<pre>CMD1=$cmd</pre>\n";
     exec($cmd);
 
     $path2 = $this->varsDir . "/$version2Dir/var/lib/rpm/";
+    if (!is_dir($path2)) {
+      $commitId2 = $this->commitIdFromVersion($version2);
+      $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
+    }
     $rpmListFile2 = tempnam('/tmp', 'ostree_');
     $cmd = "rpm -qa --dbpath=$path2 | sort > $rpmListFile2";
 //     echo "<pre>CMD2=$cmd</pre>\n";
