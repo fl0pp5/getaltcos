@@ -142,6 +142,8 @@ mv /tmp/group.$$ $MAIN_ROOT/etc/group
 
 sed -e 's/passwd:.*$/& altfiles/' -e 's/group.*$/& altfiles/' -i $MAIN_ROOT/etc/nsswitch.conf
 
+mv $MAIN_ROOT/var/lib/rpm $MAIN_ROOT/lib/rpm
+
 KERNEL=`find $MAIN_ROOT/boot/ -type f -name "vmlinuz-*"`
 SHA=`sha256sum "$KERNEL" | awk '{print $1;}'`
 mv "$KERNEL" "$KERNEL-$SHA"
