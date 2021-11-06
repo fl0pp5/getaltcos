@@ -11,4 +11,4 @@ rpms=$*
 rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
 mergedDir=$rootsPath/merged
 checkAptDirs $mergedDir
-sudo chroot $mergedDir apt-get install -y $rpms
+sudo chroot $mergedDir apt-get install -y -o RPM::DBPath='/lib/rpm/' $rpms

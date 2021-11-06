@@ -18,5 +18,5 @@ $repo = new repo($ref, $repoType);
 </head>
 <body>
 <?php
-$result = $repo->diff($commitId1, $commitId2);
+$result = $repo->diff($commitId2, $commitId1);
 echo "<pre>" . implode("\n", $result) . "</pre>";
