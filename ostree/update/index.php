@@ -64,6 +64,12 @@ $nextVersion = "$stream.$date.$major.$nextMinor";
 $nextVersionVarSubDir = repos::versionVarSubDir($nextVersion);
 
 
+$cmd = "$BINDIR/clear_roots.sh '$ref'";
+$log->write("CLEAR_ROOTS_CMD=$cmd\n");
+$output = [];
+exec($cmd, $output);
+$log->write("CLEAR_ROOTS_OUT:" . implode("\n", $output) . "\n");
+
 $cmd = "$BINDIR/ostree_checkout.sh '$ref' '$lastCommitId'";
 $log->write("CHECKOUTCMD=$cmd\n");
 $output = [];
@@ -121,8 +127,8 @@ exec($cmd, $output);
 $log->write("COMMIT=\n" . implode("\n", $output). "\n");
 $commitId = array_pop($output);
 
-// echo "<pre>VERSION=$version NEXTVERSION=$nextVersion</pre>\n";
-$ret = $repo->cmpRPMs($nextVersion, $version);
+// echo "<pre>VERSION=$version NEXTVERSION=$nextVersion COMMITID=$commitId</pre>\n";
+$ret = $repo->cmpRPMs($commitId, $version);
 echo json_encode($ret, JSON_PRETTY_PRINT);
 exit(0);
 

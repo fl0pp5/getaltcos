@@ -71,6 +71,11 @@ class repos {
     return $ret;
   }
 
+  static function isCommitId($commitId) {
+    $ret = (strlen($commitId) == 64);
+    return $ret;
+  }
+
     /*
    * Формирует имя подветки
    * переводя в верхний регистр первую букву текущей ветки и

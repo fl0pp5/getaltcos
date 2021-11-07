@@ -443,27 +443,41 @@ class repo {
   }
 
 
+
   /*
    * Сравнить список RPM-файлов различный версий
    */
   function cmpRPMs($version1, $version2) {
-    $version1Dir = repos::versionVarSubDir($version1);
-    $version2Dir = repos::versionVarSubDir($version2);
-
-    $path1 = $this->varsDir . "/$version1Dir/var/lib/rpm/";
-    if (!is_dir($path1)) {
-      $commitId1 = $this->commitIdFromVersion($version1);
-      $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
+    if (repos::isCommitId($version1)) {
+        $commitId1 = $version1;
+        $this->checkout($commitId1);
+        $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
+    } else {
+      $version1Dir = repos::versionVarSubDir($version1);
+      $path1 = $this->varsDir . "/$version1Dir/var/lib/rpm/";
+      if (!is_dir($path1)) {
+        $commitId1 = $this->commitIdFromVersion($version1);
+        $this->checkout($commitId1);
+        $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
+      }
     }
     $rpmListFile1 = tempnam('/tmp', 'ostree_');
     $cmd = "rpm -qa --dbpath=$path1 | sort > $rpmListFile1";
 //     echo "<pre>CMD1=$cmd</pre>\n";
     exec($cmd);
 
-    $path2 = $this->varsDir . "/$version2Dir/var/lib/rpm/";
-    if (!is_dir($path2)) {
-      $commitId2 = $this->commitIdFromVersion($version2);
-      $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
+    if (repos::isCommitId($version2)) {
+        $commitId2 = $version2;
+        $this->checkout($commitId2);
+        $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
+    } else {
+      $version2Dir = repos::versionVarSubDir($version2);
+      $path2 = $this->varsDir . "/$version2Dir/var/lib/rpm/";
+      if (!is_dir($path2)) {
+        $commitId2 = $this->commitIdFromVersion($version2);
+        $this->checkout($commitId2);
+        $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
+      }
     }
     $rpmListFile2 = tempnam('/tmp', 'ostree_');
     $cmd = "rpm -qa --dbpath=$path2 | sort > $rpmListFile2";
