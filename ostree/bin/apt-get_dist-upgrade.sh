@@ -12,5 +12,5 @@ rpmListFile=$2
 rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
 mergedDir=$rootsPath/merged
 checkAptDirs $mergedDir
-sudo chroot $mergedDir apt-get dist-upgrade -y
-sudo chroot $mergedDir rpm -qa >  $rpmListFile
+sudo chroot $mergedDir apt-get dist-upgrade -y -o RPM::DBPath='/lib/rpm/'
+sudo chroot $mergedDir rpm -qa --dbpath=/lib/rpm/ >  $rpmListFile

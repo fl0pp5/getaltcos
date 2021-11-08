@@ -28,7 +28,10 @@ newCommitId=`sudo ostree commit \
         --add-metadata-string=version=$nextVersion
 `
 sudo ostree  summary --repo=$repoBarePath --update
-sudo mv $commitId $newCommitId
-sudo ln -sf $newCommitId root
+
+sudo rm -rf $commitId
+# sudo mv $commitId $newCommitId
+# sudo ln -sf $newCommitId root
 cd $varsPath
 sudo ln -sf $nextVersionVarSubDir $newCommitId
+echo $newCommitId
