@@ -1,10 +1,17 @@
 <?php
-//phpinfo();
+// phpinfo();
 
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
 
+$path = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'));
+$parentDir = $path[0];
+if (in_array($parentDir, repos::repoTypes())) {
+  $repoType = $parentDir;
+}
+
+// echo "<pre>parentDir=$parentDir repoType=$repoType REQUEST_URI=" . $_SERVER['REQUEST_URI'] . "PATH=" . print_r($path) . "</pre>\n";
 $basearch = @$_REQUEST['basearch'];
 if (strlen($basearch) ==0 ) {
   errorReply(1, 'Parameter basearch is not defined');
@@ -22,7 +29,7 @@ if (key_exists('repoType', $_REQUEST)) {
 $repo = new repo("altcos/$basearch/$stream", $repoType);
 
 $output=[];
-//echo "REPO=$repo<br>\n";
+// echo "REPO=" . print_r($repo, 1);
 if (!$repo->haveConfig()) {
   errorReply(3, "Stream $stream does not have reposutory");
 }

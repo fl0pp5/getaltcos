@@ -54,11 +54,11 @@ class repos {
     return $ret;
   }
 
-  static function repoTypes($mirrorMode) {
+  static function repoTypes($mirrorMode=false) {
     if ($mirrorMode) {
-      $ret = ['archive', 'bare'];
+      $ret = ['archive', 'bare', 'barearchive'];
     } else {
-      $ret = ['bare', 'archive'];
+      $ret = ['bare', 'archive', 'barearchive'];
     }
     return $ret;
   }
