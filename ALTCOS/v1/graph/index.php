@@ -21,11 +21,12 @@ if (strlen($stream) ==0 ) {
   errorReply(2, 'Parameter stream is not defined');
 }
 
-if (key_exists('repoType', $_REQUEST)) {
-  $repoType = $_REQUEST['repoType'];
-} else {
-  $repoType = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
-}
+// if (key_exists('repoType', $_REQUEST)) {
+//   $repoType = $_REQUEST['repoType'];
+// } else {
+//   $repoType = substr($_SERVER['REMOTE_ADDR'], 0, 5) == '10.0.' ? 'bare' : 'archive';
+// }
+
 $repo = new repo("altcos/$basearch/$stream", $repoType);
 
 $output=[];
