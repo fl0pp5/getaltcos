@@ -270,7 +270,7 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
 ?>
   <li>
     <ul><h3>Тип репозитория: <?= $repoType?> <?= $mirrorMode? "(зеркало $MIRRORURL/$Ref)":'' ?></h3>
-        <li><a href='http://<?= $SERVER_NAME?>/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>&repoType=<?= $repoType?>' target='graphREST'><button  class='info'><?= $repoType?>-граф</a></button></li>
+        <li><a href='http://<?= $SERVER_NAME?>/<?= $repoType?>/v1/graph/?stream=<?= $Stream?>&basearch=<?= $Arch?>' target='graphREST'><button  class='info'><?= $repoType?>-граф</a></button></li>
         <li>Коммиты:
           <form action='/ostree/deleteCommits/' target='ostreeREST'>
           <input type='hidden' name='ref' value='<?= $Ref?>' />
