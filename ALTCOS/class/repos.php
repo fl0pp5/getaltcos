@@ -103,9 +103,9 @@ class repos {
   }
 
   /**
-   * Возвращает тропу, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
+   * Возвращает имя ветки по тропе, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
    * altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
-   * altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus/apache
+   * altcos/x86_64/sisyphus/apache -> altcos/x86_64/Sisyphus/apache
    */
   static function dirToRef($ref) {
     $path = explode('/', $ref);
@@ -113,7 +113,7 @@ class repos {
     for ($i = 2; $i < count($path)-1; $i++) {
       $ret .= "/" . ucfirst($path[$i]);
     }
-    $ret .= "/" . ucfirst($path[$i]);
+    $ret .= "/" . $path[$i];
     return $ret;
   }
 

@@ -14,7 +14,7 @@ $subVersionVarSubDir = repos::versionVarSubDir($subVersion);
 
 $altcosfile = new altcosfile($subRef);
 echo "<pre>". json_encode($altcosfile, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . "</pre>";
-$ref = $altcosfile->from;
+$ref = $altcosfile->ref;
 
 $repoType = 'bare';
 $repo = new repo($ref, $repoType);
