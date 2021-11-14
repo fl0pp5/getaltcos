@@ -224,7 +224,7 @@ if (count($refs) > 0) {
   if (count($altcosSubRefs) > 0) {
 ?>
 <form action='/ostree/build/' target='ostreeREST'>
-  <select name='altcosfileref'>
+  <select name='ref'>
 <?php
     foreach ($altcosSubRefs as $altcosSubRef) {
 ?>
