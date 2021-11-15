@@ -16,7 +16,7 @@ class altcosfile {
 
 
     function getButaneFile() {
-      $ret = is_array(@$this->data['butanefile']) ? $this->data['butanefile'] : [];
+      $ret = key_exists('butanefile', $this->data) ? $this->data['butanefile'] : 'butane.yml';
       return $ret;
     }
 
