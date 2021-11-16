@@ -396,7 +396,8 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
       $compressedImage = $repo->getCompressedImageName($imageType, $version);
       $compressedImageSize = $repo->getCompressedImageSize($imageType, $version);
       if ($compressedImage) {
-        $ref = "/ALTCOS/streams/$os/$Arch/$Stream/images/$imageType/$compressedImage";
+        $dir = repos::refToDir($Ref);
+        $ref = "/ALTCOS/streams/$dir/images/$imageType/$compressedImage";
 ?>
                   <a href='<?= $ref?>' title='<?= $compressedImage?>'><button type='button' class='info'>Скачать(<?= $compressedImageSize?>)</button></a>
 <?php
