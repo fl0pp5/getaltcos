@@ -17,6 +17,6 @@ do
   archiveFile=`echo $image | tr '/' '_'| tr ':' '_'`
   archiveFile="$dockerImagesDir/$archiveFile"
   sudo skopeo copy --additional-tag=$image docker://$image docker-archive:$archiveFile
-#   sudo xz -9 $archiveFile
+  sudo xz -9 $archiveFile
 done
 date

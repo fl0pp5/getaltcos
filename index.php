@@ -381,7 +381,8 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
       $fullImage = $repo->getFullImageName($imageType, $version);
       $fullImageSize = $repo->getFullImageSize($imageType, $version);
       if ($fullImage) {
-        $ref = "/ALTCOS/streams/$os/$Arch/$Stream/images/$imageType/$fullImage";
+        $dir = repos::refToDir($Ref);
+        $ref = "/ALTCOS/streams/$dir/images/$imageType/$fullImage";
 ?>
                 <a href='<?= $ref?>' title='<?= $fullImage?>'><button type='button' class='info'>Скачать(<?= $fullImageSize?>)</button></a>
 <?php
