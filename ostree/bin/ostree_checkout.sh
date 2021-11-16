@@ -62,7 +62,7 @@ sudo mount -t overlay overlay -o lowerdir=$lastCommitId,upperdir=./upper,workdir
 
 cd merged
 sudo ln -sf  /usr/etc/ ./etc;
-sudo rsync -av $varDir/var .
+sudo rsync -a $varDir/var .
 sudo mkdir -p ./run/lock ./run/systemd/resolve/ ./tmp/.private/root/
 sudo cp /etc/resolv.conf ./run/systemd/resolve/resolv.conf
 

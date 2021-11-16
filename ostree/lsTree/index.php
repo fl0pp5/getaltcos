@@ -5,7 +5,7 @@ require_once('repo.php');
 
 $ref = $_REQUEST['ref'];
 $commitId = $_REQUEST['commitId'];
-$refDir = repos::refRepoDir($ref);
+$refDir = repos::refToDir($ref);
 $path = "/ALTCOS/streams/$refDir/roots/$commitId";
 $dir = "$rootdir/$path";
 //echo "PATH=$path";

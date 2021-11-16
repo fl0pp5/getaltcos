@@ -76,7 +76,7 @@ class repos {
     return $ret;
   }
 
-    /*
+  /*
    * Формирует имя подветки
    * переводя в верхний регистр первую букву текущей ветки и
    * добавляя через / имя подветки
@@ -88,6 +88,18 @@ class repos {
     $path[$lastN] = ucfirst($path[$lastN]);
     $path[] = $subName;
     $ret = implode('/', $path);
+    return $ret;
+  }
+
+  /*
+   * Формирует имя родительской ветки
+   * parentRef('altcos/x86_64/Sisyphus/apache', 'apache') => altcos/x86_64/sisyphus
+   */
+  static function parentRef($ref) {
+    $path = explode('/', $ref);
+echo "<pre>REF=$ref PATH=" . print_r($path, 1) . "</pre>";
+    $lastN = count($path) - 1;
+    $ret = strtolower(implode('/', array_slice($path, 0, $lastN)));
     return $ret;
   }
 
@@ -103,9 +115,9 @@ class repos {
   }
 
   /**
-   * Возвращает тропу, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
+   * Возвращает имя ветки по тропе, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
    * altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
-   * altcos/x86_64/Sisyphus/apache -> altcos/x86_64/sisyphus/apache
+   * altcos/x86_64/sisyphus/apache -> altcos/x86_64/Sisyphus/apache
    */
   static function dirToRef($ref) {
     $path = explode('/', $ref);
@@ -113,7 +125,7 @@ class repos {
     for ($i = 2; $i < count($path)-1; $i++) {
       $ret .= "/" . ucfirst($path[$i]);
     }
-    $ret .= "/" . ucfirst($path[$i]);
+    $ret .= "/" . $path[$i];
     return $ret;
   }
 
