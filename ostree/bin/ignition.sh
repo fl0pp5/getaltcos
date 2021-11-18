@@ -11,7 +11,7 @@ butaneFile=$2
 rootDir=$refDir/roots/merged
 ignFile="$refDir/$butaneFile.jgn"
 
-sudo butane -p -d $refDir $refDir/$butaneFile > $ignFile
+sudo butane -p -d $refDir $refDir/$butaneFile | sudo tee $ignFile
 
 sudo /usr/lib/dracut/modules.d/30ignition/ignition  \
   -platform file \
