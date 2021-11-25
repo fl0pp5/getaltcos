@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 
 storage:
+  directories:
+    - path: /usr/share/k8s/flannel
   trees:
     - local: root
       path: /
@@ -11,6 +13,9 @@ storage:
       overwrite: true
     - path: /etc/systemd/system/kubelet.service.d/kubeadm.conf
       overwrite: true
+    - path:  /usr/share/k8s/flannel/kube-flannel.yml
+      contents:
+        source: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 
 systemd:

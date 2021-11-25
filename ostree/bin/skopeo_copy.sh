@@ -12,11 +12,23 @@ if [ ! -d $dockerImagesDir ]
 then
   sudo mkdir -p $dockerImagesDir
 fi
+tmpfile="/tmp/skopeo.$$"
 for image
 do
   archiveFile=`echo $image | tr '/' '_'| tr ':' '_'`
   archiveFile="$dockerImagesDir/$archiveFile"
-  sudo skopeo copy --additional-tag=$image docker://$image docker-archive:$archiveFile
-  sudo xz -9 $archiveFile
+  sudo rm -f $archiveFile
+  xzfile="$archiveFile.xz";
+  if [ ! -f $xzfile ]
+  then
+    >$tmpfile
+    until grep manifest $tmpfile
+    do
+      rm -f $archiveFile
+      sudo skopeo copy --additional-tag=$image docker://$image docker-archive:$archiveFile  2>&1 | tee $tmpfile
+    done
+    sudo xz -9 $archiveFile
+  fi
 done
+rm -f $tmpfile
 date
