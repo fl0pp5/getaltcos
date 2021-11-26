@@ -290,7 +290,7 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
 ?>
 		<li>
       <input type='checkbox' value='<?= $commitId?>' name='ids[]' onClick='markAfter(this)' />
-		  <ul>ID: <?= $commitId?><br>Версия: <?= $version?><br>Дата создания: <?= $date?>
+		  <ul>ID: <?= $commitId?><br>Версия: <b><?= $version?></b><br>Дата создания: <b><?= $date?></b>
 <?php
     if ($parent) { ?><br>Parent: <?= $parent?> <?php }
 ?>
