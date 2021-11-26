@@ -9,7 +9,8 @@
       "k8s.gcr.io/etcd:3.4.13-0",
       "k8s.gcr.io/coredns:1.7.0",
       "k8s.gcr.io/pause:3.2",
-      "docker.io/rancher/mirrored-flannelcni-flannel-cni-plugin:v1.0.0"
+      "docker.io/rancher/mirrored-flannelcni-flannel-cni-plugin:v1.0.0",
+      "quay.io/coreos/flannel:v0.15.1"
     ]
   },
   "butanefile": "k8s.yml"
