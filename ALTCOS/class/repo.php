@@ -363,15 +363,44 @@ class repo {
   }
 
   /*
+   * Получить идентификатор коммтта по версии
+   */
+  function commitIdFromVersion($version) {
+    if (!$this->commits) {
+      $this->getCommits($ref);
+    }
+    foreach ($this->commits as $commitId=>$commit) {
+//       echo "version=$version commitId=$commitId<br>";
+      if ($commit['Version'] == $version) {
+        return $commitId;
+      }
+    }
+    return false;
+  }
+
+  /*
+   *
+   */
+  function getRpmPackageDir($version) {
+    $pathVarLib = $this->varsDir . "/$versionDir/var/lib/rpm/";
+    $commitId = $this->commitIdFromVersion($version);
+    $this->checkout($commitId1);
+    $pathLib = $this->rootsDir . "/$commitId/lib/rpm/";
+    $ret= (is_dir($path) && file_exists("$path/Packages")) ? $pathVarLib : $pathLib;
+    return $ret;
+  }
+
+  /*
    * Получить список RPM-пакетов в версии
    */
   function listRPMs($version) {
-    $versionDir = repos::versionVarSubDir($version);
-    $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
-    if (!is_dir($path)) {
-      $commitId = $this->commitIdFromVersion($version);
-      $path = $this->rootsDir . "/$commitId/lib/rpm/";
-    }
+//     $versionDir = repos::versionVarSubDir($version);
+//     $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
+//     if (!$this->RpmInVarLib())) {
+//       $commitId = $this->commitIdFromVersion($version);
+//       $path = $this->rootsDir . "/$commitId/lib/rpm/";
+//     }
+    $path = $this->getRpmPackageDir($version);
     $cmd = "rpm -qa --dbpath=$path | sort";
 //     echo "<pre>CMD=$cmd</pre>\n";
     $output = [];
@@ -384,29 +413,17 @@ class repo {
     return $ret;
   }
 
-  function commitIdFromVersion($version) {
-    if (!$this->commits) {
-      $this->getCommits($ref);
-    }
-    foreach ($this->commits as $commitId=>$commit) {
-      if ($commit['Version'] == $version) {
-        return $commitId;
-      }
-    }
-    return false;
-  }
-
   /*
    * Получить информацию по переданному списку пакетов
    * !! ПОКА НЕ ОБРАБАТЫВАЮТСЯ МНОГОСТРОЧНЫЕ ОПИСАТЕЛИ и $listFields=false не выводит ни одного поля
    */
   function rpmsInfo($list, $version, $listFields=[]) {
-    $versionDir = repos::versionVarSubDir($version);
-    $path = $this->varsDir . "/$versionDir/var/lib/rpm/";
-    if (!is_dir($path)) {
-      $commitId = $this->commitIdFromVersion($version);
-      $path = $this->rootsDir . "/$commitId/lib/rpm/";
-    }
+//     $versionDir = repos::versionVarSubDir($version);
+//     if (!$this->RpmInVarLib())) {
+//       $commitId = $this->commitIdFromVersion($version);
+//       $path = $this->rootsDir . "/$commitId/lib/rpm/";
+//     }
+    $path = $this->getRpmPackageDir($version);
     $list = implode(' ', $list);
     $cmd = "export LANG=C;rpm -qi --dbpath=$path $list";
 //      echo "<pre>CMD=$cmd</pre>\n";
@@ -453,13 +470,14 @@ class repo {
         $this->checkout($commitId1);
         $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
     } else {
-      $version1Dir = repos::versionVarSubDir($version1);
-      $path1 = $this->varsDir . "/$version1Dir/var/lib/rpm/";
-      if (!is_dir($path1)) {
-        $commitId1 = $this->commitIdFromVersion($version1);
-        $this->checkout($commitId1);
-        $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
-      }
+//       $version1Dir = repos::versionVarSubDir($version1);
+//       $path1 = $this->varsDir . "/$version1Dir/var/lib/rpm/";
+//       if (!is_dir($path1)) {
+//         $commitId1 = $this->commitIdFromVersion($version1);
+//         $this->checkout($commitId1);
+//         $path1 = $this->rootsDir . "/$commitId1/lib/rpm/";
+//       }
+      $path1 = $this->getRpmPackageDir($version1);
     }
     $rpmListFile1 = tempnam('/tmp', 'ostree_');
     $cmd = "rpm -qa --dbpath=$path1 | sort > $rpmListFile1";
@@ -471,13 +489,14 @@ class repo {
         $this->checkout($commitId2);
         $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
     } else {
-      $version2Dir = repos::versionVarSubDir($version2);
-      $path2 = $this->varsDir . "/$version2Dir/var/lib/rpm/";
-      if (!is_dir($path2)) {
-        $commitId2 = $this->commitIdFromVersion($version2);
-        $this->checkout($commitId2);
-        $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
-      }
+//       $version2Dir = repos::versionVarSubDir($version2);
+//       $path2 = $this->varsDir . "/$version2Dir/var/lib/rpm/";
+//       if (!is_dir($path2)) {
+//         $commitId2 = $this->commitIdFromVersion($version2);
+//         $this->checkout($commitId2);
+//         $path2 = $this->rootsDir . "/$commitId2/lib/rpm/";
+//       }
+      $path2 = $this->getRpmPackageDir($version2);
     }
     $rpmListFile2 = tempnam('/tmp', 'ostree_');
     $cmd = "rpm -qa --dbpath=$path2 | sort > $rpmListFile2";
