@@ -97,7 +97,7 @@ class repos {
    */
   static function parentRef($ref) {
     $path = explode('/', $ref);
-echo "<pre>REF=$ref PATH=" . print_r($path, 1) . "</pre>";
+// echo "<pre>REF=$ref PATH=" . print_r($path, 1) . "</pre>";
     $lastN = count($path) - 1;
     $ret = strtolower(implode('/', array_slice($path, 0, $lastN)));
     return $ret;

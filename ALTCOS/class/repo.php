@@ -72,6 +72,21 @@ class repo {
     return $output;
   }
 
+  function getMetaData($commitId, $list=false) {
+    if (!$list) {
+      $list = ['parentCommitId', 'parentVersion', 'ALTCOSfileModTime', 'butanefileModTime', 'version'];
+    }
+    $ret = [];
+    $repoDir = $this->repoDir;
+    foreach ($list as $name) {
+      $cmd = "sudo ostree --repo=$repoDir show $commitId --print-metadata-key=$name";
+      $output = [];
+      exec($cmd, $output);
+      $ret[$name] = trim($output[0], "'");
+    }
+    return $ret;
+  }
+
   function getCommits() {
     if (is_array($this->commits)) {
       return $this->commits;

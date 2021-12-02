@@ -277,6 +277,7 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
           <input type='hidden' name='repoType' value='<?= $repoType?>' />
        	  <ul>
 <?php
+  $parentRef = repos::parentRef($Ref);
   $commitIds = array_keys($commits);
   $lastCommitId = $commitIds[$nCommits-1];
   $lastVersion = $commits[$lastCommitId]['Version'];
@@ -290,9 +291,16 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
 ?>
 		<li>
       <input type='checkbox' value='<?= $commitId?>' name='ids[]' onClick='markAfter(this)' />
-		  <ul>ID: <?= $commitId?><br>Версия: <b><?= $version?></b><br>Дата создания: <b><?= $date?></b>
+		  <ul id='<?= $commitId?>'>ID: <?= $commitId?><br>Версия: <b><?= $version?></b><br>Дата создания: <b><?= $date?></b>
 <?php
     if ($parent) { ?><br>Parent: <?= $parent?> <?php }
+    if (!repos::isBaseRef($Ref)) {
+      $metaData = $repo->getMetaData($commitId, ['parentCommitId', 'parentVersion']);
+//       echo "<pre>MetaData=" . print_r($metaData, 1) . "</pre>";
+?>
+      <br>Родительская версия ветки <b><i><?= $parentRef?></i></b>: <b><a href='./?os=<?= $os?>&arch=<?= $Arch?>&stream=<?= $Stream?>&ref=<?= $parentRef?>#<?= $metaData['parentCommitId']?>' target='parentREST'><?= $metaData['parentVersion']?></a></b>
+<?php
+    }
 ?>
 		    <li
           ><a href='/ostree/fsck/?ref=<?= $Ref?>&repoType=<?= $repoType?>&commitId=<?= $commitId?>' target=ostreeREST

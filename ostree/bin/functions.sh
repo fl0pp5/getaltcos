@@ -133,31 +133,47 @@ refStream() {
   echo $stream
 }
 
-# Возвращает вариант ветки  и $commitId
-# altcos/x86_64/Sisyphus/apache -> sisyphus_apache.$date.$major.$minor
+# Является ли указанная ветка базовой
+isBaseRef() {
+  $ret=$1
+  ifs=$IFS
+  IFS=/;set -- $ref;IFS=$ifs
+  if [ $# -eq 3 ]
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# Возвращает версию по имени ветки и $commitId
+# altcos/x86_64/sisyphus  00156 -> sisyphus.$date.$major.$minor
 refVersion() {
   (
   ref=$1
   commitId=$2
-  refDir=`refToDir $ref`
-  VarDir=$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
-  fullCommitId=`fullCommitId $refDir $commitId`
-  cd $VarDir
-  ifs=$IFS;IFS=/;set -- `readlink $fullCommitId`;IFS=$ifs
-  date=$1
-  major=$2
-  minor=$3
+  refRepoDir=`refRepoDir $ref`
+  repoBarePath="$DOCUMENT_ROOT/ALTCOS/streams/$refRepoDir/bare/repo";
+  ret=`ostree --repo=$repoBarePath show $commitId --print-metadata-key=version | tr -d "'"`
 #   refDir=`refToDir $ref`
-  IFS=/;set -- $refDir;IFS=$ifs
-  shift;shift
-  stream=$1
-  shift
-  while [ $# -gt 0 ]
-  do
-    stream="$stream_$1"
-    shift
-  done
-  ret="$stream.$date.$major.$minor"
+#   VarDir=$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars
+#   fullCommitId=`fullCommitId $refDir $commitId`
+#   cd $VarDir
+#   ifs=$IFS;IFS=/;set -- `readlink $fullCommitId`;IFS=$ifs
+#   date=$1
+#   major=$2
+#   minor=$3
+# #   refDir=`refToDir $ref`
+#   IFS=/;set -- $refDir;IFS=$ifs
+#   shift;shift
+#   stream=$1
+#   shift
+#   while [ $# -gt 0 ]
+#   do
+#     stream="$stream_$1"
+#     shift
+#   done
+#   ret="$stream.$date.$major.$minor"
   echo $ret
   )
 }

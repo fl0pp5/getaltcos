@@ -15,9 +15,26 @@ nextVersion=$3
 nextVersionVarSubDir=`versionVarSubDir $nextVersion`
 
 repoBarePath="$DOCUMENT_ROOT/ALTCOS/streams/$refRepoDir/bare/repo";
-rootsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/roots";
-varsPath="$DOCUMENT_ROOT/ALTCOS/streams/$refDir/vars";
+RefDir=$DOCUMENT_ROOT/ALTCOS/streams/$refDir
+rootsPath="$RefDir/roots";
+varsPath="$RefDir/vars";
 
+addMetaData=
+if ! isBaseRef $ref
+then
+  ALTCOSfile="$RefDir/ALTCOSfile"
+  addMetaData=" --add-metadata-string=parentCommitId=$commitId"
+  addMetaData="$addMetaData --add-metadata-string=parentVersion=$version"
+  ALTCOSfileModTime=`date -r $ALTCOSfile +%s 2>/dev/null`
+  addMetaData="$addMetaData --add-metadata-string=ALTCOSfileModTime=$ALTCOSfileModTime"
+  butanefile=`jq .butanefile $ALTCOSfile 2>/dev/null | tr -d '"'`
+  if [ -n "$butanefile" ]
+  then
+    butanefileModTime=`date -r "$RefDir/$butanefile" +%s 2>/dev/null`
+    addMetaData="$addMetaData --add-metadata-string=butanefileModTime=$butanefileModTime"
+  fi
+
+fi
 cd $rootsPath
 newCommitId=`sudo ostree commit \
         --repo=$repoBarePath \
@@ -25,6 +42,7 @@ newCommitId=`sudo ostree commit \
         -b $ref  \
         --no-bindings \
         --mode-ro-executables \
+        $addMetaData \
         --add-metadata-string=version=$nextVersion
 `
 sudo ostree  summary --repo=$repoBarePath --update
