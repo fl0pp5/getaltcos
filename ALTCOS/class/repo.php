@@ -399,7 +399,7 @@ class repo {
   function getRpmPackageDir($version) {
     $pathVarLib = $this->varsDir . "/$versionDir/var/lib/rpm/";
     $commitId = $this->commitIdFromVersion($version);
-    $this->checkout($commitId1);
+    $this->checkout($commitId);
     $pathLib = $this->rootsDir . "/$commitId/lib/rpm/";
     $ret= (is_dir($path) && file_exists("$path/Packages")) ? $pathVarLib : $pathLib;
     return $ret;
