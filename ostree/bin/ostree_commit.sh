@@ -22,15 +22,15 @@ varsPath="$RefDir/vars";
 addMetaData=
 if ! isBaseRef $ref
 then
-  ALTCOSfile="$RefDir/ALTCOSfile"
+  ALTCOSfile="$RefDir/ALTCOSfile.yml"
+  BUTANEfile="$RefDir/BUTANEfile.yml"
   addMetaData=" --add-metadata-string=parentCommitId=$commitId"
   addMetaData="$addMetaData --add-metadata-string=parentVersion=$version"
   ALTCOSfileModTime=`date -r $ALTCOSfile +%s 2>/dev/null`
   addMetaData="$addMetaData --add-metadata-string=ALTCOSfileModTime=$ALTCOSfileModTime"
-  butanefile=`yq .butanefile $ALTCOSfile 2>/dev/null | tr -d '"'`
-  if [ -n "$butanefile" ]
+  if [ -f "$BUTANEfile" ]
   then
-    butanefileModTime=`date -r "$RefDir/$butanefile" +%s 2>/dev/null`
+    butanefileModTime=`date -r $BUTANEfile +%s 2>/dev/null`
     addMetaData="$addMetaData --add-metadata-string=butanefileModTime=$butanefileModTime"
   fi
 

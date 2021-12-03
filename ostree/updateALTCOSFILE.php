@@ -1,5 +1,5 @@
 <?php
-// phpinfo();
+// phpinfo(); //exit(0);
 $rootdir = $_SERVER['DOCUMENT_ROOT'];
 ini_set('include_path', "$rootdir/class");
 require_once('altcosfile.php');
@@ -11,6 +11,11 @@ if ($error != UPLOAD_ERR_OK) {
 }
 
 $file = $_FILES['ALTCOSfile']['tmp_name'];
+if (!$file || strlen($file) == 0) {
+  echo "Файл не выбран";
+  exit(1);
+}
+// echo "FILE=$file LEN=" . strlen($file);
 list($data, $error) = altcosfile::loadALTCOSfile($file);
 if ($error) {
   echo $error;
@@ -24,8 +29,8 @@ if (!key_exists('version', $data)) {
 
 $ref = $_REQUEST['ref'];
 $toFile = $_SERVER['DOCUMENT_ROOT'] . altcosfile::getFilePath($ref);
-echo "<pre>$file -> $toFile</pre>";
+// echo "<pre>$file -> $toFile</pre>";
 move_uploaded_file($file, $toFile);
-echo "ALTCOS-файл ветки  $ref обновлен";
-echo "<pre>DATA=".print_r($data, 1). "</pre>";
+echo "<b>ALTCOS-файл ветки  $ref обновлен</b>";
+echo "<pre>".print_r($data, 1). "</pre>";
 

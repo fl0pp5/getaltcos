@@ -5,6 +5,7 @@ ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
 require_once('repos.php');
 require_once('altcosfile.php');
+require_once('butanefile.php');
 require_once('vendor/autoload.php');
 use Symfony\Component\Yaml\Yaml;
 ?>
@@ -449,20 +450,44 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
         $altcosfile = new altcosfile($Ref);
 //         echo "<pre>ALTCOSfile=" . print_r($altcosfile, 1) . "</pre>";
         if ($altcosfile->error) {
-          echo $altcosfile->error;
+          echo "<b>". $altcosfile->error . "</b>";
         } else {
           $message = ($maxTimeOfDate < $altcosfile->filemtime) ? "<b>ALTCOSfile был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $altcosfile->filemtime) . "</b>" :
-            "ALTCOSfile не одновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
+            "ALTCOSfile не обновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
 ?>
         <?= $message?>
         <a href="<?= $altcosfile->path?>" target=ostreeREST><button>Посмотреть</button></a>
-        <br><form action='/ostree/updateACOSFILE.php' method='POST' enctype='multipart/form-data' target=ostreeREST
+<?php   } ?>
+        <br><form action='/ostree/updateALTCOSFILE.php' method='POST' enctype='multipart/form-data' target=ostreeREST
           ><input type='file' name='ALTCOSfile'
           /><input type='hidden' name='ref' value='<?= $Ref?>'
           /><button>Обновить</button
         ></form>
 <?php
-        }
+        echo "<br>";
+        $butaneName = $altcosfile->getButaneFile();
+        if ($altcosfile->haveButaneFile()) {
+          $butanefile = new butanefile($Ref);
+          if ($butanefile->error) {
+            echo "<b>". $butanefile->error . "</b>";
+          } else {
+            $message = ($maxTimeOfDate < $butanefile->filemtime) ? "<b>ALTCOSfile был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $butanefile->filemtime) . "</b>" :
+              "Butanefile $butaneName не обновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
+?>
+          <?= $message?>
+          <a href="<?= $butanefile->path?>" target=ostreeREST><button>Посмотреть</button></a>
+<?php
+          }
+      } else {
+        echo "<b>Butane-файл отсутствует</b>";
+      }
+?>
+          <br><form action='/ostree/updateBUTANEFILE.php' method='POST' enctype='multipart/form-data' target=ostreeREST
+            ><input type='file' name='BUTANEfile'
+            /><input type='hidden' name='ref' value='<?= $Ref?>'
+            /><button>Обновить</button
+          ></form>
+<?php
       }
 ?>
 	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
