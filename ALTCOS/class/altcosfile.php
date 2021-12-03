@@ -83,7 +83,7 @@ class altcosfile {
     while ($entry = $fd->read()) {
       if (substr($entry, 0, 1) == '.' || in_array($entry, ['vars', 'roots'])) continue;
       $acosDir = "$refDir/$entry";
-      $acosFile = "$acosDir/ALTCOSfile";
+      $acosFile = "$acosDir/ALTCOSfile.yml";
       if (file_exists($acosFile)) {
         $subRef = repos::dirToRef("$ref/$entry");
         $ret[] = $subRef;
