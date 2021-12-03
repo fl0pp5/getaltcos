@@ -5,7 +5,8 @@ ini_set('include_path', "$rootdir/class");
 require_once('repo.php');
 require_once('repos.php');
 require_once('altcosfile.php');
-
+require_once('vendor/autoload.php');
+use Symfony\Component\Yaml\Yaml;
 ?>
 <html>
 <head>
@@ -53,6 +54,7 @@ foreach (explode(',', getenv("MIRRORSTREAMS")) as $mirror) {
 // echo "<pre>MIRRORURL=$MIRRORURL MIRRORSTREAMS=". print_r($MIRRORSTREAMS, 1) . "</pre>";
 $MIRRORBARE = getenv("MIRRORBARE");
 
+$maxTimeOfDate = 0;
 
 $title[] = "Административный интерфейс OSTREE-потоков";
 $title[] = repos::getOSName($os);
@@ -288,6 +290,8 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
     $nCommit += 1;
     $version = $commit['Version'];
     $date = $commit['Date'];
+    $timeOfDate = strtotime($date);
+    if ($maxTimeOfDate < $timeOfDate) $maxTimeOfDate = $timeOfDate;
     $parent = @$commit['Parent'];
 ?>
 		<li>
@@ -441,6 +445,25 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
     }
   } else {
     if ($repoType == 'bare') {
+      if (!repos::isBaseRef($Ref)) {
+        $altcosfile = new altcosfile($Ref);
+//         echo "<pre>ALTCOSfile=" . print_r($altcosfile, 1) . "</pre>";
+        if ($altcosfile->error) {
+          echo $altcosfile->error;
+        } else {
+          $message = ($maxTimeOfDate < $altcosfile->filemtime) ? "<b>ALTCOSfile был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $altcosfile->filemtime) . "</b>" :
+            "ALTCOSfile не одновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
+?>
+        <?= $message?>
+        <a href="<?= $altcosfile->path?>" target=ostreeREST><button>Посмотреть</button></a>
+        <br><form action='/ostree/updateACOSFILE.php' method='POST' enctype='multipart/form-data' target=ostreeREST
+          ><input type='file' name='ALTCOSfile'
+          /><input type='hidden' name='ref' value='<?= $Ref?>'
+          /><button>Обновить</button
+        ></form>
+<?php
+        }
+      }
 ?>
 	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
         <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=archive' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>

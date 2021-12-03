@@ -27,7 +27,7 @@ then
   addMetaData="$addMetaData --add-metadata-string=parentVersion=$version"
   ALTCOSfileModTime=`date -r $ALTCOSfile +%s 2>/dev/null`
   addMetaData="$addMetaData --add-metadata-string=ALTCOSfileModTime=$ALTCOSfileModTime"
-  butanefile=`jq .butanefile $ALTCOSfile 2>/dev/null | tr -d '"'`
+  butanefile=`yq .butanefile $ALTCOSfile 2>/dev/null | tr -d '"'`
   if [ -n "$butanefile" ]
   then
     butanefileModTime=`date -r "$RefDir/$butanefile" +%s 2>/dev/null`

@@ -6,7 +6,7 @@ MAINTAINER kaf@altlinux.org
 
 RUN \
   apt-get update; \
-  apt-get install -y sudo su isomd5sum rpm-build podman ignition butane skopeo jq; \
+  apt-get install -y sudo su isomd5sum rpm-build podman ignition butane skopeo yq python3-module-yaml; \
   usermod  -a -G wheel apache2; \
   chmod 777 /etc/sudoers; \
   sed -i -e "s/# WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/WHEEL_USERS ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers; \
