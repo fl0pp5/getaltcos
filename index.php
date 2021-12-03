@@ -446,14 +446,17 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
     }
   } else {
     if ($repoType == 'bare') {
+      $newALTCOSfile = false;
+      $newBUTANEfile = false;
       if (!repos::isBaseRef($Ref)) {
         $altcosfile = new altcosfile($Ref);
 //         echo "<pre>ALTCOSfile=" . print_r($altcosfile, 1) . "</pre>";
         if ($altcosfile->error) {
           echo "<b>". $altcosfile->error . "</b>";
         } else {
-          $message = ($maxTimeOfDate < $altcosfile->filemtime) ? "<b>ALTCOSfile был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $altcosfile->filemtime) . "</b>" :
-            "ALTCOSfile не обновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
+          $newALTCOSfile = ($maxTimeOfDate < $altcosfile->filemtime);
+          $message = ($newALTCOSfile) ? "<b>ALTCOSfile.yml был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $altcosfile->filemtime) . "</b>" :
+            "ALTCOSfile.yml не обновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
 ?>
         <?= $message?>
         <a href="<?= $altcosfile->path?>" target=ostreeREST><button>Посмотреть</button></a>
@@ -471,7 +474,8 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
           if ($butanefile->error) {
             echo "<b>". $butanefile->error . "</b>";
           } else {
-            $message = ($maxTimeOfDate < $butanefile->filemtime) ? "<b>ALTCOSfile был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $butanefile->filemtime) . "</b>" :
+            $newBUTANEfile = ($maxTimeOfDate < $butanefile->filemtime);
+            $message = ($newBUTANEfile) ? "<b>BUTANEfile.yml был обновлен " . strftime("%Y-%m-%d %H:%M:%S %z", $butanefile->filemtime) . "</b>" :
               "Butanefile $butaneName не обновлялся после последный сборки " . strftime("%Y-%m-%d %H:%M:%S %z", $maxTimeOfDate);
 ?>
           <?= $message?>
@@ -488,11 +492,31 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
             /><button>Обновить</button
           ></form>
 <?php
+      $parentRepo = new repo($parentRef);
+      $parentRepo->getCommits();
+      $metaParentCommitId = $metaData['parentCommitId'];
+      if ($parentRepo->lastCommitId != $metaParentCommitId || $newALTCOSfile || $newBUTANEfile) {
+        $parentVersion = $parentRepo->getCommitVersion($parentRepo->lastCommitId);
+?>
+	      <li
+          ><a href='/ostree/build/?ref=<?= $Ref?>' target=ostreeREST
+            ><button type='button' class='create'
+              >Обновить дочернюю bare-ветку <b><?= $Ref?></b> версии <b><?= $lastVersion?></b> от основной родительской ветки версии <b><?= $parentVersion?></b>
+              </button></a
+        ></li><?php
+      }
+      } else {  //Базовая ветка
+?>
+	      <li
+          ><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST
+            ><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button
+          ></a
+        ></li>
+<?php
       }
 ?>
-	      <li><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button></a></li>
         <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=archive' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в archive-репозиторий</button></a></li>
-        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=barearchive'' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в barearchive-репозиторий</button></a></li>
+        <li><a href='/ostree/pullToArchive/?ref=<?= $Ref?>&archiveName=barearchive' target=ostreeREST><button type='button' class='create'>Скопировать  bare-репозиторий в barearchive-репозиторий</button></a></li>
 <?php
     }
   }

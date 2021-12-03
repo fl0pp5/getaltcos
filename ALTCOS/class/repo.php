@@ -138,6 +138,26 @@ class repo {
     return $commits;
   }
 
+  function getCommitListAfter($afterCommitId) {
+    $ret = [];
+    $commits = array_keys($this->getCommits());
+    $finded = false;
+    foreach ($commits as $index=>$commitId) {
+      if ($afterCommitId == $commitId) {
+        $finded = true;
+        break;
+      }
+      if ($finded) {
+        $ret = array_slice($commits, $index+1);
+      } else {
+        $ret = [];
+      }
+      return $ret;
+    }
+
+
+  }
+
   function getCommitParent($commitId) {
     return $this->commits[$commitId]['Parent'];
   }
