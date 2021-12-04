@@ -143,6 +143,16 @@ class repos {
   }
 
   /*
+   * Сфоммировать сдежующую минорную версию
+   */
+  static function nextMinorVersion($version) {
+    list($stream_, $date_, $major_, $minor_) = explode('.', $version);
+    $minor_ += 1;
+    $ret = "$stream_.$date_.$major_.$minor_";
+    return $ret;
+   }
+
+  /*
    * Возвращает имя поддиректория варианта в каталоге /vars
    * sisyphus.20210914.0.0 => 20210914/0/0
    * sisyphus_apache.20210914.0.0 => apache/20210914/0/0

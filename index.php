@@ -77,6 +77,83 @@ function submitStreamForm(changedSelect) {
   }
   form.submit();
 }
+
+function getCurDate() {
+  var d = new Date()
+  var curYear = d.getFullYear().toString(),
+    curMonth = d.getMonth() +1,
+    curDay = d.getDate();
+  curMonth = (curMonth < 10) ? '0' + curMonth : '' + curMonth;
+  curDay = (curDay < 10) ? '0' + curDay : '' + curDay;
+  return curYear + curMonth + curDay;
+}
+
+function notCorrectDate(date, prevDate) {
+  if (date.length != 8) {
+    alert('Неверная длина даты ' + date + ' ' + date.length + ' символов');
+    return true;
+  }
+  if (isNaN(parseInt(date)) || parseInt(date).toString() != date ) {
+    alert('Нечисловой формат даты ' + date);
+    return true;
+  }
+  var curDate = getCurDate();
+  if (curDate < date) {
+    alert('Заданная дата ' + date + ' после текущей даты ' + curDate)
+    return true;
+  }
+  return false;
+}
+
+function updateRepo(button) {
+//   alert(button);
+  var form = button.parentNode;
+  var inputs = form.getElementsByTagName('input');
+  var date = inputs[2].value;
+  var prevDate = inputs[2].getAttribute('prevValue');
+  if (notCorrectDate(date, prevDate)) return;
+  if (date < prevDate) {
+    alert('Заданная дата '+ date + ' раньше даты последнего коммита ' + prevDate);
+    return;
+  }
+  var curDate = getCurDate();
+  if (date > prevDate) {
+    inputs[3].value = '0';
+    inputs[4].value = '0';
+    alert('Дата изменилась, устанавливаем major и minor версии в ноль');
+  } else {
+    var major = inputs[3].value;
+    var prevMajor = inputs[3].getAttribute('prevValue');
+    if (isNaN(parseInt(major)) || parseInt(major).toString() != major ) {
+      alert('Нечисловой формат major версии ' + major);
+      return;
+    }
+    if (major < prevMajor) {
+      alert('Заданный major '+ major + ' меньше последнего major ' + prevMajor);
+      return;
+    }
+    if (major > prevMajor) {
+      if (inputs[4].value != '0') {
+        inputs[4].value = '0';
+        alert('Major изменился, устанавливаем minor версию в ноль');
+      }
+    } else {
+      var minor = inputs[4].value;
+      var prevMinor = inputs[4].getAttribute('prevValue');
+      if (isNaN(parseInt(minor)) || parseInt(minor).toString() != minor ) {
+        alert('Нечисловой формат minor версии ' + minor);
+        return;
+      }
+      if (minor < prevMinor) {
+        alert('Заданный minor '+ minor + ' не больше последнего minor ' + prevMinor);
+        return;
+      }
+    }
+  }
+//   alert('date=' + date + ' prevDate=' + prevDate + ' major=' + major + ' prevMajor=' + prevMajor + ' minor=' + minor + ' prevMinor=' + prevMinor);
+  form.submit();
+}
+
 </script>
 </head>
 <body>
@@ -506,12 +583,23 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
         ></li><?php
       }
       } else {  //Базовая ветка
+        $nextVersion = repos::nextMinorVersion($lastVersion);
+        list($stream_, $date_, $major_, $minor_) = explode('.', $nextVersion);
 ?>
-	      <li
-          ><a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST
+	      <li>
+          <form action='/ostree/update/' target='ostreeREST'>
+            <input type='hidden' name='ref' value='<?= $Ref?>' />
+            <input type='hidden' name='commitId' value='<?= $commitId?>' />
+            <button type='button' class='create' onClick='updateRepo(this)'>Обновить bare-ветку <?= $Ref?> до версии</button>
+            <?= $stream_?>.
+            <input name='date' value='<?= $date_?>' prevValue='<?= $date_?>' size='6' />.
+            <input name='major' value='<?= $major_?>' prevValue='<?= $major_?>' size='1'/>.
+            <input name='minor' value='<?= $minor_?>'  prevValue='<?= $minor_?>' size='1'/>
+          </form>
+          <!--a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST
             ><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button
-          ></a
-        ></li>
+          ></a-->
+        </li>
 <?php
       }
 ?>

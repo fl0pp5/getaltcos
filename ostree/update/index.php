@@ -59,10 +59,13 @@ if ($lastCommitId != $commitId) {
 
 $versionVarSubDir = repos::versionVarSubDir($version);
 list($stream, $date, $major, $minor) = explode('.', $lastVersion);
-$nextMinor = intval($minor) + 1;
-$nextVersion = "$stream.$date.$major.$nextMinor";
+if (key_exists('date', $_REQUEST) && key_exists('major', $_REQUEST) && key_exists('minor', $_REQUEST)) {
+  $nextVersion = $_REQUEST['date'] . '.' . intVal($_REQUEST['major']) . '.' . intVal($_REQUEST['minor']);
+} else {
+  $nextMinor = intval($minor) + 1;
+  $nextVersion = "$stream.$date.$major.$nextMinor";
+}
 $nextVersionVarSubDir = repos::versionVarSubDir($nextVersion);
-
 
 $cmd = "$BINDIR/clear_roots.sh '$ref'";
 $log->write("CLEAR_ROOTS_CMD=$cmd\n");
