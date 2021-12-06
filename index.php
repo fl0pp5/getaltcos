@@ -595,6 +595,7 @@ foreach (repos::repoTypes($mirrorMode) as $repoType) {
             <input name='date' value='<?= $date_?>' prevValue='<?= $date_?>' size='6' />.
             <input name='major' value='<?= $major_?>' prevValue='<?= $major_?>' size='1'/>.
             <input name='minor' value='<?= $minor_?>'  prevValue='<?= $minor_?>' size='1'/>
+            <!--с обновлением ядра <input type='checkbox' name='updatekernel' /-->
           </form>
           <!--a href='/ostree/update/?ref=<?= $Ref?>&commitId=<?= $commitId?>' target=ostreeREST
             ><button type='button' class='create'>Обновить bare-ветку <?= $Ref?> версии <?= $lastVersion?></button

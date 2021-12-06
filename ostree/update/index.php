@@ -60,7 +60,7 @@ if ($lastCommitId != $commitId) {
 $versionVarSubDir = repos::versionVarSubDir($version);
 list($stream, $date, $major, $minor) = explode('.', $lastVersion);
 if (key_exists('date', $_REQUEST) && key_exists('major', $_REQUEST) && key_exists('minor', $_REQUEST)) {
-  $nextVersion = $_REQUEST['date'] . '.' . intVal($_REQUEST['major']) . '.' . intVal($_REQUEST['minor']);
+  $nextVersion = $stream . '.' . $_REQUEST['date'] . '.' . intVal($_REQUEST['major']) . '.' . intVal($_REQUEST['minor']);
 } else {
   $nextMinor = intval($minor) + 1;
   $nextVersion = "$stream.$date.$major.$nextMinor";
@@ -87,6 +87,8 @@ exec($cmd, $output);
 $log->write("APT-GET_UPDATE:" . implode("\n", $output). "\n");
 //exit(0);
 
+
+
 $rpmListFile = tempnam('/tmp', 'ostree_');
 $log->write("rpmListFile=$rpmListFile<\n");
 $cmd = "$BINDIR/apt-get_dist-upgrade.sh $ref '$rpmListFile'";
@@ -100,12 +102,20 @@ $rpmList = explode("\n", fread($fp, filesize($rpmListFile)));
 fclose($fp);
 unlink($rpmListFile);
 
-if (!isUpdated($output)) {
+if (!isUpdated($output) && !key_exists('updatekernel', $_REQUEST)) {
   $log->write("Обновлений нет");
   $endTime = time();
   $log->write("Время выполнения скрипта " . ($endTime - $startTime) . " секунд\n");
   echo json_encode(['new'=>[], 'changed'=>[], 'deleted'=>[]], JSON_PRETTY_PRINT);
   exit(1);
+}
+
+if (key_exists('updatekernel', $_REQUEST)) {
+  $cmd = "$BINDIR/kernel_update.sh $ref";
+  $log->write("KERNEL_UPDATETCMD=$cmd\n");
+  $output = [];
+  exec($cmd, $output);
+  $log->write("KERNEL_UPDATE:" . implode("\n", $output). "\n");
 }
 
 $RpmList = [];
