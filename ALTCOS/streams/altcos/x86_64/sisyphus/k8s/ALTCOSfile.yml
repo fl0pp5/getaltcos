@@ -6,14 +6,16 @@ rpms:
   - kubernetes-crio
   - cri-tools
   - bash-completion
+  - yq
+  - jq
   - tzdata
   - net-tools
 podman:
   images:
-    - k8s.gcr.io/kube-proxy:v1.20.12
-    - k8s.gcr.io/kube-apiserver:v1.20.12
-    - k8s.gcr.io/kube-controller-manager:v1.20.12
-    - k8s.gcr.io/kube-scheduler:v1.20.12
+    - k8s.gcr.io/kube-proxy:v1.22.4
+    - k8s.gcr.io/kube-apiserver:v1.22.4
+    - k8s.gcr.io/kube-controller-manager:v1.22.4
+    - k8s.gcr.io/kube-scheduler:v1.22.4
     - k8s.gcr.io/etcd:3.4.13-0
     - k8s.gcr.io/coredns:1.7.0
     - k8s.gcr.io/pause:3.2

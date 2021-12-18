@@ -3,6 +3,7 @@ set -e
 export DOCUMENT_ROOT=$(realpath `dirname $0`'/../../')
 . $DOCUMENT_ROOT/ostree/bin/functions.sh
 
+ROOT_SIZE=20GiB
 
 exec 2>&1
 # set -x
@@ -85,7 +86,7 @@ MOUNT_DIR=`mktemp --tmpdir -d altcos_make_qcow2-XXXXXX`
 REPO_LOCAL=$MOUNT_DIR/ostree/repo
 RAWFILE=`mktemp --tmpdir altcos_make_qcow2-XXXXXX.raw`
 
-fallocate -l 4GiB $RAWFILE
+fallocate -l $ROOT_SIZE $RAWFILE
 
 LOOPDEV=`losetup --show -f $RAWFILE`
 LOOPPART="$LOOPDEV"p1
