@@ -5,12 +5,14 @@ use Symfony\Component\Yaml\Yaml;
 class altcosfile {
 
   function __construct($ref) {
+    $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
+    $this->BINDIR = "$DOCUMENT_ROOT/ostree/bin";
     $this->path = altcosfile::getFilePath($ref);
     $this->file = $_SERVER['DOCUMENT_ROOT'] . $this->path;
 //       $this->operators = [];
     $this->error = false;
     if (!file_exists($this->file)) {
-      $this->error = "ALTCOSfile файл " . $this->path ." отсутствует";
+      $this->error = "ALTCOSfile файл " . $this->file ." отсутствует";
       return;
     }
     $this->ref = $ref;
@@ -21,6 +23,7 @@ class altcosfile {
       return;
     }
     $this->data = $data;
+    $this->environments = [];
   }
 
   function notCorrect() {
@@ -36,7 +39,7 @@ class altcosfile {
   }
 
   static function getFilePath($ref) {
-    $ret = altcosfile::getFileDir($ref) . "/ALTCOSfile.yml";
+    $ret = altcosfile::getFileDir($ref) . "/ALTCOSfile_v2.yml";
     return $ret;
   }
 
@@ -57,20 +60,104 @@ class altcosfile {
     return $ret;
   }
 
-  function getButaneFile() {
-    $ret = 'BUTANEfile.yml';
+  function getActions() {
+    $ret = is_array(@$this->data['actions']) ? $this->data['actions'] : [];
     return $ret;
   }
 
-  function getRPMS() {
-    $ret = is_array(@$this->data['rpms']) ? $this->data['rpms'] : [];
+  function execActions($mergeDir, $subRef) {
+    foreach ($this->getActions() as $subActions ) {
+      foreach ($subActions as $actionName => $actionPars) {
+        echo "<pre>actionName=$actionName\n</pre>";
+        switch($actionName) {
+          case 'rpms':
+            $cmd = $this->BINDIR . "/apt-get_update.sh $subRef";
+            echo "APT-GET_UPDATETCMD=$cmd\n";
+            $output = [];
+#            exec($cmd, $output);
+            echo "APT-GET_UPDATE=<pre>" . implode("\n",$output). "</pre>";
+            flush();
+            $rpms = implode(' ', array_keys($actionPars));
+            $cmd = $this->BINDIR . "/apt-get_install.sh '$subRef' $rpms";
+            echo "APT-GET_INSTALL CMD=$cmd\n";
+            $output = $this->runCmdWithEnv($cmd);
+            echo "APT-GET_INSTALL OUTPUT=<pre>" . implode("\n",$output). "</pre>";
+            flush();
+            break;
+          case 'env':
+            foreach ($actionPars as $envName => $envValue) {
+//               echo "<pre>ENV:".print_r($env, 1)."</pre>\n";
+              $cmd = "$envName=\"$envValue\";echo \$$envName";
+//               echo "<pre>ENV: $envName = $cmd</pre>\n";
+              $output = [];
+              exec($cmd, $output);
+              $output = implode("\n", $output);
+//               echo "<pre>OUTPUT=$output</pre>";
+              $this->environments[$envName] = $output;
+            }
+            echo "<PRE>ENVIRONMENTS=".print_r($this->environments, 1)."</pre>\n";
+            break;
+          case 'podman':
+            if (key_exists('images', $actionPars)) {
+              $images = [];
+              foreach ($actionPars['images'] as $image =>$imageVars) {
+                $image .= ":" . $imageVars['version'];
+                $images[] = $image;
+              }
+              $podmanImages = implode(' ', $images);
+//             echo "<pre>IMAGES=$images</pre>\n";
+              $cmd = $this->BINDIR . "/skopeo_copy.sh $mergeDir $podmanImages";
+              echo "SKOPEO_COPY CMD=$cmd\n";
+              $output = $this->runCmdWithEnv($cmd);
+              echo "SKOPEO_COPY OUTPUT=<pre>" . implode("\n",$output). "</pre>";
+              flush();
+            }
+            break;
+
+          case 'copy':
+            break;
+
+          case 'run':
+            break;
+          default:
+        }
+      }
+    }
+  }
+
+  function setEnvironments() {
+    $ret = [];
+    foreach ($this->environments as $name => $value) {
+      $ret[] = "export $name=\"$value\"";
+    }
+//     $ret[] = "";
+    $ret = implode("\n", $ret) . "\n";
     return $ret;
   }
 
-  function getPodmanImages() {
-    $ret = is_array(@$this->data['podman']) && @is_array($this->data['podman']['images']) ? $this->data['podman']['images'] : [];
-    return $ret;
+  function runCmdWithEnv($cmd) {
+    $environments = $this->setEnvironments();
+    $envCmd = "${environments}${cmd}";
+    echo "<pre>ENVCMD=$envCmd</pre>\n";
+    $output = [];
+//     exec($envCmd, $output);
+    return $output;
   }
+
+//   function getButaneFile() {
+//     $ret = 'BUTANEfile.yml';
+//     return $ret;
+//   }
+//
+//   function getRPMS() {
+//     $ret = is_array(@$this->data['rpms']) ? $this->data['rpms'] : [];
+//     return $ret;
+//   }
+//
+//   function getPodmanImages() {
+//     $ret = is_array(@$this->data['podman']) && @is_array($this->data['podman']['images']) ? $this->data['podman']['images'] : [];
+//     return $ret;
+//   }
 
 
   /*

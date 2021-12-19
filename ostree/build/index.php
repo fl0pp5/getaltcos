@@ -17,6 +17,7 @@ $parentRef = repos::parentRef($subRef);
 echo "<pre>PARENTREF=" . print_r($parentRef, 1) . "</pre>";
 
 $subRepo = new repo($subRef, 'bare');
+$mergeDir = $subRepo->rootsDir . "/merged/";
 echo "<pre>SUBTREPO=" . print_r($subRepo, 1) . "</pre>";
 
 $parentRepo = new repo($parentRef, 'bare');
@@ -42,8 +43,9 @@ exec($cmd, $output);
 echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
 flush();
 
-$podmanImages = implode(' ', $altcosfile->getPodmanImages());
-$mergeDir = $subRepo->rootsDir . "/merged/";
+$altcosfile->execActions($mergeDir, $subRef);
+
+/*$podmanImages = implode(' ', $altcosfile->getPodmanImages());
 $cmd = "$BINDIR/skopeo_copy.sh $mergeDir $podmanImages";
 echo "SKOPEO_COPY_CMD=$cmd\n";
 $output = [];
@@ -76,7 +78,7 @@ echo "IGNITION_CMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "IGNITION_OUTPUT=<pre>" . implode("\n",$output). "</pre>";
-flush();
+flush();*/
 
 // exit(0);
 
