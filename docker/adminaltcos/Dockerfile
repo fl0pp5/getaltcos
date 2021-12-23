@@ -14,8 +14,8 @@ RUN \
   sed -e 's/Options.*/Options +Indexes +FollowSymLinks/' -i /etc/httpd2/conf/include/Directory_root_default.conf; \
   echo -ne "<VirtualHost *:80>\n  ServerAdmin user@domain\n  DocumentRoot "/var/www/vhosts/altcos"\n  ServerName adminaltcos.altlinux.org\n  ServerAlias builds.altcos.altlinux.org\n  ErrorLog \"/var/log/httpd2/error.log\"\n  CustomLog \"/var/log/httpd2/access.log\" common\n  <Directory /var/www/vhosts/altcos>\n Options Indexes FollowSymLinks\n  </Directory>\n</VirtualHost>" >> /etc/httpd2/conf/sites-available/vhosts.conf;\
   a2ensite vhosts; \
-  adduser -d /var/www/vhosts/altcos altcos
-
+  adduser -d /var/www/vhosts/altcos altcos; \
+  PHPINIFILE=`php --ini  | grep /cli/php.ini |  awk '{print $NF}'`; sed -e 's/output_buffering =.*/output_buffering = Off/' -i $PHPINIFILE
 
 COPY /startApache.sh /bin/startApache.sh
 

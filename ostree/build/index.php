@@ -69,7 +69,7 @@ $output = [];
 exec($cmd, $output);
 echo "APT-GET_INSTALL=<pre>" . implode("\n",$output). "</pre>";
 flush();
-
+*/
 $subRefDir = $subRepo->refDir;
 $butaneFile = $altcosfile->getButaneFile();
 echo "<pre>BUTANEFILE=".print_r($butaneFile, 1) . "</pre>";
@@ -78,7 +78,7 @@ echo "IGNITION_CMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "IGNITION_OUTPUT=<pre>" . implode("\n",$output). "</pre>";
-flush();*/
+flush();
 
 // exit(0);
 
