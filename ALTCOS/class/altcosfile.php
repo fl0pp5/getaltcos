@@ -39,7 +39,7 @@ class altcosfile {
   }
 
   static function getFilePath($ref) {
-    $ret = altcosfile::getFileDir($ref) . "/ALTCOSfile_v2.yml";
+    $ret = altcosfile::getFileDir($ref) . "/ALTCOSfile.yml";
     return $ret;
   }
 

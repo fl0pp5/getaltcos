@@ -1,24 +1,26 @@
-version: 1.0.0
-rpms:
-  - cri-o
-  - kubernetes-kubeadm
-  - kubernetes-kubelet
-  - kubernetes-crio
-  - cri-tools
-  - bash-completion
-  - yq
-  - jq
-  - tzdata
-  - net-tools
-podman:
-  images:
-    - k8s.gcr.io/kube-proxy:v1.22.4
-    - k8s.gcr.io/kube-apiserver:v1.22.4
-    - k8s.gcr.io/kube-controller-manager:v1.22.4
-    - k8s.gcr.io/kube-scheduler:v1.22.4
-    - k8s.gcr.io/etcd:3.4.13-0
-    - k8s.gcr.io/coredns:1.7.0
-    - k8s.gcr.io/pause:3.2
-    - docker.io/rancher/mirrored-flannelcni-flannel-cni-plugin:v1.0.0
-    - quay.io/coreos/flannel:v0.15.1
-butanefile: k8s.yml
+version: 2.0.0
+actions:
+  - rpms:
+      cri-o:
+      kubernetes-kubeadm:
+      kubernetes-kubelet:
+      kubernetes-crio:
+      cri-tools:
+      bash-completion:
+      yq:
+      jq:
+      tzdata:
+      net-tools:
+  - env:
+      Images:
+        cmd: kubeadm config images list --kubernetes-version latest
+      imageList: "$Images quay.io/coreos/flannel:v0.15.1"
+      CONSTANT: "Моя константа"
+  - podman:
+      envListImages: Images
+      images:
+        - docker.io/rancher/mirrored-flannelcni-flannel-cni-plugin:v1.0.0
+        - quay.io/coreos/flannel:v0.15.1
+
+  - run:
+    - /var/www/vhosts/altcos/ostree/bin/skopeo_copy.sh $MERGEDIR `kubeadm config images list --kubernetes-version latest`
