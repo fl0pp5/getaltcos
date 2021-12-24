@@ -115,6 +115,14 @@ class repos {
   }
 
   /**
+   * Возвращает абсолютную тропу, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
+   */
+  static function refToAbsDir($ref) {
+    $ret = $_SERVER['DOCUMENT_ROOT'] . "/ALTCOS/streams/" . repos::refToDir($ref);
+    return $ret;
+  }
+
+  /**
    * Возвращает имя ветки по тропе, где находятся данные ветки (vars, roots, ALTCOSfile, ...)
    * altcos/x86_64/sisyphus -> altcos/x86_64/sisyphus
    * altcos/x86_64/sisyphus/apache -> altcos/x86_64/Sisyphus/apache

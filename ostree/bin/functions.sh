@@ -135,7 +135,7 @@ refStream() {
 
 # Является ли указанная ветка базовой
 isBaseRef() {
-  $ret=$1
+  ref=$1
   ifs=$IFS
   IFS=/;set -- $ref;IFS=$ifs
   if [ $# -eq 3 ]

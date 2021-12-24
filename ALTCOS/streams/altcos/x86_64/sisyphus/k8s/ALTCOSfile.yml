@@ -1,5 +1,39 @@
 version: 2.0.0
 actions:
+  - run:
+    - |
+      set
+      pwd
+      ls -l
+  - env:
+      flannelURL: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  - butane:
+      variant: fcos
+      version: 1.3.0
+      storage:
+        directories:
+          - path: /usr/share/k8s/flannel
+        trees:
+          - local: root
+            path: /
+        files:
+          - path: /bin/loadDockerArchiveImages.sh
+            mode: 0755
+            overwrite: true
+          - path: /etc/systemd/system/kubelet.service.d/kubeadm.conf
+            overwrite: true
+          - path:  /usr/share/k8s/flannel/kube-flannel.yml
+            contents:
+              source: $flannelURL
+      systemd:
+        units:
+          - name: crio.service
+            enabled: true
+          - name: kubelet.service
+            enabled: true
+          - name: kube-proxy.service
+            enabled: true
+
   - rpms:
       cri-o:
       kubernetes-kubeadm:
@@ -22,5 +56,4 @@ actions:
         - docker.io/rancher/mirrored-flannelcni-flannel-cni-plugin:v1.0.0
         - quay.io/coreos/flannel:v0.15.1
 
-  - run:
-    - /var/www/vhosts/altcos/ostree/bin/skopeo_copy.sh $MERGEDIR `kubeadm config images list --kubernetes-version latest`
+

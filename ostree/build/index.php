@@ -45,40 +45,15 @@ flush();
 
 $altcosfile->execActions($mergeDir, $subRef);
 
-/*$podmanImages = implode(' ', $altcosfile->getPodmanImages());
-$cmd = "$BINDIR/skopeo_copy.sh $mergeDir $podmanImages";
-echo "SKOPEO_COPY_CMD=$cmd\n";
-$output = [];
-exec($cmd, $output);
-echo "SKOPEO_COPY_OUTPUT=<pre>" . implode("\n",$output). "</pre>";
-flush();
-// exit(0);
-
-
-$cmd = "$BINDIR/apt-get_update.sh $subRef";
-echo "APT-GET_UPDATETCMD=$cmd\n";
-$output = [];
-exec($cmd, $output);
-echo "APT-GET_UPDATE=<pre>" . implode("\n",$output). "</pre>";
-flush();
-
-$rpms = implode(' ', $altcosfile->getRPMS());
-$cmd = "$BINDIR/apt-get_install.sh '$subRef' $rpms";
-echo "APT-GET_INSTALL=$cmd\n";
-$output = [];
-exec($cmd, $output);
-echo "APT-GET_INSTALL=<pre>" . implode("\n",$output). "</pre>";
-flush();
-*/
-$subRefDir = $subRepo->refDir;
-$butaneFile = $altcosfile->getButaneFile();
-echo "<pre>BUTANEFILE=".print_r($butaneFile, 1) . "</pre>";
-$cmd = "$BINDIR/ignition.sh '$subRefDir' $butaneFile";
-echo "IGNITION_CMD=$cmd\n";
-$output = [];
-exec($cmd, $output);
-echo "IGNITION_OUTPUT=<pre>" . implode("\n",$output). "</pre>";
-flush();
+// $subRefDir = $subRepo->refDir;
+// $butaneFile = $altcosfile->getButaneFile();
+// echo "<pre>BUTANEFILE=".print_r($butaneFile, 1) . "</pre>";
+// $cmd = "$BINDIR/ignition.sh '$subRefDir' $butaneFile";
+// echo "IGNITION_CMD=$cmd\n";
+// $output = [];
+// exec($cmd, $output);
+// echo "IGNITION_OUTPUT=<pre>" . implode("\n",$output). "</pre>";
+// flush();
 
 // exit(0);
 

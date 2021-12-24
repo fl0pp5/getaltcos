@@ -44,7 +44,7 @@ sudo rm -rf $delete
 cd ../upper;
 #echo 'RM==='
 #find . -type c -exec echo sudo rm -rf  $commitPath/{} 2>&1\;
-sudo find . -depth | (cd ../merged;sudo cpio -plmdu $commitPath/) 2>&1;
+sudo find . -depth | (cd ../merged;sudo cpio -plmdu $commitPath/) 2>/tmp/syncUpdates.log;
 
 cd ..
 sudo du -s upper

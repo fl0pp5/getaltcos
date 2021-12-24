@@ -66,6 +66,8 @@ class altcosfile {
   }
 
   function execActions($mergeDir, $subRef) {
+    $BINDIR = $_SERVER['DOCUMENT_ROOT'] . "/ostree/bin";
+    $this->environments['ROOTDIR'] = $mergeDir;
     foreach ($this->getActions() as $subActions ) {
       foreach ($subActions as $actionName => $actionPars) {
         echo "<pre>actionName=$actionName\n</pre>";
@@ -129,10 +131,22 @@ class altcosfile {
             }
             break;
 
-          case 'copy':
+          case 'butane':
+            echo "<pre>PODMAN: ACTIONPARS=" . print_r($actionPars, 1) . "</pre>";
+            $refDir = repos::refToAbsDir($subRef);
+            $yml = Yaml::dump($actionPars, 16384);
+            echo "<pre>BUTANE: YML = $yml</yml>";
+            $cmd = "echo \"$yml\" | $BINDIR/ignition.sh '$refDir' '$mergeDir'";
+            $output = $this->runCmdWithEnv($cmd);
+            echo "<pre>BUTANE OUTPUT=<pre>" . implode("\n",$output). "</pre>";
+//             exit();
             break;
 
           case 'run':
+            $cmd = "sudo chroot $mergeDir bash -c \"" . implode("\n",$actionPars) . '"';
+            $output = $this->runCmdWithEnv($cmd);
+            echo "<pre>RUN OUTPUT=<pre>" . implode("\n",$output). "</pre>";
+//             exit();
             break;
           default:
         }
@@ -159,8 +173,8 @@ class altcosfile {
     echo "<pre>ENVCMD=$envCmd</pre>\n";
     flush();
     $output = [];
-//     exec($envCmd, $output);
-    system($cmd);
+    exec($envCmd, $output);
+//     system($cmd);
     return $output;
   }
 
