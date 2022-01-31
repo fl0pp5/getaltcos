@@ -22,8 +22,37 @@ class altcosfile {
       $this->error = $error;
       return;
     }
+    $error = [];
+    foreach (['from', 'action'] as $attr) {
+      if (!key_exists($attr, $data)) {
+        $error[] = "Отсутствует обязательный аттрибут $attr";
+      }
+    }
+    if (count($error) > 0) {
+      $error = implode("\n", $error);
+      $this->error = $error;
+      return;
+    }
+    $from = $data['from'];
+    list($this->parentRef, $this->parentTag) = explode(':', $from);
+    $this->parentRepo = new repo($this->parentRef, 'bare');
+    if (!$this->parentRepo->haveConfig()) {
+      $this->error = "Bare репозиторий для " . $this->parentRef . "не существует";
+      return;
+    }
+
     $this->data = $data;
     $this->environments = [];
+  }
+
+  function getActions() {
+    $ret = is_array(@$this->data['actions']) ? $this->data['actions'] : [];
+    return $ret;
+  }
+
+  function getFrom() {
+    $ret = $this->data['from'];
+    return $ret;
   }
 
   function notCorrect() {
@@ -57,11 +86,6 @@ class altcosfile {
     $butanefile = $_SERVER['DOCUMENT_ROOT'] . altcosfile::getFileDir($this->ref) . "/BUTANEfile.yml";
 //     echo "<pre>BUTANEFILE=$butanefile</pre>";
     $ret = file_exists($butanefile);
-    return $ret;
-  }
-
-  function getActions() {
-    $ret = is_array(@$this->data['actions']) ? $this->data['actions'] : [];
     return $ret;
   }
 

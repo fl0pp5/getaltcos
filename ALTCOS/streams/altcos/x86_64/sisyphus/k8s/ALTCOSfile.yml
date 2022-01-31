@@ -1,4 +1,5 @@
 version: 2.0.0
+from: altcos/x86_64/sisyphus:20211207.0.0
 actions:
   - run:
     - |

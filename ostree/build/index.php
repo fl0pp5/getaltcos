@@ -9,7 +9,7 @@ $BINDIR = "$DOCUMENT_ROOT/ostree/bin";
 $subRef = $_REQUEST['ref'];
 
 $subVersion = repos::refVersion($subRef);
-$subVersionVarSubDir = repos::versionVarSubDir($subVersion);
+// $subVersionVarSubDir = repos::versionVarSubDir($subVersion);
 
 $altcosfile = new altcosfile($subRef);
 echo "<pre>". json_encode($altcosfile, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . "</pre>";
@@ -35,7 +35,7 @@ echo "<pre>lastCommitId=$lastCommitId lastCommit=" . print_r($lastCommit, 1) . "
 flush();
 
 $lastVersion = $lastCommit['Version'];
-$versionVarSubDir = repos::versionVarSubDir($lastVersion);
+// $versionVarSubDir = repos::versionVarSubDir($lastVersion);
 $cmd = "$BINDIR/ostree_checkout.sh '$parentRef' '$lastCommitId' '$subRef' 'all'";
 echo "CHECKOUTCMD=$cmd\n";
 $output = [];
