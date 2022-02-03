@@ -109,6 +109,46 @@ ssh core@192.168.122.xxx
 sudo bash
 ```
 
+После загрузки запусукаются сервисы.
+Состояние каждого сервиса записывается в файл
+`/var/log/openshift/<имя_сервиса>.json`.
+
+Порядок запуска сервисов:
+- `release-image.service` (скрипт `usr/local/bin/release-image-download.sh`)
+   Сервис загружает образ `quay.io/openshift-release-dev/ocp-release@sha256:...` и проверяет его соответствие 
+   архитектуре процессора узла.
+   Имя образа записывается в переменные `RELEASE_IMAGE` и `RELEASE_IMAGE_DIGEST`.
+
+- `bootkube.service` (скрипт `/usr/local/bin/bootkube.sh`)
+  Сервис:
+  * Создает в каталоге `/etc/kubernetes/` подкаталоги `manifests, bootstrap-configs, bootstrap-manifests}`
+  * Посредством вызова команды 
+    ```
+    podman run ... "${RELEASE_IMAGE_DIGEST}" image
+    ```
+    определяются образы с именем `quay.io/openshift-release-dev/ocp-v4.0-art-dev` с различнымы sha256-тегами:
+    - `MACHINE_CONFIG_OPERATOR_IMAGE` - `machine-config-operator` - `quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:...`
+    - `MACHINE_CONFIG_OSCONTENT` - machine-os-content` -      `quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:B...` 
+    - `MACHINE_CONFIG_ETCD_IMAGE` - `etcd` - `quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:C...`
+    - `MACHINE_CONFIG_INFRA_IMAGE` - `pod` - `quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:D...`
+    - `CLUSTER_ETCD_OPERATOR_IMAGE` - `cluster-etcd-operator`
+    - `CONFIG_OPERATOR_IMAGE` - `cluster-config-operator`
+    - `KUBE_APISERVER_OPERATOR_IMAGE` - `cluster-kube-apiserver-operator`
+    - `KUBE_CONTROLLER_MANAGER_OPERATOR_IMAGE` - `cluster-kube-controller-manager-operator`
+    - `KUBE_SCHEDULER_OPERATOR_IMAGE` - `cluster-kube-scheduler-operator`
+    - `INGRESS_OPERATOR_IMAGE` - `cluster-ingress-operator`
+    - `CLOUD_CREDENTIAL_OPERATOR_IMAGE` - `cloud-credential-operator`
+    - `OPENSHIFT_HYPERKUBE_IMAGE` - `hyperkube`
+    - `OPENSHIFT_CLUSTER_POLICY_IMAGE` - `cluster-policy-controller`
+    - `CLUSTER_BOOTSTRAP_IMAGE` - `cluster-bootstrap`
+    - `KEEPALIVED_IMAGE` - `keepalived-ipfailover`
+    - `COREDNS_IMAGE` - `coredns`
+    - `HAPROXY_IMAGE` - `haproxy-router`
+    - `BAREMETAL_RUNTIMECFG_IMAGE` - `baremetal-runtimecfg`
+
+
+
+
 
 ## Ссылки
 
