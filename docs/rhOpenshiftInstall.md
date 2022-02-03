@@ -70,7 +70,8 @@
 - Включить полученный ignition-файл в ISO-образ:
   ```
   cp ocp/bootstrap-in-place-for-live-iso.ign iso.ign
-  sudo podman run --privileged --rm -v /dev:/dev -v /run/udev:/run/udev -v $PWD:/data -w /data quay.io/coreos/coreos-installer:release \
+  sudo podman run --privileged --rm -v /dev:/dev -v /run/udev:/run/udev -v $PWD:/data -w /data \
+    quay.io/coreos/coreos-installer:release \
     iso ignition embed -fi iso.ign rhcos-live.x86_64.iso
   ```
     
