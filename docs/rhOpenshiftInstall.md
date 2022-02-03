@@ -2,6 +2,8 @@
 
 ## Начальные действия
 
+### Подготовка live ISO-образа 
+
 Перед установкой необходимо 
 - Скачать бинарный код клиента Openshift `oc`:
  ```
@@ -74,7 +76,23 @@
     quay.io/coreos/coreos-installer:release \
     iso ignition embed -fi iso.ign rhcos-live.x86_64.iso
   ```
-    
+### Настройка DNS
+
+Выберите корневое доменное имя (например `altlinux.io`) и сформируйте для него DNS-записи типа A:
+```
+openshift.openshift IN A 192.168.122.135
+api.openshift.openshift IN CNAME openshift.openshift
+*.apps.openshift.openshift IN CNAME openshift.openshift
+api-int.openshift.openshift IN CNAME openshift.openshift
+```
+и типа PTR
+```
+135.122.168.192.in-addr.arpa. IN PTR openshift.openshift.altlinux.io.
+```
+### Создание виртуальной машины в libvirt
+
+
 ## Ссылки
 
 - [Installing OpenShift on a single node ](https://docs.openshift.com/container-platform/4.9/installing/installing_sno/install-sno-installing-sno.html)
+- [Openshift Single Node for Distributed Clouds](https://medium.com/codex/openshift-single-node-for-distributed-clouds-582f84022bd0)
