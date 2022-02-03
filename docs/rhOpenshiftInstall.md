@@ -27,7 +27,7 @@
   ISO_URL=$(./openshift-install coreos print-stream-json | grep location | grep x86_64 | grep iso | cut -d\" -f4)
   curl $ISO_URL > rhcos-live.x86_64.iso
   ```  
-- Подготовить `install-config.yaml` в каталоге `ocp`:
+- Подготовить `install-config.yaml`:
   Пример файла:
   ```
   apiVersion: v1
@@ -57,7 +57,22 @@
   ```
     * `pullSecret` нужно скачать под Вашим эккаунтом со страницы `https://console.redhat.com/openshift/install/pull-secret`
     * `sshKey` копируется из файла `~/.ssh/id_rsa.pub`.
-    
+- Скопировать файл `install-config.yaml` в каталог `ocp` и создать ignition-файл `ocp/bootstrap-in-place-for-live-iso.ign`:
+  ```
+  mkdir ocp
+  cp install-config.yaml ocp
+  ./openshift-install --dir=ocp create single-node-ignition-config
+  ```
+- Скачать образ `quay.io/coreos/coreos-installer:release`:
+  ```
+  sudo podman pull quay.io/coreos/coreos-installer:release
+  ```
+- Включить полученный ignition-файл в ISO-образ:
+  ```
+  cp ocp/bootstrap-in-place-for-live-iso.ign iso.ign
+  sudo podman run --privileged --rm -v /dev:/dev -v /run/udev:/run/udev -v $PWD:/data -w /data quay.io/coreos/coreos-installer:release \
+    iso ignition embed -fi iso.ign rhcos-live.x86_64.iso
+  ```
     
 ## Ссылки
 
