@@ -119,7 +119,7 @@ sudo bash
    архитектуре процессора узла.
    Имя образа записывается в переменные `RELEASE_IMAGE` и `RELEASE_IMAGE_DIGEST`.
 
-- `bootkube.service` (скрипт `/usr/local/bin/bootkube.sh`) заускается в каталоге `/var/opt/openshift`.
+- `bootkube.service` (скрипт `/usr/local/bin/bootkube.sh`) запускается в каталоге `/var/opt/openshift`.
   Сервис:
   * Создает в каталоге `/etc/kubernetes/` подкаталоги `manifests`, `bootstrap-configs`, `bootstrap-manifests}`
   * Посредством вызова команды 
