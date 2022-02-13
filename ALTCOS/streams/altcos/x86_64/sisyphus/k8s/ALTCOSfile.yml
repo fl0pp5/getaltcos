@@ -1,11 +1,11 @@
 version: 2.0.0
 from: altcos/x86_64/sisyphus:20211207.0.0
 actions:
-  - run:
-    - |
-      set
-      pwd
-      ls -l
+  #- run:
+    #- |
+      #set
+      #pwd
+      #ls -l
   - env:
       flannelURL: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
   - butane:
@@ -26,7 +26,6 @@ actions:
           - path:  /usr/share/k8s/flannel/kube-flannel.yml
             contents:
               source: $flannelURL
-
   - rpms:
       cri-o:
       kubernetes-kubeadm:
@@ -49,7 +48,6 @@ actions:
             enabled: true
           - name: kube-proxy.service
             enabled: true
-
   - env:
       Images:
         cmd: kubeadm config images list --kubernetes-version latest
