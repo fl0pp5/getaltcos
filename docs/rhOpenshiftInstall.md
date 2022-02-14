@@ -4,6 +4,8 @@
 
 ### Подготовка live ISO-образа 
 
+[Подготовка  live ISO-образа](./Images/openshift_rhcos_install.png)
+
 Перед установкой необходимо 
 - Скачать бинарный код клиента Openshift `oc`:
  ```
