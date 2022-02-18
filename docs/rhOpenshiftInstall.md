@@ -161,3 +161,5 @@ sudo bash
 - [Installing OpenShift on a single node ](https://docs.openshift.com/container-platform/4.9/installing/installing_sno/install-sno-installing-sno.html)
 - [Openshift Single Node for Distributed Clouds](https://medium.com/codex/openshift-single-node-for-distributed-clouds-582f84022bd0)
 - [Running Openshift at Home - Part 4/4 Deploying Openshift 4 on Proxmox VE ](https://blog.rossbrigoli.com/2020/11/running-openshift-at-home-part-44.html)
+- [Install OpenShift on any x86_64 platform with user-provisioned infrastructure](https://console.redhat.com/openshift/install/platform-agnostic)
+- [Installing a cluster on any platform](https://docs.openshift.com/container-platform/4.9/installing/installing_platform_agnostic/installing-platform-agnostic.html)
