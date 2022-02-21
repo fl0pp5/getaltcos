@@ -19,6 +19,7 @@
 
 ### Создание ignition-файлов
 
+![Создание манифестов](./Images/openshift_altcos_manifests.png)
 ```
 # mkdir ocp
 # cp install-config.yaml ocp
