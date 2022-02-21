@@ -19,7 +19,10 @@
 
 ### Создание ignition-файлов
 
-![Создание манифестов](./Images/openshift_altcos_manifests.png)
+#### Создание файла конфигурации install-config.yaml
+
+#### Генерация файлов манифестов
+
 ```
 # mkdir ocp
 # cp install-config.yaml ocp
@@ -27,8 +30,21 @@ INFO Consuming Install Config from target directory
 WARNING Making control-plane schedulable by setting MastersSchedulable to true for Scheduler cluster settings 
 INFO Manifests created in: ocp/manifests and ocp/openshift
 ```
+![Создание манифестов](./Images/openshift_altcos_manifests.png)
 
+##### Добавление манифестов (создание BTRFS томов)
 
+#### Создание ignition-файлов
+
+```
+# ./openshift-install create ignition-configs --dir ocp
+INFO Consuming Worker Machines from target directory 
+INFO Consuming Common Manifests from target directory 
+INFO Consuming OpenShift Install (Manifests) from target directory 
+INFO Consuming Openshift Manifests from target directory 
+INFO Consuming Master Machines from target directory 
+INFO Ignition-Configs created in: ocp and ocp/auth 
+```
 
 
 
