@@ -45,6 +45,7 @@ INFO Consuming Openshift Manifests from target directory
 INFO Consuming Master Machines from target directory 
 INFO Ignition-Configs created in: ocp and ocp/auth 
 ```
+![Создание манифестов](./Images/openshift_altcos_ignition.png)
 
 
 
