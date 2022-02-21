@@ -7,6 +7,31 @@
   Описание см [Creating a separate /var partition](https://docs.openshift.com/container-platform/4.9/installing/installing_platform_agnostic/installing-platform-agnostic.html#installation-user-infra-machines-advanced_vardisk_installing-platform-agnostic)
 
 
+## Настройка DNS
+
+## Настройка балансировщика нагрузки
+
+## Генерация SSH-ключей
+
+## Установка дополнительного ПО 
+
+## Установка openshift
+
+### Создание ignition-файлов
+
+```
+# mkdir ocp
+# cp install-config.yaml ocp
+INFO Consuming Install Config from target directory 
+WARNING Making control-plane schedulable by setting MastersSchedulable to true for Scheduler cluster settings 
+INFO Manifests created in: ocp/manifests and ocp/openshift
+```
+
+
+
+
+
+
 
 ## Ссылки
 
