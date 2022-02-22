@@ -44,7 +44,7 @@ worker0.osp4   IN  A 10.150.0.205
 worker1.osp4   IN  A 10.150.0.206
 ```
 
-Определение обратнаой зоны для поддоменов
+Определение обратной зоны для поддоменов
 ```
 $TTL 3600
 @   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
@@ -72,6 +72,77 @@ $TTL 3600
 ```
 
 ## Настройка балансировщика нагрузки
+
+```
+# /etc/haproxy/haproxy.cfg
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    daemon
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 1
+    timeout http-request    10s
+    timeout queue           20s
+    timeout connect         5s
+    timeout client          20s
+    timeout server          20s
+    timeout http-keep-alive 10s
+    timeout check           100s
+
+frontend stats
+  bind *:1936
+  log global
+  maxconn global
+  stats enable
+  stats hide-version
+  stats refresh 30s
+  stats show-node
+  stats show-desc Stats for ocp4 cluster
+  stats auth admin:ocp4
+  stats uri /stats
+listen api-server-6443
+  bind *:6443
+  mode tcp
+  server bootstrap.ocp4.altlinux.io:6443 check inter ls backup
+  server master0 master0.ocp4.altlinux.io:6443 check inter 1s
+  #server master1 master1.ocp4.altlinux.io:6443 check inter 1s
+  #server master2 master2.ocp4.altlinux.io:6443 check inter 1s
+listen machine-config-server-22623
+  bind *:22623
+  mode tcp
+  server bootstrap.ocp4.altlinux.io:22623 check inter ls backup
+  server master0 master0.ocp4.altlinux.io:22623 check inter 1s
+  #server master1 master1.ocp4.altlinux.io:22623 check inter 1s
+  #server master2 master2.ocp4.altlinux.io:22623 check inter 1s
+listen ingress-router-443
+  bind *:443
+  mode tcp
+  balance source
+  server worker0 worker0.ocp4.altlinux.io:443 check inter ls 1s
+  #server worker1 worker1.ocp4.altlinux.io:443 check inter ls 1s
+listen ingress-router-80
+  bind *:80
+  mode tcp
+  balance source
+  server worker0 worker0.ocp4.altlinux.io:443 check inter ls 1s
+  #server worker1 worker1.ocp4.altlinux.io:443 check inter ls 1s
+```
+
 
 ## Генерация SSH-ключей
 
