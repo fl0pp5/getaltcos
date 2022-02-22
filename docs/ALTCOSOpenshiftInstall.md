@@ -155,7 +155,26 @@ listen ingress-router-80
 #### Создание файла конфигурации install-config.yaml
 
 ```
-
+apiVersion: v1
+baseDomain: altlinux.io
+compute:
+- name: worker
+  replicas: 0
+controlPlane:
+  name: master
+  replicas: 1
+metadata:
+  name: openshift
+networking:
+  networkType: OVNKubernetes
+  clusterNetwork:
+  - cidr: 10.244.0.0/16
+    hostPrefix: 24
+  serviceNetwork:
+  - 10.96.0.0/16
+platform:
+  none: {}
+pullSecret: ...
 ```
 
 #### Генерация файлов манифестов
