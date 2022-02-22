@@ -9,6 +9,68 @@
 
 ## Настройка DNS
 
+Определение прямой зоны для поддоменов
+- api.osp4;
+- *.apps.osp4;
+- bootstrap.ocp4;
+- master0.osp4;
+- master1.osp4;
+- master2.osp4;
+- worker0.osp4;
+- worker1.osp4.
+```
+$TTL 14400
+altlinux.io.   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
+        2022022201      ; Serial
+        10800           ; Refresh
+        3600            ; Retry
+        604800          ; Expire
+        604800          ; Negative Cache TTL
+);
+                        IN      NS      ns1
+@                       IN      A       10.150.0.5
+ns1                     IN      A       10.150.0.5
+quay                    IN      CNAME ns1       
+
+api.osp4 IN  A 10.150.0.200
+*.apps.osp4 IN CNAME api.osp4
+
+bootstrap.ocp4 IN  A 10.150.0.201
+master0.osp4   IN       A 10.150.0.202
+master1.osp4   IN       A 10.150.0.203
+master2.osp4   IN       A 10.150.0.204
+
+worker0.osp4   IN  A 10.150.0.205
+worker1.osp4   IN  A 10.150.0.206
+```
+
+Определение обратнаой зоны для поддоменов
+```
+$TTL 3600
+@   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
+              2022022202       ; Serial
+              21600             ; refresh
+              3600              ; retry
+              3600000           ; expire
+              86400 )           ; minimum
+ 
+   IN      NS      ns1.altlinux.io.
+
+
+; $ORIGIN 0.150.10.in-addr.arpa.
+
+200.0.150.10.in-addr.arpa. IN PTR api.ocp4.altlinux.io.
+200.0.150.10.in-addr.arpa. IN PTR api-int.ocp4.altlinux.io.
+
+201.0.150.10.in-addr.arpa. IN PTR bootstrap.ocp4.altlinux.io.
+202.0.150.10.in-addr.arpa. IN PTR master0.ocp4.altlinux.io.
+203.0.150.10.in-addr.arpa. IN PTR master1.ocp4.altlinux.io.
+204.0.150.10.in-addr.arpa. IN PTR master2.ocp4.altlinux.io.
+
+205.0.150.10.in-addr.arpa. IN PTR worker0.ocp4.altlinux.io.
+206.0.150.10.in-addr.arpa. IN PTR worker1.ocp4.altlinux.io.
+```
+
 ## Настройка балансировщика нагрузки
 
 ## Генерация SSH-ключей
