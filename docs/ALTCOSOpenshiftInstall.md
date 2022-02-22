@@ -20,7 +20,7 @@
 - worker1.osp4.
 ```
 $TTL 14400
-altlinux.io.   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
+altlinux.io.   IN      SOA   ns1.office.basealt.ru. root.office.basealt.io. (
         2022022201      ; Serial
         10800           ; Refresh
         3600            ; Retry
@@ -29,9 +29,6 @@ altlinux.io.   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
 );
                         IN      NS      ns1
 @                       IN      A       10.150.0.5
-ns1                     IN      A       10.150.0.5
-quay                    IN      CNAME ns1       
-
 api.osp4 IN  A 10.150.0.200
 *.apps.osp4 IN CNAME api.osp4
 
@@ -47,28 +44,28 @@ worker1.osp4   IN  A 10.150.0.206
 Определение обратной зоны для поддоменов
 ```
 $TTL 3600
-@   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
+@   IN      SOA   ns1.office.basealt.ru. root.office.basealt.ru. (
               2022022202       ; Serial
               21600             ; refresh
               3600              ; retry
               3600000           ; expire
               86400 )           ; minimum
  
-   IN      NS      ns1.altlinux.io.
+   IN      NS      ns1.office.basealt.ru.
 
 
 ; $ORIGIN 0.150.10.in-addr.arpa.
 
-200.0.150.10.in-addr.arpa. IN PTR api.ocp4.altlinux.io.
-200.0.150.10.in-addr.arpa. IN PTR api-int.ocp4.altlinux.io.
+200.0.150.10.in-addr.arpa. IN PTR api.ocp4.office.basealt.ru.
+200.0.150.10.in-addr.arpa. IN PTR api-int.ocp4.office.basealt.ru.
 
-201.0.150.10.in-addr.arpa. IN PTR bootstrap.ocp4.altlinux.io.
-202.0.150.10.in-addr.arpa. IN PTR master0.ocp4.altlinux.io.
-203.0.150.10.in-addr.arpa. IN PTR master1.ocp4.altlinux.io.
-204.0.150.10.in-addr.arpa. IN PTR master2.ocp4.altlinux.io.
+201.0.150.10.in-addr.arpa. IN PTR bootstrap.ocp4.office.basealt.ru.
+202.0.150.10.in-addr.arpa. IN PTR master0.ocp4.office.basealt.ru.
+203.0.150.10.in-addr.arpa. IN PTR master1.ocp4.office.basealt.ru.
+204.0.150.10.in-addr.arpa. IN PTR master2.ocp4.office.basealt.ru.
 
-205.0.150.10.in-addr.arpa. IN PTR worker0.ocp4.altlinux.io.
-206.0.150.10.in-addr.arpa. IN PTR worker1.ocp4.altlinux.io.
+205.0.150.10.in-addr.arpa. IN PTR worker0.ocp4.office.basealt.ru.
+206.0.150.10.in-addr.arpa. IN PTR worker1.ocp4.office.basealt.ru.
 ```
 
 ## Настройка балансировщика нагрузки
@@ -118,29 +115,29 @@ frontend stats
 listen api-server-6443
   bind *:6443
   mode tcp
-  server bootstrap.ocp4.altlinux.io:6443 check inter ls backup
-  server master0 master0.ocp4.altlinux.io:6443 check inter 1s
-  #server master1 master1.ocp4.altlinux.io:6443 check inter 1s
-  #server master2 master2.ocp4.altlinux.io:6443 check inter 1s
+  server bootstrap.ocp4.office.basealt.ru:6443 check inter ls backup
+  server master0 master0.ocp4.office.basealt.ru:6443 check inter 1s
+  server master1 master1.ocp4.office.basealt.ru:6443 check inter 1s
+  server master2 master2.ocp4.office.basealt.ru:6443 check inter 1s
 listen machine-config-server-22623
   bind *:22623
   mode tcp
-  server bootstrap.ocp4.altlinux.io:22623 check inter ls backup
-  server master0 master0.ocp4.altlinux.io:22623 check inter 1s
-  #server master1 master1.ocp4.altlinux.io:22623 check inter 1s
-  #server master2 master2.ocp4.altlinux.io:22623 check inter 1s
+  server bootstrap.ocp4.office.basealt.ru:22623 check inter ls backup
+  server master0 master0.ocp4.office.basealt.ru:22623 check inter 1s
+  server master1 master1.ocp4.office.basealt.ru:22623 check inter 1s
+  server master2 master2.ocp4.office.basealt.ru:22623 check inter 1s
 listen ingress-router-443
   bind *:443
   mode tcp
   balance source
-  server worker0 worker0.ocp4.altlinux.io:443 check inter ls 1s
-  #server worker1 worker1.ocp4.altlinux.io:443 check inter ls 1s
+  server worker0 worker0.ocp4.office.basealt.ru:443 check inter ls 1s
+  server worker1 worker1.ocp4.office.basealt.ru:443 check inter ls 1s
 listen ingress-router-80
   bind *:80
   mode tcp
   balance source
-  server worker0 worker0.ocp4.altlinux.io:443 check inter ls 1s
-  #server worker1 worker1.ocp4.altlinux.io:443 check inter ls 1s
+  server worker0 worker0.ocp4.office.basealt.ru:443 check inter ls 1s
+  server worker1 worker1.ocp4.office.basealt.ru:443 check inter ls 1s
 ```
 
 
