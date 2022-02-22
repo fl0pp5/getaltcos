@@ -6,6 +6,9 @@
 - При установке развернуть для два диска - / (ext4)  и /var (btrfs). 
   Описание см [Creating a separate /var partition](https://docs.openshift.com/container-platform/4.9/installing/installing_platform_agnostic/installing-platform-agnostic.html#installation-user-infra-machines-advanced_vardisk_installing-platform-agnostic)
 
+## Список виртуальныз машин
+
+
 
 ## Настройка DNS
 
