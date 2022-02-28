@@ -198,6 +198,7 @@ INFO Manifests created in: ocp/manifests and ocp/openshift
 
 ##### Добавление манифестов (создание BTRFS томов)
 
+
 #### Создание ignition-файлов
 
 ```
@@ -220,4 +221,4 @@ INFO Ignition-Configs created in: ocp and ocp/auth
 - [Running Openshift at Home - Part 4/4 Deploying Openshift 4 on Proxmox VE ](https://blog.rossbrigoli.com/2020/11/running-openshift-at-home-part-44.html)
 - [Install OpenShift on any x86_64 platform with user-provisioned infrastructure](https://console.redhat.com/openshift/install/platform-agnostic)
 - [Installing a cluster on any platform](https://docs.openshift.com/container-platform/4.9/installing/installing_platform_agnostic/installing-platform-agnostic.html)
-- 
+- [1.1.11.3.2. Disk partitioning](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html-single/installing_on_bare_metal/index)
