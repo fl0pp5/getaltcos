@@ -198,6 +198,123 @@ INFO Manifests created in: ocp/manifests and ocp/openshift
 
 ##### Добавление манифестов (создание BTRFS томов)
 
+После генерации манифестов они помещаются в каталоги
+- `ocp/openshift/` - манифесты конфигурации серверов;
+- `ocp/manifests/` - манифесты конфигурации кластера.
+
+При конфигурации серверов выполняются следующие скрипты из каталога `ocp/openshift/`:
+- `99_kubeadmin-password-secret.yaml
+- `99_openshift-cluster-api_master-user-data-secret.yaml`;
+- `99_openshift-cluster-api_worker-user-data-secret.yaml`;
+- `99_openshift-machineconfig_99-master-ssh.yaml`;
+- `99_openshift-machineconfig_99-worker-ssh.yaml`;
+- `openshift-install-manifests.yaml`.
+
+Для выполнения дополнительных действий необходимо сформировать манифесты с префиксом менее `99`, которые обеспечивают
+вызов `ignition` с передачей ему `ignition`-конфигурации. 
+Например для создания партиции, на которую будет монтированы каталоги docker, containers создается butane-файл
+`ocp/98-var-partition.bu`:
+```
+variant: openshift
+version: 4.9.0
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: 98-var-partition
+storage:
+ disks:
+   - device: /dev/sdb # создадим на диске /dev/sdb партицию /dev/sdb1
+     wipe_table: true
+     partitions:
+       - number: 1
+         label: docker
+ filesystems:
+   - device: /dev/sdb1 # создадим в партиции /dev/sdb1 файловую систему BTRFS
+     format: btrfs
+     wipe_filesystem: true
+     label: docker
+     with_mount_unit: false
+ directories:
+   - path: /var/mnt/docker # создадим каталог монтирования тома
+     overwrite: true
+ files:
+   - path: /etc/fstab # добавим строку монтирования btrfs-тома на каталог /var/mnt/docker
+     append:
+       - inline: |
+           LABEL=docker /var/mnt/docker btrfs defaults 0 2
+           /var/mnt/docker/docker/ /var/lib/docker none bind 0 0
+           /var/mnt/docker/containers/ /var/lib/containers/ none bind 0 0
+   # заменим в конфигурации dockerd-демона:
+   # тип storage-driver с overlay2 на btrfs
+   - path: /etc/docker/daemon.json
+     overwrite: true
+     contents:
+       inline: |
+         {
+         "init-path": "/usr/bin/tini",
+         "userland-proxy-path": "/usr/bin/docker-proxy",
+         "default-runtime": "docker-runc",
+         "live-restore": false,
+         "log-driver": "journald",
+         "runtimes": {
+           "docker-runc": {
+             "path": "/usr/bin/runc"
+           }
+         },
+         "default-ulimits": {
+           "nofile": {
+           "Name": "nofile",
+           "Hard": 64000,
+           "Soft": 64000
+           }
+         },
+         "data-root": "/var/lib/docker/",
+         "storage-driver": "btrfs"
+         }
+   # заменим в конфигурации CRI-O тип driver с overlay на btrfs
+   - path: /etc/crio/crio.conf.d/00-btrfs.conf
+     overwrite: true
+     contents:
+       inline: |
+         [crio]
+         root = "/var/lib/containers/storage"
+         runroot = "/var/run/containers/storage"
+         storage_driver = "btrfs"
+         storage_option = []
+         [crio.runtime]
+         conmon = "/usr/bin/conmon"
+         [crio.network]
+         plugin_dirs = [
+           "/usr/libexec/cni",
+           "/opt/cni/bin/"
+         ]
+   # заменим в конфигурации podman тип driver с overlay2 на btrfs
+   - path: /etc/containers/storage.conf
+     overwrite: true
+     contents:
+       inline: |
+         [storage]
+         driver = "btrfs"
+         runroot = "/var/run/containers/storage"
+         graphroot = "/var/lib/containers/storage"
+         [storage.options]
+         additionalimagestores = [
+         ]
+         [storage.options.overlay]
+         mountopt = "nodev,metacopy=on"
+    # исключим определение flannel-подсети в CRIO 
+    - path: /etc/cni/net.d/100-crio-bridge.conf
+      overwrite: true
+      contents:
+        inline: |
+          {"type": "bridge"}
+```
+
+Конвертация производится командой:
+```
+# butane ocp/98-var-partition.bu -o ocp/openshift/98-var-partition.yaml
+```
+
 
 #### Создание ignition-файлов
 
