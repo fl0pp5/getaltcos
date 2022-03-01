@@ -20,7 +20,22 @@ Compute (Worker)       | 2 | ALTCOS  | QCOW2      |   2 |  8GB       |  100GB  |
 
 ## Настройка DNS
 
-Определение прямой зоны для поддоменов
+Добавление файлов описания зоны в `/var/lib/bind/etc/local.conf`:
+```
+include "/etc/bind/rfc1912.conf";
+
+zone "altlinux.io" {
+  type master;
+  file "master/altlinux.io";
+};
+
+zone "5.4.10.in-addr.arpa" {
+  type master;
+  file "5.4.10.in-addr.arpa";
+};
+```
+
+Определение прямой зоны  в файле `/var/lib/bind/zone/master/altlinux.io` для поддоменов
 - api.osp4;
 - *.apps.osp4;
 - bootstrap.ocp4;
@@ -31,52 +46,51 @@ Compute (Worker)       | 2 | ALTCOS  | QCOW2      |   2 |  8GB       |  100GB  |
 - worker1.osp4.
 ```
 $TTL 14400
-altlinux.io.   IN      SOA   ns1.office.basealt.ru. root.office.basealt.io. (
-        2022022201      ; Serial
+altlinux.io.   IN      SOA   ns1.altlinux.io. root.altlinux.io. (
+        2022030102      ; Serial
         10800           ; Refresh
         3600            ; Retry
         604800          ; Expire
         604800          ; Negative Cache TTL
 );
                         IN      NS      ns1
-@                       IN      A       10.150.0.5
-api.osp4 IN  A 10.150.0.200
-*.apps.osp4 IN CNAME api.osp4
+@                       IN      A       10.4.5.30
 
-bootstrap.ocp4 IN  A 10.150.0.201
-master0.osp4   IN       A 10.150.0.202
-master1.osp4   IN       A 10.150.0.203
-master2.osp4   IN       A 10.150.0.204
+ns1     IN      A 10.4.5.30
+api.ocp4 IN CNAME ns1 
+*.apps.ocp4 IN CNAME ns1
 
-worker0.osp4   IN  A 10.150.0.205
-worker1.osp4   IN  A 10.150.0.206
+bootstrap.ocp4 IN  A 10.4.5.31
+master0.ocp4   IN       A 10.4.5.32
+master1.ocp4   IN       A 10.4.5.33
+master2.ocp4   IN       A 10.4.5.34
+
+worker0.ocp4   IN  A 10.4.5.35
+worker1.ocp4   IN  A 10.4.5.36
 ```
 
-Определение обратной зоны для поддоменов
+Определение обратной зоны для поддоменов в файле `/var/lib/bind/zone/5.4.10.in-addr.arpa`:
 ```
 $TTL 3600
-@   IN      SOA   ns1.office.basealt.ru. root.office.basealt.ru. (
-              2022022202       ; Serial
-              21600             ; refresh
-              3600              ; retry
-              3600000           ; expire
-              86400 )           ; minimum
- 
-   IN      NS      ns1.office.basealt.ru.
+@       IN      SOA     ns1.altlinux.io. root.altlinux.io. (
+        2022030101      ; Serial
+        21600   ; refresh
+        3600    ; retry
+        3600000 ; expire
+        86400 ) ; minimum
 
+        IN      NS      ns1.altlinux.io.
 
-; $ORIGIN 0.150.10.in-addr.arpa.
+30.5.4.10.in-addr.arpa. IN PTR api.altlinux.io.
+30.5.4.10.in-addr.arpa. IN PTR api-int.altlinux.io.
 
-200.0.150.10.in-addr.arpa. IN PTR api.ocp4.office.basealt.ru.
-200.0.150.10.in-addr.arpa. IN PTR api-int.ocp4.office.basealt.ru.
+31.5.4.10.in-addr.arpa. IN PTR bootstrap.altlinux.io.
+32.5.4.10.in-addr.arpa. IN PTR master0.altlinux.io.
+33.5.4.10.in-addr.arpa. IN PTR master1.altlinux.io.
+34.5.4.10.in-addr.arpa. IN PTR master2.altlinux.io.
 
-201.0.150.10.in-addr.arpa. IN PTR bootstrap.ocp4.office.basealt.ru.
-202.0.150.10.in-addr.arpa. IN PTR master0.ocp4.office.basealt.ru.
-203.0.150.10.in-addr.arpa. IN PTR master1.ocp4.office.basealt.ru.
-204.0.150.10.in-addr.arpa. IN PTR master2.ocp4.office.basealt.ru.
-
-205.0.150.10.in-addr.arpa. IN PTR worker0.ocp4.office.basealt.ru.
-206.0.150.10.in-addr.arpa. IN PTR worker1.ocp4.office.basealt.ru.
+35.5.4.10.in-addr.arpa. IN PTR worker0.altlinux.io.
+36.5.4.10.in-addr.arpa. IN PTR worker1.altlinux.io.
 ```
 
 ## Настройка балансировщика нагрузки
@@ -111,44 +125,54 @@ defaults
     timeout server          20s
     timeout http-keep-alive 10s
     timeout check           100s
-
-frontend stats
-  bind *:1936
-  log global
-  maxconn global
-  stats enable
-  stats hide-version
-  stats refresh 30s
-  stats show-node
-  stats show-desc Stats for ocp4 cluster
-  stats auth admin:ocp4
-  stats uri /stats
-listen api-server-6443
+frontend api-server-6443
   bind *:6443
   mode tcp
-  server bootstrap.ocp4.office.basealt.ru:6443 check inter ls backup
-  server master0 master0.ocp4.office.basealt.ru:6443 check inter 1s
-  server master1 master1.ocp4.office.basealt.ru:6443 check inter 1s
-  server master2 master2.ocp4.office.basealt.ru:6443 check inter 1s
-listen machine-config-server-22623
+  option tcplog
+  default_backend api-server-6443
+
+backend api-server-6443
+  mode tcp
+  #balance roundrobin
+  server bootstrap bootstrap.ocp4.altlinux.io:6443 check 
+  server master0 master0.ocp4.altlinux.io:6443 check inter 1s
+  server master1 master1.ocp4.altlinux.io:6443 check inter 1s
+  server master2 master2.ocp4.altlinux.io:6443 check inter 1s
+
+
+frontend machine-config-server-22623
   bind *:22623
   mode tcp
-  server bootstrap.ocp4.office.basealt.ru:22623 check inter ls backup
-  server master0 master0.ocp4.office.basealt.ru:22623 check inter 1s
-  server master1 master1.ocp4.office.basealt.ru:22623 check inter 1s
-  server master2 master2.ocp4.office.basealt.ru:22623 check inter 1s
-listen ingress-router-443
+  option tcplog
+  default_backend machine-config-server-22623
+
+backend machine-config-server-22623
+  server bootstrap bootstrap.ocp4.altlinux.io:22623 check inter 1s
+  server master0 master0.ocp4.altlinux.io:22623 check inter 1s
+  server master1 master1.ocp4.altlinux.io:22623 check inter 1s
+  server master2 master2.ocp4.altlinux.io:22623 check inter 1s
+frontend ingress-router-443
   bind *:443
   mode tcp
-  balance source
-  server worker0 worker0.ocp4.office.basealt.ru:443 check inter ls 1s
-  server worker1 worker1.ocp4.office.basealt.ru:443 check inter ls 1s
-listen ingress-router-80
+  option tcplog
+  default_backend ingress-router-443
+
+backend ingress-router-443  
+#  balance source
+  server worker0 worker0.ocp4.altlinux.io:443 check inter  1s
+  server worker1 worker1.ocp4.altlinux.io:443 check inter  1s
+
+frontend ingress-router-80
   bind *:80
   mode tcp
-  balance source
-  server worker0 worker0.ocp4.office.basealt.ru:443 check inter ls 1s
-  server worker1 worker1.ocp4.office.basealt.ru:443 check inter ls 1s
+  option tcplog
+  default_backend ingress-router-80
+
+backend ingress-router-80  
+#  balance source
+  server worker0 worker0.ocp4.altlinux.io:443 check inter 1s
+  server worker1 worker1.ocp4.altlinux.io:443 check inter 1s
+
 ```
 
 
