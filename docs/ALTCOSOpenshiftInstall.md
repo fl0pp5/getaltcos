@@ -81,16 +81,17 @@ $TTL 3600
 
         IN      NS      ns1.altlinux.io.
 
-30.5.4.10.in-addr.arpa. IN PTR api.altlinux.io.
-30.5.4.10.in-addr.arpa. IN PTR api-int.altlinux.io.
+30.5.4.10.in-addr.arpa. IN PTR api.ocp4.altlinux.io.
+30.5.4.10.in-addr.arpa. IN PTR api-int.ocp4.altlinux.io.
 
-31.5.4.10.in-addr.arpa. IN PTR bootstrap.altlinux.io.
-32.5.4.10.in-addr.arpa. IN PTR master0.altlinux.io.
-33.5.4.10.in-addr.arpa. IN PTR master1.altlinux.io.
-34.5.4.10.in-addr.arpa. IN PTR master2.altlinux.io.
+31.5.4.10.in-addr.arpa. IN PTR bootstrap.ocp4.altlinux.io.
+32.5.4.10.in-addr.arpa. IN PTR master0.ocp4.altlinux.io.
+33.5.4.10.in-addr.arpa. IN PTR master1.ocp4.altlinux.io.
+34.5.4.10.in-addr.arpa. IN PTR master2.ocp4.altlinux.io.
 
-35.5.4.10.in-addr.arpa. IN PTR worker0.altlinux.io.
-36.5.4.10.in-addr.arpa. IN PTR worker1.altlinux.io.
+35.5.4.10.in-addr.arpa. IN PTR worker0.ocp4.altlinux.io.
+36.5.4.10.in-addr.arpa. IN PTR worker1.ocp4.altlinux.io.
+~                                                           
 ```
 
 ## Настройка балансировщика нагрузки
