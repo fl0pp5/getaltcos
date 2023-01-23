@@ -23,7 +23,7 @@ class altcosfile {
       return;
     }
     $error = [];
-    foreach (['from', 'action'] as $attr) {
+    foreach (['from', 'actions'] as $attr) {
       if (!key_exists($attr, $data)) {
         $error[] = "Отсутствует обязательный аттрибут $attr";
       }
@@ -147,7 +147,7 @@ class altcosfile {
                 }
               }
               $cmd = $this->BINDIR . "/skopeo_copy.sh $mergeDir $podmanImages";
-              echo "SKOPEO_COPY CMD=$cmd\n";
+              echo "ENVCMD CMD=$cmd\n";
 //               exit();
               $output = $this->runCmdWithEnv($cmd);
               echo "SKOPEO_COPY OUTPUT=<pre>" . implode("\n",$output). "</pre>";
@@ -226,7 +226,8 @@ class altcosfile {
     $ret = [];
     $fd = dir($refDir);
     while ($entry = $fd->read()) {
-      if (substr($entry, 0, 1) == '.' || in_array($entry, ['vars', 'roots'])) continue;
+      if (substr($entry, 0, 1) == '.' /*|| in_array($entry, ['vars', 'roots'])*/) continue;
+      // echo "<br>ENTRY=$entry<br>";
       $acosDir = "$refDir/$entry";
       $acosFile = "$acosDir/ALTCOSfile.yml";
       if (file_exists($acosFile)) {

@@ -87,6 +87,7 @@ rpmbuild --define "_topdir $RPMBUILD_DIR" --define "_rpmdir $APTDIR/x86_64/RPMS.
 sudo rm -rf $RPMBUILD_DIR
 
 sudo chmod a+w $OUT_DIR
-make -C "$DOCUMENT_ROOT/../mkimage-profiles" APTCONF=$APTDIR/apt.conf.sisyphus.x86_64  BRANCH=sisyphus IMAGEDIR=$OUT_DIR installer-altcos.iso
+ifs=$IFS;IFS=/;set -- $BRANCH;IFS=$ifs;Branch=$3;
+make -C "$DOCUMENT_ROOT/../mkimage-profiles" APTCONF=$APTDIR/apt.conf.$Branch.x86_64  BRANCH=$Branch IMAGEDIR=$OUT_DIR installer-altcos.iso
 mv `realpath $OUT_DIR/installer-altcos-latest-x86_64.iso` $OUT_DIR/`refVersion $BRANCH $COMMITID`.iso
 find $OUT_DIR -type l -delete

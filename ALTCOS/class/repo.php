@@ -22,7 +22,7 @@ class repo {
   function haveConfig() {
     $configFile = $this->repoDir."/config";
     $ret = file_exists($configFile);
-//    echo "<pre>CONFIGFILE=$configFile<br>\n";
+    // echo "<pre>CONFIGFILE=$configFile<br>\n";
     return $ret;
   }
 

@@ -221,7 +221,7 @@ if ($Arch) {
     if ($repo->haveConfig()) {
       $altcosSubRefs = array_flip(altcosfile::getAcosSubRefs($Ref));
     }
-//     echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
+    // echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
     $refExists = false;
     foreach ($refs as $ref) {
       if ($ref == $Ref) $refExists=true;
@@ -237,6 +237,7 @@ if ($Arch) {
 </select>
 </span>
 <?php
+    // echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
   }
 }
 ?>
@@ -301,6 +302,10 @@ if (count($refs) > 0) {
 </div>
 </form-->
 <?php
+    if ($repo->haveConfig()) {
+      $altcosSubRefs = altcosfile::getAcosSubRefs($Ref);
+    }
+    // echo "<pre>ALTCOSSUBREFS=" . print_r($altcosSubRefs, 1) . "</pre>";
   if (count($altcosSubRefs) > 0) {
 ?>
 <form action='/ostree/build/' target='ostreeREST'>

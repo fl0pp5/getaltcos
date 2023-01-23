@@ -51,8 +51,9 @@ actions:
   - env:
       Images:
         cmd: kubeadm config images list --kubernetes-version latest
+  - env:
       imageList: "$Images quay.io/coreos/flannel:v0.15.1"
-      CONSTANT: "Моя константа"
+      #CONSTANT: "Моя константа"
   - podman:
       envListImages: Images
       images:

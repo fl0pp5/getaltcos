@@ -30,7 +30,7 @@ if (strlen($stream) ==0 ) {
 $repo = new repo("altcos/$basearch/$stream", $repoType);
 
 $output=[];
-// echo "REPO=" . print_r($repo, 1);
+echo "REPO=" . print_r($repo, 1);
 if (!$repo->haveConfig()) {
   errorReply(3, "Stream $stream does not have reposutory");
 }

@@ -12,13 +12,13 @@ $subVersion = repos::refVersion($subRef);
 // $subVersionVarSubDir = repos::versionVarSubDir($subVersion);
 
 $altcosfile = new altcosfile($subRef);
-echo "<pre>". json_encode($altcosfile, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . "</pre>";
+echo "<pre>ALTCOSFILE=". json_encode($altcosfile, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . "</pre>";
 $parentRef = repos::parentRef($subRef);
 echo "<pre>PARENTREF=" . print_r($parentRef, 1) . "</pre>";
 
 $subRepo = new repo($subRef, 'bare');
 $mergeDir = $subRepo->rootsDir . "/merged/";
-echo "<pre>SUBTREPO=" . print_r($subRepo, 1) . "</pre>";
+echo "<pre>SUBREPO=" . print_r($subRepo, 1) . "</pre>";
 
 $parentRepo = new repo($parentRef, 'bare');
 $subRefRepoDir = $parentRepo->refRepoDir;
@@ -41,6 +41,8 @@ echo "CHECKOUTCMD=$cmd\n";
 $output = [];
 exec($cmd, $output);
 echo "CHECKOUT=<pre>" . print_r($output, 1) . "</pre>";
+flush();
+echo "<pre>execActions=</pre>";
 flush();
 
 $altcosfile->execActions($mergeDir, $subRef);
