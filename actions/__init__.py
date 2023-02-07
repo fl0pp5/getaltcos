@@ -6,7 +6,7 @@ class Action:
     _TMPL_CMD = string.Template("$cmd")
 
     @classmethod
-    def do(cls, **kwargs):
+    def do(cls, **kwargs) -> subprocess.CompletedProcess:
         return subprocess.run(
             cls._TMPL_CMD.substitute(kwargs),
             shell=True,
