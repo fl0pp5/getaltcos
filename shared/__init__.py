@@ -1,0 +1,2 @@
+DOCUMENT_ROOT = '.'
+STREAMS_ROOT = "ALTCOS/streams"

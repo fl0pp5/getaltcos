@@ -1,16 +1,14 @@
 import os
 import time
 
-from shared import errors
-
-DOCUMENT_ROOT = '.'
+from shared import errors, DOCUMENT_ROOT, STREAMS_ROOT
 
 
 def get_arch_list(os_name: str = "altcos") -> list[str]:
     """
     https://github.com/alt-cloud/getaltcos/blob/6fe4a273b8258189c0e75bcd3cbd306ee2eace2b/ALTCOS/class/repos.php#L16
     """
-    path = os.path.join(DOCUMENT_ROOT, f"ALTCOS/streams/{os_name}")
+    path = os.path.join(DOCUMENT_ROOT, STREAMS_ROOT, os_name)
     return os.listdir(path)
 
 
@@ -23,7 +21,7 @@ def get_stream_list(os_name: str = "altcos", arch: str = "x86_64", mirror_stream
     stream_list = []
 
     for arch in arch_list:
-        path = os.path.join(DOCUMENT_ROOT, f"ALTCOS/streams/{os_name}/{arch}")
+        path = os.path.join(DOCUMENT_ROOT, STREAMS_ROOT, os_name, arch)
 
         stream_list.extend(os.listdir(path))
 
@@ -93,7 +91,7 @@ def ref_to_abs_dir(ref: str) -> str:
     """
     https://github.com/alt-cloud/getaltcos/blob/6fe4a273b8258189c0e75bcd3cbd306ee2eace2b/ALTCOS/class/repos.php#L120
     """
-    return os.path.join(DOCUMENT_ROOT, "ALTCOS/streams", ref_to_dir(ref))
+    return os.path.join(DOCUMENT_ROOT, STREAMS_ROOT, ref_to_dir(ref))
 
 
 def dir_to_ref(ref: str) -> str:
@@ -142,7 +140,7 @@ def get_full_commit_id(ref_dir: str, short_commit_id: str) -> str:
     """
     https://github.com/alt-cloud/getaltcos/blob/6fe4a273b8258189c0e75bcd3cbd306ee2eace2b/ALTCOS/class/repos.php#L177
     """
-    vars_path = os.path.join(DOCUMENT_ROOT, f"ALTCOS/streams/{ref_dir}/vars")
+    vars_path = os.path.join(DOCUMENT_ROOT, STREAMS_ROOT, f"{ref_dir}/vars")
 
     vars_items = os.listdir(vars_path)
 
@@ -170,7 +168,7 @@ def get_last_commit_id(ref_dir: str) -> str:
     """
     https://github.com/alt-cloud/getaltcos/blob/6fe4a273b8258189c0e75bcd3cbd306ee2eace2b/ALTCOS/class/repos.php#L199
     """
-    vars_path = os.path.join(DOCUMENT_ROOT, f"ALTCOS/streams/altcos/{ref_dir}/vars")
+    vars_path = os.path.join(DOCUMENT_ROOT, STREAMS_ROOT, f"{ref_dir}/vars")
 
     vars_items = os.listdir(vars_path)
 
@@ -197,7 +195,7 @@ def ref_version(ref: str, commit_id: str = None) -> str:
     else:
         ref_dir = ref_to_dir(ref)
         full_commit_id = get_full_commit_id(ref, commit_id)
-        vars_path = os.path.join(DOCUMENT_ROOT, f"ALTCOS/streams/{ref_dir}/vars")
+        vars_path = os.path.join(DOCUMENT_ROOT, STREAMS_ROOT, f"{ref_dir}/vars")
         commit_link = os.path.join(vars_path, full_commit_id)
         link_target = os.readlink(commit_link)
 
